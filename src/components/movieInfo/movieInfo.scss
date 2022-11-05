@@ -1,0 +1,144 @@
+.btn {
+    margin: 30px auto;
+    width: 90px;
+    height: 40px;
+    display: block;
+    background-color: rgb(66, 64, 64);
+    text-align: center;
+    border: none;
+    border-radius: 6px;
+    transition: background-color .2s linear;
+    &:hover {
+        cursor: pointer;
+        background-color: rgb(90, 86, 86);
+    }
+}
+.infowrapper {
+    content: '';
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    max-width: 100%;
+    max-height: 100%;
+    overflow-y: scroll;
+    background-color: rgba(0, 0, 0, .9);
+    
+    z-index: 2000;
+    i {
+        color: #fff;
+        font-size: 26px;
+        
+    }
+}
+
+.close {
+    position: absolute;
+        top: 100px;
+        right: 100px;
+}
+
+.infocontainer {
+    display: grid;
+    grid-template-columns: 2fr 4fr 2fr;
+    margin: 100px auto;
+    width: 1300px;
+    height: 1300px;
+    max-height: 100%;
+    
+    z-index: 1;
+    
+}
+
+.poster {
+    padding: 0 20px;
+    
+}
+
+.posterwrapper {
+    margin: 0 auto;
+    width: 300px;
+    height: 450px;
+    img {
+        max-width: 100%;
+    }
+}
+
+.info {
+    padding: 0 20px;
+    h1,h3 {
+        color: #fff;
+        text-align: left;
+    }
+}
+
+.filminfostring {
+    display: grid;
+    grid-template-columns: 1fr 3fr;
+    div {
+        padding: 8px 0;
+        color: #fff;
+    }
+}
+
+.raiting {
+
+    
+    
+}
+
+
+
+.choisewrapper {
+    position: relative;
+    width: 350px;
+    height: 35px; 
+    padding: 4px 15px;
+    background-color: rgb(66, 64, 64);
+    border-radius: 20px; 
+    display: flex;
+    justify-content: center;
+    div {
+        width: 30px;
+        height: 30px;
+        text-align: center;
+        vertical-align: middle;
+    }
+    i {
+        display: block;
+        
+        color: #fff;
+        font-size: 26px;
+    }
+    span {
+        color: #fff;
+        font-size: 20px;
+        transition: .2s ease;
+    }
+}
+
+.red {
+    &:hover {
+        color: red;
+        font-size: 22px;
+        cursor: pointer;
+        
+    }
+}
+
+.gray {
+    &:hover {
+        color: gray;
+        font-size: 22px;
+        cursor: pointer;
+    }
+}
+
+.green {
+    &:hover {
+        color: green;
+        font-size: 22px;
+        cursor: pointer;
+    }
+}
