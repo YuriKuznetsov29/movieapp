@@ -6,6 +6,7 @@ import './movieInfo.scss';
 const MovieInfo = (props) => {
     const [modalState, setModalState] = useState({'display': 'none'});
     const [filmInfo, setFilmInfo] = useState({});
+    const [gradeState, setGradeState] = useState({state: false, visible: {'display': 'block'}});
 
     const {getFilmInfo} = MovieService();
 
@@ -32,11 +33,15 @@ const MovieInfo = (props) => {
         setModalState({'display': 'none'})
     }
 
+    const onShowGrade = () => {
+        setGradeState({state: true, visible: {'display': 'none'}});
+    }
+
 
     return (
         
         <>
-            <div className='infowrapper' style={modalState}>
+            <div className='infowrapper' style={modalState} onClick={() => closeModal()}>
                 <i className="ph-x close"
                 onClick={() => closeModal()}></i>
                 <div className='infocontainer'>
@@ -63,10 +68,12 @@ const MovieInfo = (props) => {
                                 <div>Жанр</div>
                                 <div>{filmInfo.genre}</div>
                             </div>
+                            {filmInfo.slogan ? 
                             <div className='filminfostring'>
                                 <div>Слоган</div>
                                 <div>{filmInfo.slogan}</div>
-                            </div>
+                            </div> :
+                            null}
                             {/* <div className='filminfostring'>
                                 <div>Режиссер</div>
                                 <div>Фрэнк Дарабонт</div>
@@ -131,8 +138,10 @@ const MovieInfo = (props) => {
                         </div>
                     </div>
                     <div className='raiting'>
-                        <button className='btn'>Оценить</button>
-                        <div className='choise'>
+                        <button className='btn' style={gradeState.visible}
+                        onClick={() => onShowGrade()}>Оценить</button>
+                        
+                        {gradeState.state ? <div className='choise'>
                             <div className='choisewrapper'>
                                 <div>
                                     <i className="ph-star star"></i>
@@ -168,7 +177,7 @@ const MovieInfo = (props) => {
                                     <span className='green'>10</span>
                                 </div>
                             </div>
-                        </div>                        
+                        </div>: null}                        
                     </div>
                 </div>
 
