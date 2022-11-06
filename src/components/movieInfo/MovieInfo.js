@@ -1,39 +1,73 @@
+import { useEffect, useState } from 'react';
+import MovieService from '../../services/MovieService';
+
 import './movieInfo.scss';
 
-const MovieInfo = () => {
+const MovieInfo = (props) => {
+    const [modalState, setModalState] = useState({'display': 'none'});
+    const [filmInfo, setFilmInfo] = useState({});
+
+    const {getFilmInfo} = MovieService();
+
+    useEffect(() => {
+        openModal()
+
+    }, [props.filmId])
+
+    
+    const openModal = () => {
+        if (props.filmId) {
+            loadData();
+            setModalState({'display': 'block'});
+        }
+    }
+
+    const loadData = () => {
+        getFilmInfo(props.filmId)
+            .then(res => setFilmInfo(res));
+        console.log(filmInfo);
+    }
+
+    const closeModal = () => {
+        setModalState({'display': 'none'})
+    }
+
+
     return (
+        
         <>
-            <div className='infowrapper'>
-                <i className="ph-x close"></i>
+            <div className='infowrapper' style={modalState}>
+                <i className="ph-x close"
+                onClick={() => closeModal()}></i>
                 <div className='infocontainer'>
                     <div className='poster'>
                         <div className='posterwrapper'>
-                            <img src='https://avatars.mds.yandex.net/get-kinopoisk-image/1704946/207fdfc7-25b9-4fb4-ada1-09acaec1e844/300x450' alt='logo'></img>
+                            <img src={filmInfo.poster} alt='poster'></img>
                         </div>
                     </div>
                     <div className='info'>
                         <h1>
-                            Бандитский Петербург: Барон (мини–сериал 2000)
+                            {filmInfo.name}
                         </h1>
                         <h3>О фильме</h3>
                         <div className='filminfo'>
                             <div className='filminfostring'>
                                 <div>Год производства</div>
-                                <div>1994</div>
+                                <div>{filmInfo.year}</div>
                             </div>
                             <div className='filminfostring'>
                                 <div>Страна</div>
-                                <div>США</div>
+                                <div>{filmInfo.country}</div>
                             </div>
                             <div className='filminfostring'>
                                 <div>Жанр</div>
-                                <div>драма</div>
+                                <div>{filmInfo.genre}</div>
                             </div>
                             <div className='filminfostring'>
                                 <div>Слоган</div>
-                                <div>«Страх - это кандалы. Надежда - это свобода»</div>
+                                <div>{filmInfo.slogan}</div>
                             </div>
-                            <div className='filminfostring'>
+                            {/* <div className='filminfostring'>
                                 <div>Режиссер</div>
                                 <div>Фрэнк Дарабонт</div>
                             </div>
@@ -88,10 +122,10 @@ const MovieInfo = () => {
                             <div className='filminfostring'>
                                 <div>Премьера в мире</div>
                                 <div>10 сентября 1994</div>
-                            </div>
+                            </div> */}
                             <div className='filminfostring'>
                                 <div>Время</div>
-                                <div>142 мин. / 02:22</div>
+                                <div>{`${filmInfo.time} мин.`}</div>
                             </div>
 
                         </div>

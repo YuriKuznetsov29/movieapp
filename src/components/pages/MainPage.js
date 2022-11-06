@@ -1,9 +1,16 @@
+import { useState } from 'react';
 import MovieList from '../movieList/MovieList';
 import MovieInfo from '../movieInfo/MovieInfo';
 
 import './mainPage.scss'
 
 const MainPage = () => {
+    const [filmId, setFilmId] = useState('');
+
+    const onFilmSelected = (id) => {
+        setFilmId(id)
+    }
+
     return (
         <>
             <aside className="sidebar">
@@ -21,8 +28,8 @@ const MainPage = () => {
                     </ul>
                 </nav>
             </aside>
-            <MovieList/>
-            <MovieInfo/>
+            <MovieList onFilmSelected={onFilmSelected}/>
+            <MovieInfo filmId={filmId}/>
         </>
     )
 }

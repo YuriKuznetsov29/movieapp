@@ -3,7 +3,7 @@ import MovieService from '../../services/MovieService';
 
 import './movieList.scss';
 
-const MovieList = () => {
+const MovieList = (props) => {
     const [films, setFilms] = useState([]);
 
     const {getFilms} = MovieService();
@@ -15,14 +15,15 @@ const MovieList = () => {
     const loadData = () => {
         getFilms()
             .then(res => setFilms(res))
-        console.log(films)
-
     }
 
     const renderFilms = (arr) => {
         const items = arr.map(item => {
             return (
-                <div className="filmitem">
+                <div className="filmitem"
+                onClick={() => {
+                    props.onFilmSelected(item.id);
+                }}>
                     <img src={item.posterUrl} alt="logo"/>
                 </div>
             )
