@@ -19,31 +19,42 @@ const MovieInfo = (props) => {
     const openModal = () => {
         if (props.filmId) {
             loadData();
-            setModalState({'display': 'block'});
+            document.body.style.overflow = "hidden";
+            
+            
         }
     }
 
     const loadData = () => {
         getFilmInfo(props.filmId)
-            .then(res => setFilmInfo(res));
+            .then(res => setFilmInfo(res))
+            .then(setModalState({'display': 'block', 'background': `linear-gradient(rgba(0, 0, 0, 0.9), rgba(0, 0, 0, 0.9) ), url(${filmInfo.background})` }));
         console.log(filmInfo);
+        
+        console.log(filmInfo.background)
+
     }
 
-    const closeModal = () => {
-        setModalState({'display': 'none'})
+    const closeModal = (e) => {
+        if (e.target.id === 'close') {
+            setModalState({'display': 'none'})
+            setFilmInfo({});
+            document.body.style.overflow = "scroll";
+        }
     }
 
     const onShowGrade = () => {
         setGradeState({state: true, visible: {'display': 'none'}});
     }
 
-
     return (
-        
         <>
-            <div className='infowrapper' style={modalState} onClick={() => closeModal()}>
-                <i className="ph-x close"
-                onClick={() => closeModal()}></i>
+            <div className='infowrapper' style={modalState} id='close' onClick={(e) => closeModal(e)}>
+                <i 
+                    className="ph-x close"
+                    id='close'
+                    onClick={() => closeModal()}>
+                </i>
                 <div className='infocontainer'>
                     <div className='poster'>
                         <div className='posterwrapper'>
@@ -74,68 +85,15 @@ const MovieInfo = (props) => {
                                 <div>{filmInfo.slogan}</div>
                             </div> :
                             null}
-                            {/* <div className='filminfostring'>
-                                <div>Режиссер</div>
-                                <div>Фрэнк Дарабонт</div>
-                            </div>
-                            <div className='filminfostring'>
-                                <div>Сценарий</div>
-                                <div>Фрэнк Дарабонт, Стивен Кинг</div>
-                            </div>
-                            <div className='filminfostring'>
-                                <div>Продюсер</div>
-                                <div>Лиз Глоцер, Дэвид В. Лестер, Ники Марвин</div>
-                            </div>
-                            <div className='filminfostring'>
-                                <div>Оператор</div>
-                                <div>Роджер Дикинс</div>
-                            </div>
-                            <div className='filminfostring'>
-                                <div>Композитор</div>
-                                <div>Томас Ньюман</div>
-                            </div>
-                            <div className='filminfostring'>
-                                <div>Художник</div>
-                                <div>Теренс Марш, Питер Лэндсдаун Смит, Элизабет МакБрайд, ...</div>
-                            </div>
-                            <div className='filminfostring'>
-                                <div>Монтаж</div>
-                                <div>Ричард Фрэнсис-Брюс</div>
-                            </div>
-                            <div className='filminfostring'>
-                                <div>Бюджет</div>
-                                <div>$25 000 000</div>
-                            </div>
-                            <div className='filminfostring'>
-                                <div>Сборы в США</div>
-                                <div>$28 341 469</div>
-                            </div>
-                            <div className='filminfostring'>
-                                <div>Сборы в мире</div>
-                                <div></div>
-                            </div>
-                            <div className='filminfostring'>
-                                <div>Зрители</div>
-                                <div>США6.7 млн, Испания1.2 млн, Германия427.2 тыс</div>
-                            </div>
-                            <div className='filminfostring'>
-                                <div>Сборы в России</div>
-                                <div>$87 432</div>
-                            </div>
-                            <div className='filminfostring'>
-                                <div>Премьера в Росcии</div>
-                                <div>24 октября 2019, «Иноекино»</div>
-                            </div>
-                            <div className='filminfostring'>
-                                <div>Премьера в мире</div>
-                                <div>10 сентября 1994</div>
-                            </div> */}
                             <div className='filminfostring'>
                                 <div>Время</div>
                                 <div>{`${filmInfo.time} мин.`}</div>
                             </div>
-
                         </div>
+                        <div className='filminfostring'>
+                                <div>Описание</div>
+                                <div>{filmInfo.description}</div>
+                            </div>
                     </div>
                     <div className='raiting'>
                         <button className='btn' style={gradeState.visible}

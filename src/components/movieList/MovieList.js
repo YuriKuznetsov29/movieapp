@@ -40,10 +40,12 @@ const MovieList = (props) => {
 
     return (
         <>  
+            <div>
             {content}
             <button className="btn">
                 Load more
             </button>
+            </div>
         </>
     )
 }

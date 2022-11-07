@@ -1,12 +1,52 @@
 import { useHttp } from "../components/hooks/http.hook";
 
-const MovieService = () => {
+    const MovieService = () => {
 
-const {request} = useHttp();
+    const {request} = useHttp();
 
-const getFilms = async () => {
+    
 
-    const res = await request('https://kinopoiskapiunofficial.tech/api/v2.2/films/premieres?year=2022&month=NOVEMBER')
+    const getActualMonth = () => {
+
+        const date = new Date();
+        const month = date.getMonth();
+
+        switch (month) {
+            case 0:
+                return 'JANUARY';
+            case 1:
+                return 'FEBRUARY';
+            case 2:
+                return 'MARCH';
+            case 3:
+                return 'APRIL';
+            case 4:
+                return 'MAY';
+            case 5:
+                return 'JUNE';
+            case 6:
+                return 'JULY';
+            case 7:
+                return 'AUGUST';
+            case 8:
+                return 'SEPTEMBER';
+            case 9:
+                return 'OCTOBER';
+            case 10:
+                return 'NOVEMBER';
+            case 11:
+                return 'DECEMBER';
+        
+            default:
+                return 'JANUARY';
+        }
+    };
+
+    const currentMonth = getActualMonth();
+
+    const getFilms = async () => {
+
+        const res = await request(`https://kinopoiskapiunofficial.tech/api/v2.2/films/premieres?year=2022&month=${currentMonth}`)
         return _transformFilms(res);
     }
 
@@ -27,7 +67,7 @@ const getFilms = async () => {
                 id: films.kinopoiskId
             });
         });
-        
+        // console.log(films);
         return films;
     }
 
@@ -42,13 +82,15 @@ const getFilms = async () => {
                 genre: item.genres[0].genre, //массив жанров
                 slogan: item.slogan,
                 time: item.filmLength,
+                description: item.description,
+                background: item.coverUrl
             }
         
-        console.log(info);
+        // console.log(info);
         return info;
     }
 
-    return {getFilms, getFilmInfo}
+    return {getFilms, getFilmInfo, getActualMonth}
 }
 
 export default MovieService;
