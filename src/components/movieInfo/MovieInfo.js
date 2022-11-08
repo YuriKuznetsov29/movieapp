@@ -4,7 +4,7 @@ import MovieService from '../../services/MovieService';
 import './movieInfo.scss';
 
 const MovieInfo = (props) => {
-    const [modalState, setModalState] = useState({'display': 'none'});
+    const [modalState, setModalState] = useState('infowrapper');
     const [filmInfo, setFilmInfo] = useState({});
     const [gradeState, setGradeState] = useState({state: false, visible: {'display': 'block'}});
 
@@ -28,18 +28,15 @@ const MovieInfo = (props) => {
     const loadData = () => {
         getFilmInfo(props.filmId)
             .then(res => setFilmInfo(res))
-            .then(setModalState({'display': 'block', 'background': `linear-gradient(rgba(0, 0, 0, 0.9), rgba(0, 0, 0, 0.9) ), url(${filmInfo.background})` }));
-        console.log(filmInfo);
-        
-        console.log(filmInfo.background)
 
+        setModalState('infowrapper show');
     }
 
     const closeModal = (e) => {
         if (e.target.id === 'close') {
-            setModalState({'display': 'none'})
+            setModalState('infowrapper')
             setFilmInfo({});
-            document.body.style.overflow = "scroll";
+            document.body.style.overflow = "auto";
         }
     }
 
@@ -49,7 +46,7 @@ const MovieInfo = (props) => {
 
     return (
         <>
-            <div className='infowrapper' style={modalState} id='close' onClick={(e) => closeModal(e)}>
+            <div className={modalState} style={{'background': `linear-gradient(rgba(0, 0, 0, 0.9), rgba(0, 0, 0, 0.9) ), url(${filmInfo.background})`}} id='close' onClick={(e) => closeModal(e)}>
                 <i 
                     className="ph-x close"
                     id='close'

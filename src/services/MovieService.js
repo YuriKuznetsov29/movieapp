@@ -55,6 +55,15 @@ import { useHttp } from "../components/hooks/http.hook";
                     .then(res => _getTransformFilmInfo(res)))
     }
 
+    const getFilmByName = async (keyword) => {
+        const res = await request(`https://kinopoiskapiunofficial.tech/api/v2.1/films/search-by-keyword?keyword=${keyword}&page=1`)
+        console.log(res)
+        return _transformFilmsForFind(res);
+                    
+    }
+
+    //https://kinopoiskapiunofficial.tech/api/v2.1/films/search-by-keyword?keyword=Matrix&page=1
+
     const _transformFilms = (res) => {
         let films = []
         
@@ -86,11 +95,31 @@ import { useHttp } from "../components/hooks/http.hook";
                 background: item.coverUrl
             }
         
-        // console.log(info);
+        console.log(info);
         return info;
     }
 
-    return {getFilms, getFilmInfo, getActualMonth}
+    const _transformFilmsForFind = (res) => {
+        let films = []
+        
+        films = res.films.map((films) => {
+            return (
+            {
+                nameEn: films.nameEn,
+                nameRu: films.nameRu,
+                genre: films.genres[0].genre,
+                posterUrl: films.posterUrl,
+                year: films.year,
+                id: films.filmId,
+                time: films.filmLength,
+
+            });
+        });
+         console.log(films);
+        return films;
+    }
+
+    return {getFilms, getFilmInfo, getActualMonth, getFilmByName}
 }
 
 export default MovieService;

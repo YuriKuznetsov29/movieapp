@@ -1,15 +1,8 @@
-import { useState } from 'react';
-import MovieList from '../movieList/MovieList';
-import MovieInfo from '../movieInfo/MovieInfo';
-
+import { Outlet, Link } from "react-router-dom";
 import './mainPage.scss'
 
 const MainPage = () => {
-    const [filmId, setFilmId] = useState('');
-
-    const onFilmSelected = (id) => {
-        setFilmId(id)
-    }
+ 
 
     return (
         <>
@@ -17,10 +10,14 @@ const MainPage = () => {
                 <nav>
                     <ul className="navigation">
                         <li>
-                            <i className="ph-house"></i>
+                            <Link to={`/`}>
+                                <i className="ph-house"></i>
+                            </Link>
                         </li>
                         <li>
-                            <i className="ph-magnifying-glass"></i>
+                            <Link to={'/find'}>
+                                <i className="ph-magnifying-glass"></i>
+                            </Link>
                         </li>
                         <li>
                             <i className="ph-user"></i>
@@ -28,8 +25,6 @@ const MainPage = () => {
                     </ul>
                 </nav>
             </aside>
-            <MovieList onFilmSelected={onFilmSelected}/>
-            <MovieInfo filmId={filmId}/>
         </>
     )
 }
