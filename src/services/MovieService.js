@@ -62,7 +62,20 @@ import { useHttp } from "../components/hooks/http.hook";
                     
     }
 
-    //https://kinopoiskapiunofficial.tech/api/v2.1/films/search-by-keyword?keyword=Matrix&page=1
+    const getCounryList = async () => {
+        const res = await request(`https://kinopoiskapiunofficial.tech/api/v2.2/films/filters`);
+        console.log(res);
+        return res;
+    }
+
+    const getFimsByParametrs = async (country, genre, startYear, endYear) => {
+        const res = await request(`https://kinopoiskapiunofficial.tech/api/v2.2/films?countries=${country}&genres=${genre}&order=RATING&type=ALL&ratingFrom=0&ratingTo=10&yearFrom=${startYear}&yearTo=${endYear}&page=1`);
+        console.log(res);
+        return _transformFilmsForFindByParametrs(res);
+    }
+
+
+    //https://kinopoiskapiunofficial.tech/api/v2.2/films/filters
 
     const _transformFilms = (res) => {
         let films = []
@@ -119,7 +132,27 @@ import { useHttp } from "../components/hooks/http.hook";
         return films;
     }
 
-    return {getFilms, getFilmInfo, getActualMonth, getFilmByName}
+    const _transformFilmsForFindByParametrs = (res) => {
+        let films = []
+        
+        films = res.items.map((items) => {
+            return (
+            {
+                nameEn: items.nameEn,
+                nameRu: items.nameRu,
+                genre: items.genres[0].genre,
+                posterUrl: items.posterUrl,
+                year: items.year,
+                id: items.kinopoiskId,
+                time: items.filmLength,
+
+            });
+        });
+         console.log(films);
+        return films;
+    }
+
+    return {getFilms, getFilmInfo, getActualMonth, getFilmByName, getCounryList, getFimsByParametrs}
 }
 
 export default MovieService;

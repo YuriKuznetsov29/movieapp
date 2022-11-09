@@ -1,4 +1,6 @@
-import { Outlet, Link } from "react-router-dom";
+import Sidebar from '../sidebar/Sidebar';
+import MovieList from '../movieList/MovieList';
+import MovieInfo from '../movieInfo/MovieInfo';
 import './mainPage.scss'
 
 const MainPage = () => {
@@ -6,25 +8,7 @@ const MainPage = () => {
 
     return (
         <>
-            <aside className="sidebar">
-                <nav>
-                    <ul className="navigation">
-                        <li>
-                            <Link to={`/`}>
-                                <i className="ph-house"></i>
-                            </Link>
-                        </li>
-                        <li>
-                            <Link to={'/find'}>
-                                <i className="ph-magnifying-glass"></i>
-                            </Link>
-                        </li>
-                        <li>
-                            <i className="ph-user"></i>
-                        </li>
-                    </ul>
-                </nav>
-            </aside>
+           
         </>
     )
 }

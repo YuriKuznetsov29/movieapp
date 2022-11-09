@@ -20,15 +20,12 @@ const MovieInfo = (props) => {
         if (props.filmId) {
             loadData();
             document.body.style.overflow = "hidden";
-            
-            
         }
     }
 
     const loadData = () => {
         getFilmInfo(props.filmId)
             .then(res => setFilmInfo(res))
-
         setModalState('infowrapper show');
     }
 

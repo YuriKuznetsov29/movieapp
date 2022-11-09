@@ -8,6 +8,7 @@ import MainPage from "./components/pages/MainPage";
 import MovieInfo from "./components/movieInfo/MovieInfo";
 import MovieList from "./components/movieList/MovieList";
 import FindFilms from "./components/findFilms/FindFilms";
+import Sidebar from './components/sidebar/Sidebar';
 
 function App() {
 
@@ -21,14 +22,14 @@ function App() {
     {
       path: "/",
       element: <>
-                  <MainPage/>
+                  <Sidebar/>
                   <MovieList onFilmSelected={onFilmSelected}/>
                   <MovieInfo filmId={filmId}/>
               </>,
     },{
       path: "/find",
       element: <>
-                  <MainPage/>
+                  <Sidebar/>
                   <FindFilms onFilmSelected={onFilmSelected}/>
                   <MovieInfo filmId={filmId}/>
               </>,

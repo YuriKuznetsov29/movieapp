@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import MovieService from '../../services/MovieService';
 
 import './findFilms.scss';
@@ -6,13 +6,41 @@ import './findFilms.scss';
 const FindFilms = (props) => {
     const [films, setFilms] = useState([]);
     const [keyword, setKeyword] = useState('');
-    const {getFilmByName} = MovieService();
+    const [countriesArr, setCountriesArr] = useState([]);
+    const [country, setCountry] = useState('');
+    const [genresArr, setGenresArr] = useState([]);
+    const [genre, setGenre] = useState('');
+    const [startYear, setStartYear] = useState('');
+    const [endYear, setEndYear] = useState('');
+    const [optionState, setOptionState] = useState({state: false, visible: {'display': 'none'}});
 
 
+    const {getFilmByName, getCounryList, getFimsByParametrs} = MovieService();
 
-    const loadData = () => {
+
+    useEffect(() => {
+        getCounryList()
+            .then(res => {
+                setGenresArr(res.genres) 
+                setCountriesArr(res.countries)
+            });
+    }, [])
+
+    const loadDataByKeyword = () => {
         getFilmByName(keyword)
             .then(res => setFilms(res))
+    }
+
+    const loadDataByParametrs = () => {
+        getFimsByParametrs(country, genre, startYear, endYear)
+            .then(res => setFilms(res))
+    }
+
+    const showOptions = () => {
+        let state = optionState.state;
+        state = !state;
+        state ? setOptionState({state: true, visible: {'display': 'block'}}) : setOptionState({state: false, visible: {'display': 'none'}});
+        
     }
 
     const renderFilms = (arr) => {
@@ -43,7 +71,36 @@ const FindFilms = (props) => {
         )
     }
 
+    const renderCountries = (arr) => {
+        const items = arr.map(item => {
+            return (
+                <option value={item.id}>{item.country}</option>
+            )
+        })
+        return (
+            <select name="select" onChange={(e) => setCountry(e.target.value)}>
+                {items}
+            </select>
+
+        )
+    }
+
+    const renderGenres = (arr) => {
+        const items = arr.map((item, i) => {
+            return (
+                <option value={item.id}>{item.genre}</option>
+            )
+        })
+        return (
+            <select name="select" onChange={(e) => setGenre(e.target.value)}>
+                {items}
+            </select>
+        )
+    }
+
     const content = renderFilms(films);
+    const countriesTransform = renderCountries(countriesArr);
+    const genresTransform = renderGenres(genresArr);
 
 
     return (
@@ -51,12 +108,23 @@ const FindFilms = (props) => {
         <div className='find-wrapper'>
             <div className='advanced-search'>
                 <input className='find-input' value={keyword} onChange={(e) => setKeyword(e.target.value)}/>
-                <div className="options-wrapper">
-                    <i class="ph-faders-horizontal"></i>
-                    <i className="ph-magnifying-glass" onClick={() => loadData()}></i>
+                <div className="buttons-wrapper">
+                    <i class="ph-faders-horizontal" onClick={() => showOptions()}></i>
+                    <i className="ph-magnifying-glass" onClick={() => loadDataByKeyword()}></i>
                 </div>
             </div>
-            {content}
+                {content}
+                <div className="options-inner" style={optionState.visible}>
+                        <label>Страны</label>
+                        {countriesTransform}
+                        <label>Жанры</label>
+                        {genresTransform}
+                        <label>Минимальный год</label>
+                        <input type='text' value={startYear} onChange={(e) => setStartYear(e.target.value)}></input>
+                        <label>Максимальный год</label>
+                        <input type='text' value={endYear} onChange={(e) => setEndYear(e.target.value)}></input>
+                        <button className='btn' type='submit' onClick={() => loadDataByParametrs()}>Найти</button>
+                </div>
         </div>
     )
 }
