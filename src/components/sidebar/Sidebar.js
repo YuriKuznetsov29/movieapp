@@ -1,4 +1,4 @@
-import { Outlet, Link } from "react-router-dom";
+import { Link } from "react-router-dom";
 import './sidebar.scss';
 
 const Sidebar = () => {
@@ -18,7 +18,9 @@ const Sidebar = () => {
                             </Link>
                         </li>
                         <li>
-                            <i className="ph-user"></i>
+                            <Link to={'/login'}>
+                               <i className="ph-user"></i>
+                            </Link>
                         </li>
                     </ul>
                 </nav>

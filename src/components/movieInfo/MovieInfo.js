@@ -59,6 +59,13 @@ const MovieInfo = (props) => {
                         <h1>
                             {filmInfo.name}
                         </h1>
+                        <div className='favorites'>
+                            <span>
+                            <button className='btn btn-favorites'>
+                                <i class="ph-bookmark-simple"></i> Добавить<br/> в избранное
+                            </button>
+                            </span>
+                        </div>
                         <h3>О фильме</h3>
                         <div className='filminfo'>
                             <div className='filminfostring'>

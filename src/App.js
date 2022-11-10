@@ -9,6 +9,7 @@ import MovieInfo from "./components/movieInfo/MovieInfo";
 import MovieList from "./components/movieList/MovieList";
 import FindFilms from "./components/findFilms/FindFilms";
 import Sidebar from './components/sidebar/Sidebar';
+import MovieForm from './components/movieForm/MovieForm';
 
 function App() {
 
@@ -34,6 +35,14 @@ function App() {
                   <MovieInfo filmId={filmId}/>
               </>,
     },
+    {
+      path: "/login",
+      element: <>
+                  <Sidebar/>
+                  <MovieForm/>
+                </>,
+    },
+
   ]);
 
   return (

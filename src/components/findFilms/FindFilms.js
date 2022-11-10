@@ -39,7 +39,7 @@ const FindFilms = (props) => {
     const showOptions = () => {
         let state = optionState.state;
         state = !state;
-        state ? setOptionState({state: true, visible: {'display': 'block'}}) : setOptionState({state: false, visible: {'display': 'none'}});
+        state ? setOptionState({state: true, visible: {'display': 'flex'}}) : setOptionState({state: false, visible: {'display': 'none'}});
         
     }
 
@@ -112,19 +112,20 @@ const FindFilms = (props) => {
                     <i class="ph-faders-horizontal" onClick={() => showOptions()}></i>
                     <i className="ph-magnifying-glass" onClick={() => loadDataByKeyword()}></i>
                 </div>
-            </div>
-                {content}
                 <div className="options-inner" style={optionState.visible}>
-                        <label>Страны</label>
-                        {countriesTransform}
-                        <label>Жанры</label>
-                        {genresTransform}
-                        <label>Минимальный год</label>
-                        <input type='text' value={startYear} onChange={(e) => setStartYear(e.target.value)}></input>
-                        <label>Максимальный год</label>
-                        <input type='text' value={endYear} onChange={(e) => setEndYear(e.target.value)}></input>
-                        <button className='btn' type='submit' onClick={() => loadDataByParametrs()}>Найти</button>
+                    <label>Страны</label>
+                    {countriesTransform}
+                    <label>Жанры</label>
+                    {genresTransform}
+                    <label>Минимальный год</label>
+                    <input type='text' value={startYear} onChange={(e) => setStartYear(e.target.value)}></input>
+                    <label>Максимальный год</label>
+                    <input type='text' value={endYear} onChange={(e) => setEndYear(e.target.value)}></input>
+                    <button className='btn' type='submit' onClick={() => loadDataByParametrs()}>Найти</button>
                 </div>
+            </div>
+                
+                {content}
         </div>
     )
 }
