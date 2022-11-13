@@ -54,7 +54,8 @@ const MovieInfo = (props) => {
               const uid = user.uid;
               const email = user.email;
               console.log('send to db')
-              readData(uid)
+              addData(uid, filmInfo)
+            //   readData(uid)
             //   writeUserData(uid, filmInfo)
             //   writeUserData(uid, email, filmInfo)
             //   console.log(`${email} User is signed in`);
@@ -81,35 +82,19 @@ const MovieInfo = (props) => {
 
     const readData = (userId) => {
         const db = getDatabase();
-        const starCountRef = ref(db, `user/` + userId + '/favoriteFilms/');
-
-        onValue(starCountRef, (snapshot) => {
-        const data = snapshot.val();
-        Object.keys(data).map(item => {
-            const starCountRef = ref(db, `user/` + userId + `/favoriteFilms/${item}/film/`);
-            onValue(starCountRef, (snapshot) => {
-            const data = snapshot.val();
-            Object.entries(data)
-        })})
-
+        const Ref = ref(db, `users/` + userId + '/favoriteFilms/');
+        onValue(Ref, (films) => {
+        const data = films.val()
+        console.log(Object.values(data))
 
     })}
 
-    // Object.keys(data).map(item => {
-    //     const starCountRef = ref(db, `user/` + userId + `/favoriteFilms/${item}/film/`);
-    //     onValue(starCountRef, (snapshot) => {
-    //     const data = snapshot.val();
-    //     console.log(Object.keys(data));
-    // })})
-
-    
-
     const addData = (userId, film) => {
         const db = getDatabase();
-        const postListRef = ref(db, 'users/' + userId);
-        const faviriteFilms = push(postListRef);
-        set(faviriteFilms, {
-            film
+        const Ref = ref(db, `users/` + userId + `/favoriteFilms/`);
+        const favoriteFilms = push(Ref);
+        set(favoriteFilms, {
+            ...film
         });
     }
 

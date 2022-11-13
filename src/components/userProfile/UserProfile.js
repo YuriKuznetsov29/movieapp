@@ -1,53 +1,62 @@
 import { useState, useEffect } from 'react';
-import MovieService from '../../services/MovieService';
 import { getDatabase, ref, onValue} from "firebase/database";
 import { getAuth, onAuthStateChanged} from "firebase/auth";
 
 import './userProfile.scss'
 
 const UserProfile = (props) => {
-    const [film, setFilm] = useState({});
-    let films = [];
-
-    const {getFilmInfo} = MovieService();
-
-    const idArr = [301, 1294123];
-    //, 1294123, 299, 316
-
-    const loadData = (idArr) => {
-        
-        idArr.map(id => {
-            getFilmInfo(id)
-                .then(res => (setFilm(res)));
-            films.push(film)
-        })
-        
-        
-    }
+    const [films, setFilms] = useState([]);
 
     useEffect(() => {
-        loadData(idArr)
+        autorizationStatus(auth)
     }, [])
+
+    const auth = getAuth();
+
+    const autorizationStatus = (auth) => {
+        onAuthStateChanged(auth, (user) => {
+            if (user) {
+              const uid = user.uid;
+              const email = user.email;
+              console.log('send to db')
+              readData(uid)
+              console.log(films)
+            } else {
+              // User is signed out
+              // ...
+              console.log('User is signed out');
+            }
+          });
+    }
+
+    const readData = (userId) => {
+        const db = getDatabase();
+        const Ref = ref(db, `users/` + userId + '/favoriteFilms/');
+        onValue(Ref, (films) => {
+        const data = films.val()
+        setFilms(Object.values(data))
+        
+
+    })}
 
     const renderFilms = (arr) => {
         const items = arr.map(item => {
             return (
-                <div className='item-inner '>
+                <>
                     <div 
-                        className='find-posterr'>
+                        className='find-poster'>
                             <img src={item.poster} alt="logo"/>
                     </div>
-                    <div className='find-infoo'>
+                    <div className='find-info'>
                         <h4>{item.name}</h4>
                         <div>{item.year}</div>
                         <div>{item.genre}</div>
                     </div>
-                </div>
+                </>
             )
         })
-        console.log(items)
         return (
-            <div className="resultss">
+            <div className="results">
                 {items}
             </div>
 
@@ -55,49 +64,10 @@ const UserProfile = (props) => {
     }
 
     let content = renderFilms(films);
-
-    const auth = getAuth();
-
-    const autorizationStatus = (auth) => {
-        onAuthStateChanged(auth, (user) => {
-            if (user) {
-              // User is signed in, see docs for a list of available properties
-              // https://firebase.google.com/docs/reference/js/firebase.User
-              const uid = user.uid;
-              const email = user.email;
-              console.log('send to db')
-              ViewArr(uid)
-            //   writeUserData(uid, email, filmInfo)
-            //   console.log(`${email} User is signed in`);
-              // ...
-            } else {
-              // User is signed out
-              // ...
-              console.log('User is signed out');
-              
-            }
-          });
-    }
     
-    const ViewArr = (userId) => {
-        const db = getDatabase();
-                const starCountRef = ref(db, 'users/' + userId.key);
-                onValue(starCountRef, (snapshot) => {
-                const data = snapshot.val();
-                console.log(data)
-                });
-    }
-
-    
-
-    
-
     return (
-        <div className='find-wrapperr'>
-            <button
-            onClick={() => autorizationStatus(auth)}>
-                12312414111
-            </button>
+        <div className='find-wrapper'>
+            
             <h1>Мои фильмы</h1>
             
             {content}
