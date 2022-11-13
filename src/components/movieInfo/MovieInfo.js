@@ -1,5 +1,7 @@
 import { useEffect, useState } from 'react';
 import MovieService from '../../services/MovieService';
+import { getAuth, onAuthStateChanged} from "firebase/auth";
+import {getDatabase, push, ref, set, onValue} from "firebase/database";
 
 import './movieInfo.scss';
 
@@ -41,6 +43,76 @@ const MovieInfo = (props) => {
         setGradeState({state: true, visible: {'display': 'none'}});
     }
 
+    const auth = getAuth();
+
+    
+    const autorizationStatus = (auth) => {
+        onAuthStateChanged(auth, (user) => {
+            if (user) {
+              // User is signed in, see docs for a list of available properties
+              // https://firebase.google.com/docs/reference/js/firebase.User
+              const uid = user.uid;
+              const email = user.email;
+              console.log('send to db')
+              readData(uid)
+            //   writeUserData(uid, filmInfo)
+            //   writeUserData(uid, email, filmInfo)
+            //   console.log(`${email} User is signed in`);
+              // ...
+            } else {
+              // User is signed out
+              // ...
+              console.log('User is signed out');
+              
+            }
+          });
+    }
+
+    function writeUserData(userId, film) {
+        let filmNumber = [];
+        const db = getDatabase();
+        set(ref(db, `user/` + userId + `/favoriteFilms/${film.id}/`), {
+        //   username: name,
+        film,
+        //   profile_picture : imageUrl
+        });
+        // filmNumber++;
+    }
+
+    const readData = (userId) => {
+        const db = getDatabase();
+        const starCountRef = ref(db, `user/` + userId + '/favoriteFilms/');
+
+        onValue(starCountRef, (snapshot) => {
+        const data = snapshot.val();
+        Object.keys(data).map(item => {
+            const starCountRef = ref(db, `user/` + userId + `/favoriteFilms/${item}/film/`);
+            onValue(starCountRef, (snapshot) => {
+            const data = snapshot.val();
+            Object.entries(data)
+        })})
+
+
+    })}
+
+    // Object.keys(data).map(item => {
+    //     const starCountRef = ref(db, `user/` + userId + `/favoriteFilms/${item}/film/`);
+    //     onValue(starCountRef, (snapshot) => {
+    //     const data = snapshot.val();
+    //     console.log(Object.keys(data));
+    // })})
+
+    
+
+    const addData = (userId, film) => {
+        const db = getDatabase();
+        const postListRef = ref(db, 'users/' + userId);
+        const faviriteFilms = push(postListRef);
+        set(faviriteFilms, {
+            film
+        });
+    }
+
     return (
         <>
             <div className={modalState} style={{'background': `linear-gradient(rgba(0, 0, 0, 0.9), rgba(0, 0, 0, 0.9) ), url(${filmInfo.background})`}} id='close' onClick={(e) => closeModal(e)}>
@@ -62,7 +134,8 @@ const MovieInfo = (props) => {
                         <div className='favorites'>
                             <span>
                             <button className='btn btn-favorites'>
-                                <i class="ph-bookmark-simple"></i> Добавить<br/> в избранное
+                                <i class="ph-bookmark-simple"
+                                onClick={() => autorizationStatus(auth)}></i> Добавить<br/> в избранное
                             </button>
                             </span>
                         </div>
