@@ -46,7 +46,7 @@ const FindFilms = (props) => {
     const renderFilms = (arr) => {
         const items = arr.map(item => {
             return (
-                <>
+                <div className='item-inner'>
                     <div 
                         className='find-poster' 
                         onClick={() => {
@@ -60,7 +60,7 @@ const FindFilms = (props) => {
                         <div>{item.year}</div>
                         <div>{item.genre}</div>
                     </div>
-                </>
+                </div>
             )
         })
         return (

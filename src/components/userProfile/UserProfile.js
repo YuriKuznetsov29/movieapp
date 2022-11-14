@@ -38,7 +38,7 @@ const UserProfile = (props) => {
     const renderFilms = (arr) => {
         const items = arr.map(item => {
             return (
-                <>
+                <div className='item-inner'>
                     <div 
                         className='find-poster'
                         onClick={() => {
@@ -50,8 +50,10 @@ const UserProfile = (props) => {
                         <h4>{item.name}</h4>
                         <div>{item.year}</div>
                         <div>{item.genre}</div>
+                        
                     </div>
-                </>
+                    <i class="ph-trash delete"></i>
+                </div>
             )
         })
         return (
