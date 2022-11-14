@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import {
     createBrowserRouter,
     RouterProvider,
@@ -25,66 +25,60 @@ function App() {
 
   const auth = getAuth();
 
-    const autorizationStatus = (auth) => {
-        onAuthStateChanged(auth, (user) => {
-            if (user) {
-              // User is signed in, see docs for a list of available properties
-              // https://firebase.google.com/docs/reference/js/firebase.User
-              const uid = user.uid;
-              const email = user.email;
-              console.log(`${email} User is signed in`);
-              setAuthStatus(true);
-              // ...
-            } else {
-              // User is signed out
-              // ...
-              setAuthStatus(false);
-              console.log('User is signed out');
-              
-            }
-          });
-    }
-
-  const onAuthStateChange = () => {
-    setAuthStatus(!authStatus);
+  const autorizationStatus = (auth) => {
+      onAuthStateChanged(auth, (user) => {
+          if (user) {
+            const uid = user.uid;
+            const email = user.email;
+            console.log(`${email} User is signed in`);
+            setAuthStatus(true);
+          } else {
+            setAuthStatus(false);
+            console.log('User is signed out');
+          }
+        });
   }
+
+  useEffect(() => {
+    autorizationStatus(auth)
+  }, [])
 
   const router = createBrowserRouter([
     {
       path: "/",
       element: <>
-                  <Sidebar onAuthStateChange = {onAuthStateChange} authStatus = {authStatus}/>
+                  <Sidebar authStatus = {authStatus} setAuthStatus = {setAuthStatus}/>
                   <MovieList onFilmSelected={onFilmSelected}/>
-                  <MovieInfo filmId={filmId}/>
+                  <MovieInfo filmId={filmId} setFilmId = {setFilmId}/>
               </>,
     },{
       path: "/find",
       element: <>
-                  <Sidebar onAuthStateChange = {onAuthStateChange} authStatus = {authStatus}/>
+                  <Sidebar authStatus = {authStatus} setAuthStatus = {setAuthStatus}/>
                   <FindFilms onFilmSelected={onFilmSelected}/>
-                  <MovieInfo filmId={filmId}/>
+                  <MovieInfo filmId={filmId} setFilmId = {setFilmId}/>
               </>,
     },
     {
       path: "/login",
       element: <>
-                  <Sidebar onAuthStateChange = {onAuthStateChange} authStatus = {authStatus}/>
-                  <LoginForm onAuthStateChange = {onAuthStateChange} authStatus = {authStatus}/>
+                  <Sidebar authStatus = {authStatus} setAuthStatus = {setAuthStatus}/>
+                  <LoginForm setAuthStatus = {setAuthStatus}/>
                 </>,
     },
     {
       path: "/registration",
       element: <>
-                  <Sidebar onAuthStateChange = {onAuthStateChange} authStatus = {authStatus}/>
+                  <Sidebar authStatus = {authStatus} setAuthStatus = {setAuthStatus}/>
                   <RegForm/>
                 </>,
     },
     {
       path: "/profile",
       element: <>
-                  <Sidebar onAuthStateChange = {onAuthStateChange} authStatus = {authStatus}/>
-                  <UserProfile/>
-                  <MovieInfo filmId={filmId}/>
+                  <Sidebar authStatus = {authStatus} setAuthStatus = {setAuthStatus}/>
+                  <UserProfile onFilmSelected={onFilmSelected}/>
+                  <MovieInfo filmId={filmId} setFilmId = {setFilmId}/>
                 </>,
     },
     

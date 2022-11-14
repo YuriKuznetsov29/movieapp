@@ -17,7 +17,7 @@ const LoginForm = (props) => {
             const user = userCredential.user;
             const email = user.email;
               console.log(`${email} User is signed in`);
-            props.onAuthStateChange();
+            props.setAuthStatus(true);
             // ...
         })
         .catch((error) => {
@@ -47,19 +47,19 @@ const LoginForm = (props) => {
     return (
 
         <Formik
-            initialValues={{ login: '', password: '' }}
+            initialValues={{ email: '', password: '' }}
             validationSchema={Yup.object({
-                login: Yup.string().required('This field is required'),
+                email: Yup.string().required('This field is required'),
                 password: Yup.string().required('This field is required')
             })}
             onSubmit={(value) => {
-                login(auth, value.login, value.password)
+                login(auth, value.email, value.password)
             }}
         >
             <Form className="form-wrapper">
                 <div className="form-inner">
-                    <label>Логин</label>
-                    <Field type="text" name="login"></Field>
+                    <label>Email</label>
+                    <Field type="email" name="email"></Field>
                     <ErrorMessage name="email" component="div" />
                     <label>Пароль</label>
                     <Field type="password" name="password"></Field>

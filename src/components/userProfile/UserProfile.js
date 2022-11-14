@@ -22,8 +22,6 @@ const UserProfile = (props) => {
               readData(uid)
               console.log(films)
             } else {
-              // User is signed out
-              // ...
               console.log('User is signed out');
             }
           });
@@ -35,8 +33,6 @@ const UserProfile = (props) => {
         onValue(Ref, (films) => {
         const data = films.val()
         setFilms(Object.values(data))
-        
-
     })}
 
     const renderFilms = (arr) => {
@@ -44,7 +40,10 @@ const UserProfile = (props) => {
             return (
                 <>
                     <div 
-                        className='find-poster'>
+                        className='find-poster'
+                        onClick={() => {
+                            props.onFilmSelected(item.id);
+                        }}>
                             <img src={item.poster} alt="logo"/>
                     </div>
                     <div className='find-info'>

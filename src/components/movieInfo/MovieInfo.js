@@ -17,7 +17,6 @@ const MovieInfo = (props) => {
 
     }, [props.filmId])
 
-    
     const openModal = () => {
         if (props.filmId) {
             loadData();
@@ -33,8 +32,9 @@ const MovieInfo = (props) => {
 
     const closeModal = (e) => {
         if (e.target.id === 'close') {
-            setModalState('infowrapper')
+            setModalState('infowrapper');
             setFilmInfo({});
+            props.setFilmId('');
             document.body.style.overflow = "auto";
         }
     }
@@ -49,45 +49,16 @@ const MovieInfo = (props) => {
     const autorizationStatus = (auth) => {
         onAuthStateChanged(auth, (user) => {
             if (user) {
-              // User is signed in, see docs for a list of available properties
-              // https://firebase.google.com/docs/reference/js/firebase.User
+            
               const uid = user.uid;
               const email = user.email;
               console.log('send to db')
               addData(uid, filmInfo)
-            //   readData(uid)
-            //   writeUserData(uid, filmInfo)
-            //   writeUserData(uid, email, filmInfo)
-            //   console.log(`${email} User is signed in`);
-              // ...
             } else {
-              // User is signed out
-              // ...
               console.log('User is signed out');
-              
             }
           });
     }
-
-    function writeUserData(userId, film) {
-        let filmNumber = [];
-        const db = getDatabase();
-        set(ref(db, `user/` + userId + `/favoriteFilms/${film.id}/`), {
-        //   username: name,
-        film,
-        //   profile_picture : imageUrl
-        });
-        // filmNumber++;
-    }
-
-    const readData = (userId) => {
-        const db = getDatabase();
-        const Ref = ref(db, `users/` + userId + '/favoriteFilms/');
-        onValue(Ref, (films) => {
-        const data = films.val()
-        console.log(Object.values(data))
-
-    })}
 
     const addData = (userId, film) => {
         const db = getDatabase();
@@ -118,9 +89,10 @@ const MovieInfo = (props) => {
                         </h1>
                         <div className='favorites'>
                             <span>
-                            <button className='btn btn-favorites'>
-                                <i class="ph-bookmark-simple"
-                                onClick={() => autorizationStatus(auth)}></i> Добавить<br/> в избранное
+                            <button 
+                                className='btn btn-favorites'
+                                onClick={() => autorizationStatus(auth)}>
+                                    <i class="ph-bookmark-simple"></i> Добавить<br/> в избранное
                             </button>
                             </span>
                         </div>

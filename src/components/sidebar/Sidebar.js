@@ -8,37 +8,15 @@ const Sidebar = (props) => {
 
     const auth = getAuth();
 
-    const autorizationStatus = (auth) => {
-        onAuthStateChanged(auth, (user) => {
-            if (user) {
-              // User is signed in, see docs for a list of available properties
-              // https://firebase.google.com/docs/reference/js/firebase.User
-              const uid = user.uid;
-              const email = user.email;
-              console.log(`${email} User is signed in`);
-              // ...
-            } else {
-              // User is signed out
-              // ...
-              console.log('User is signed out');
-              
-            }
-          });
-    }
-
     const exit = (auth) => {
             signOut(auth).then(() => {
-            // Sign-out successful.
-            console.log('Sign-out successful.')
-            props.onAuthStateChange();
-
-            }).catch((error) => {
-            // An error happened.
-            console.log('An error happened.')
+                console.log('Sign-out successful.')
+                props.setAuthStatus(false);
+            })
+            .catch((error) => {
+                console.log('An error happened.')
             });
     }
-
-    
 
     return (
         <>
@@ -50,11 +28,13 @@ const Sidebar = (props) => {
                                 <i className="ph-house"></i>
                             </Link>
                         </li>
-                        <li>
-                            <Link to={`/profile`}>
-                            <i class="ph-person"></i>
-                            </Link>
-                        </li>
+                        { props.authStatus ?
+                            <li>
+                                <Link to={`/profile`}>
+                                <i class="ph-person"></i>
+                                </Link> 
+                            </li> : null
+                        }
                         <li>
                             <Link to={'/find'}>
                                 <i className="ph-magnifying-glass"></i>
@@ -74,7 +54,6 @@ const Sidebar = (props) => {
                                 </Link>
                             </li>
                         }
-                        
                     </ul>
                 </nav>
             </aside>
