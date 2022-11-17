@@ -1,46 +1,27 @@
 import { Formik, Form, Field, ErrorMessage } from 'formik';
 import * as Yup from 'yup';
-import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, onAuthStateChanged, signOut} from "firebase/auth";
-
+import { getAuth, createUserWithEmailAndPassword} from "firebase/auth";
+import { useSelector } from 'react-redux';
+import { Navigate } from "react-router-dom";
 
 import './regForm.scss'
 
 const RegForm = () => {
-
+    const loginStatus = useSelector(state => state.login.loginStatus);
 
     const auth = getAuth();
 
     const register = (auth, email, password) => {
         createUserWithEmailAndPassword(auth, email, password)
             .then((userCredential) => {
-                // Signed in 
                 const user = userCredential.user;
                 console.log(user)
-                // ...
             })
             .catch((error) => {
                 const errorCode = error.code;
                 const errorMessage = error.message;
-                // ..
             });
     }
-
-    const login = (auth, email, password) => {
-        signInWithEmailAndPassword(auth, email, password)
-        .then((userCredential) => {
-            // Signed in 
-            const user = userCredential.user;
-            // ...
-        })
-        .catch((error) => {
-            const errorCode = error.code;
-            const errorMessage = error.message;
-            console.log(error.message);
-        });
-
-    }
-
-    
 
     return (
 
@@ -68,6 +49,9 @@ const RegForm = () => {
                     <ErrorMessage name="repeatPasword" component="div" />
                     <button className='formbtn' type="submit">Зарегистрироваться</button>
                 </div>
+                {loginStatus && 
+                        (<Navigate to="/profile" replace={true} />
+                    )}
             </Form>
         </Formik>
 

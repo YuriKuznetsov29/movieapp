@@ -1,22 +1,33 @@
-import { useState } from "react";
+import { useEffect } from "react";
 import { Link } from "react-router-dom";
-import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, onAuthStateChanged, signOut} from "firebase/auth";
+import { useDispatch, useSelector } from "react-redux";
+import { fetchLogOut, changeStatusOnOnline, changeStatusOnOffline,  } from "../loginForm/loginSlice";
+import { getAuth, onAuthStateChanged } from "firebase/auth";
 
 import './sidebar.scss';
 
-const Sidebar = (props) => {
-
+const Sidebar = () => {
+    const dispatch = useDispatch();
     const auth = getAuth();
 
-    const exit = (auth) => {
-            signOut(auth).then(() => {
-                console.log('Sign-out successful.')
-                props.setAuthStatus(false);
-            })
-            .catch((error) => {
-                console.log('An error happened.')
-            });
+    const loginStatus = useSelector(state => state.login.loginStatus)
+
+    
+
+    const check = (auth) => {
+        onAuthStateChanged(auth, (user) => {
+            if (user) {
+                dispatch(changeStatusOnOnline(user.email));
+            } else {
+                dispatch(changeStatusOnOffline());
+            }
+        })
     }
+
+
+    useEffect(() => {
+        check(auth);
+      }, [])
 
     return (
         <>
@@ -28,7 +39,7 @@ const Sidebar = (props) => {
                                 <i className="ph-house"></i>
                             </Link>
                         </li>
-                        { props.authStatus ?
+                        { loginStatus ?
                             <li>
                                 <Link to={`/profile`}>
                                 <i class="ph-person"></i>
@@ -40,11 +51,11 @@ const Sidebar = (props) => {
                                 <i className="ph-magnifying-glass"></i>
                             </Link>
                         </li>
-                        { props.authStatus ?
+                        { loginStatus ?
                             <li>
                                 <i class="ph-sign-out"
                                 onClick={() => {
-                                    exit(auth)
+                                    dispatch(fetchLogOut())
                                 }}></i>
                             </li>
                                 :

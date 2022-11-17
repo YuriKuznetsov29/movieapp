@@ -1,7 +1,9 @@
 import { useEffect, useState } from 'react';
 import MovieService from '../../services/MovieService';
 import { getAuth, onAuthStateChanged} from "firebase/auth";
-import {getDatabase, push, ref, set, onValue} from "firebase/database";
+import {getDatabase, push, ref, set} from "firebase/database";
+import { useSelector } from 'react-redux';
+import { Link, Navigate, useNavigate, redirect  } from "react-router-dom";
 
 import './movieInfo.scss';
 
@@ -9,6 +11,10 @@ const MovieInfo = (props) => {
     const [modalState, setModalState] = useState('infowrapper');
     const [filmInfo, setFilmInfo] = useState({});
     const [gradeState, setGradeState] = useState({state: false, visible: {'display': 'block'}});
+
+    const loginStatus = useSelector(state => state.login.loginStatus);
+
+    const navigate = useNavigate();
 
     const {getFilmInfo} = MovieService();
 
@@ -49,7 +55,6 @@ const MovieInfo = (props) => {
     const autorizationStatus = (auth) => {
         onAuthStateChanged(auth, (user) => {
             if (user) {
-            
               const uid = user.uid;
               const email = user.email;
               console.log('send to db')
@@ -91,7 +96,8 @@ const MovieInfo = (props) => {
                             <span>
                             <button 
                                 className='btn btn-favorites'
-                                onClick={() => autorizationStatus(auth)}>
+                                onClick={() => loginStatus ? autorizationStatus(auth) : (navigate("/login"), closeModal())
+                                }>
                                     <i class="ph-bookmark-simple"></i> Добавить<br/> в избранное
                             </button>
                             </span>

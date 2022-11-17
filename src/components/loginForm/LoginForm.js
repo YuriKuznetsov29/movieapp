@@ -1,15 +1,16 @@
 import { Formik, Form, Field, ErrorMessage } from 'formik';
 import * as Yup from 'yup';
-import { getAuth, signInWithEmailAndPassword} from "firebase/auth";
-import { Link } from "react-router-dom";
-import { useDispatch } from 'react-redux';
+import { Link, Navigate } from "react-router-dom";
+import { useDispatch, useSelector } from 'react-redux';
 import { fetchLogin } from './loginSlice';
 
 import './loginForm.scss'
 
 const LoginForm = () => {
 
-    const dispatch = useDispatch()
+    const dispatch = useDispatch();
+
+    const loginStatus = useSelector(state => state.login.loginStatus);
 
     return (
 
@@ -21,6 +22,7 @@ const LoginForm = () => {
             })}
             onSubmit={(value) => {
                 dispatch(fetchLogin({email: value.email, password: value.password}))
+                
             }}
         >
             <Form className="form-wrapper">
@@ -36,6 +38,9 @@ const LoginForm = () => {
                         <div>Зарегистрироваться</div>
                     </Link>
                 </div>
+                {loginStatus && 
+                        (<Navigate to="/profile" replace={true} />
+                    )}
             </Form>
         </Formik>
 

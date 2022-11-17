@@ -1,36 +1,94 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
-import { getAuth, signInWithEmailAndPassword} from "firebase/auth";
+import { getAuth, signInWithEmailAndPassword, signOut, onAuthStateChanged} from "firebase/auth";
 
 
 
 export const fetchLogin = createAsyncThunk(
-    'login/loging',
+    'autorization/login',
     async ({email, password}) => {
         const auth = getAuth();
         console.log(email)
         console.log(password)
-        return await signInWithEmailAndPassword(auth, email, password)
+        await signInWithEmailAndPassword(auth, email, password);
+        return email;
                
-}
-);
+});
+
+export const fetchLogOut = createAsyncThunk(
+    'autorization/logout',
+    async () => {
+        const auth = getAuth();
+        await signOut(auth);
+    }
+)
+
+// export const fetchCheckLoginStatus = createAsyncThunk(
+//     'autorization/check',
+//     async () => {
+//         const auth = getAuth();
+//         // let userInfo = '';
+//         await onAuthStateChanged(auth, (user) => {
+//             userInfo = user.email;
+//         }) 
+//         // console.log(userInfo)
+        
+//     })
+
+// return await onAuthStateChanged(auth, (user) => {
+//     if (user) {
+//       const uid = user.uid;
+//       const email = user.email;
+//       console.log(`${email} User is signed in`);
+//     } else {
+//       console.log('User is signed out');
+//     }
+//   });
+// }
+
 
 const initialState = {
     loginStatus: false,
+    email: '',
 }
 
 const loginSlice = createSlice({
     name: 'login',
     initialState,
-    reducers: {},
+    reducers: {
+        changeStatusOnOnline: (state, action) => {
+            state.loginStatus = true;
+            state.email = action.payload;
+        },
+        changeStatusOnOffline: (state) => {
+            state.loginStatus = false;
+        },
+    },
     extraReducers: (builder) => {
         builder
             .addCase(fetchLogin.pending, state => {state.loginStatus = 'loading'})
-            .addCase(fetchLogin.fulfilled, (state) => {
+            .addCase(fetchLogin.fulfilled, (state, action) => {
                 state.loginStatus = true;
+                state.email = action.payload;
             })
             .addCase(fetchLogin.rejected, state => {
                 state.loginStatus = 'error';
             })
+            .addCase(fetchLogOut.fulfilled, (state) => {
+                state.loginStatus = false;
+            })
+            .addCase(fetchLogOut.rejected, state => {
+                state.loginStatus = 'error';
+            })
+            // .addCase(fetchCheckLoginStatus.fulfilled, (state, action) => {
+            //     state.loginStatus = true;
+            //     console.log(action);
+                
+            //     // const user = action.payload;
+            //     // state.user = user;
+            // })
+            // .addCase(fetchCheckLoginStatus.rejected, state => {
+            //     state.loginStatus = 'error';
+            // })
             .addDefaultCase(() => {})
     },
 });
@@ -38,3 +96,5 @@ const loginSlice = createSlice({
 const {actions, reducer} = loginSlice;
 
 export default reducer;
+
+export const {changeStatusOnOnline, changeStatusOnOffline} = actions;
