@@ -22,30 +22,6 @@ export const fetchLogOut = createAsyncThunk(
     }
 )
 
-// export const fetchCheckLoginStatus = createAsyncThunk(
-//     'autorization/check',
-//     async () => {
-//         const auth = getAuth();
-//         // let userInfo = '';
-//         await onAuthStateChanged(auth, (user) => {
-//             userInfo = user.email;
-//         }) 
-//         // console.log(userInfo)
-        
-//     })
-
-// return await onAuthStateChanged(auth, (user) => {
-//     if (user) {
-//       const uid = user.uid;
-//       const email = user.email;
-//       console.log(`${email} User is signed in`);
-//     } else {
-//       console.log('User is signed out');
-//     }
-//   });
-// }
-
-
 const initialState = {
     loginStatus: false,
     email: '',

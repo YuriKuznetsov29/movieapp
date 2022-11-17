@@ -52,11 +52,12 @@ const UserProfile = (props) => {
                 console.log(newData)
                 const updates = {};
                 updates[`users/` + uid + `/favoriteFilms/`] = newData;
-                update(ref(db), updates)
-                // setFilms([]);
-                // console.log(films)
-                // readData(uid);
-                // renderFilms(films)
+                if (newData !== {}) {
+                    update(ref(db), updates);
+                } else {
+                    set(ref(db, `users/` + uid + `/favoriteFilms/`), null);
+                }
+                
             } else {
               console.log('User is signed out');
             }
@@ -97,11 +98,8 @@ const UserProfile = (props) => {
     
     return (
         <div className='find-wrapper'>
-            
             <h1>Мои фильмы</h1>
-            
-            {content}
-
+            {data ? content : null}
         </div>
     )
 }
