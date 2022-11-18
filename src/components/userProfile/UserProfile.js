@@ -13,10 +13,6 @@ const UserProfile = (props) => {
 
     const auth = getAuth();
 
-    function writeNewPost(userId, key) {
-        
-      }
-
     const autorizationStatus = (auth) => {
         onAuthStateChanged(auth, (user) => {
             if (user) {
@@ -41,15 +37,12 @@ const UserProfile = (props) => {
     })}
 
     const deleteFavoriteFilm = (key) => {
-        
         onAuthStateChanged(auth, (user) => {
             if (user) {
                 const uid = user.uid;
                 const db = getDatabase();
                 let newData = Object.assign({}, data);
                 delete newData[key];
-                console.log(data)
-                console.log(newData)
                 const updates = {};
                 updates[`users/` + uid + `/favoriteFilms/`] = newData;
                 if (newData !== {}) {

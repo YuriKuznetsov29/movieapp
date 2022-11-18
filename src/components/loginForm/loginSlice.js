@@ -55,17 +55,7 @@ const loginSlice = createSlice({
             .addCase(fetchLogOut.rejected, state => {
                 state.loginStatus = 'error';
             })
-            // .addCase(fetchCheckLoginStatus.fulfilled, (state, action) => {
-            //     state.loginStatus = true;
-            //     console.log(action);
-                
-            //     // const user = action.payload;
-            //     // state.user = user;
-            // })
-            // .addCase(fetchCheckLoginStatus.rejected, state => {
-            //     state.loginStatus = 'error';
-            // })
-            .addDefaultCase(() => {})
+            .addDefaultCase(() => {});
     },
 });
 

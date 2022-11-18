@@ -1,6 +1,7 @@
 import { Formik, Form, Field, ErrorMessage } from 'formik';
 import * as Yup from 'yup';
 import { getAuth, createUserWithEmailAndPassword} from "firebase/auth";
+import { getDatabase, ref, set} from "firebase/database";
 import { useSelector } from 'react-redux';
 import { Navigate } from "react-router-dom";
 
@@ -16,6 +17,9 @@ const RegForm = () => {
             .then((userCredential) => {
                 const user = userCredential.user;
                 console.log(user)
+                const uid = user.uid;
+                const db = getDatabase();
+                set(ref(db, `users/` + uid + `/favoriteFilms/`), null);
             })
             .catch((error) => {
                 const errorCode = error.code;

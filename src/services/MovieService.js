@@ -48,34 +48,45 @@ import { useHttp } from "../components/hooks/http.hook";
 
         const res = await request(`https://kinopoiskapiunofficial.tech/api/v2.2/films/premieres?year=2022&month=${currentMonth}`)
         return _transformFilms(res);
-    }
+    };
 
     const getFilmInfo = async (id) => {
         return (await request(`https://kinopoiskapiunofficial.tech/api/v2.2/films/${id}`)
                     .then(res => _getTransformFilmInfo(res)))
-    }
+    };
 
     const getFilmByName = async (keyword) => {
         const res = await request(`https://kinopoiskapiunofficial.tech/api/v2.1/films/search-by-keyword?keyword=${keyword}&page=1`)
         // console.log(res)
         return _transformFilmsForFind(res);
                     
-    }
+    };
 
     const getCounryList = async () => {
         const res = await request(`https://kinopoiskapiunofficial.tech/api/v2.2/films/filters`);
         // console.log(res);
         return res;
-    }
+    };
 
     const getFimsByParametrs = async (country, genre, startYear, endYear) => {
         const res = await request(`https://kinopoiskapiunofficial.tech/api/v2.2/films?countries=${country}&genres=${genre}&order=RATING&type=ALL&ratingFrom=0&ratingTo=10&yearFrom=${startYear}&yearTo=${endYear}&page=1`);
         // console.log(res);
         return _transformFilmsForFindByParametrs(res);
-    }
+    };
+
+    const getSimilarFilms = async (id) => {
+        const res = await request(`https://kinopoiskapiunofficial.tech/api/v2.2/films/${id}/similars`);
+        return _transformFilms(res);
+    };
+
+    const getTrailer = async (id) => {
+        const res = await request(`https://kinopoiskapiunofficial.tech/api/v2.2/films/${id}/videos`);
+        console.log(res);
+        return res;
+    };
 
 
-    //https://kinopoiskapiunofficial.tech/api/v2.2/films/filters
+    //https://kinopoiskapiunofficial.tech/api/v2.2/films/301/videos
 
     const _transformFilms = (res) => {
         let films = []
@@ -153,7 +164,7 @@ import { useHttp } from "../components/hooks/http.hook";
         return films;
     }
 
-    return {getFilms, getFilmInfo, getActualMonth, getFilmByName, getCounryList, getFimsByParametrs}
+    return {getFilms, getFilmInfo, getActualMonth, getFilmByName, getCounryList, getFimsByParametrs, getSimilarFilms, getTrailer}
 }
 
 export default MovieService;

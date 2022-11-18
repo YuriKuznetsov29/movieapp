@@ -27,14 +27,14 @@ function App() {
       element: <>
                   <Sidebar/>
                   <MovieList onFilmSelected={onFilmSelected}/>
-                  <MovieInfo filmId={filmId} setFilmId = {setFilmId}/>
+                  <MovieInfo filmId={filmId} setFilmId = {setFilmId} onFilmSelected={onFilmSelected}/>
               </>,
     },{
       path: "/find",
       element: <>
                   <Sidebar/>
                   <FindFilms onFilmSelected={onFilmSelected}/>
-                  <MovieInfo filmId={filmId} setFilmId = {setFilmId}/>
+                  <MovieInfo filmId={filmId} setFilmId = {setFilmId} onFilmSelected={onFilmSelected}/>
               </>,
     },
     {
@@ -56,7 +56,7 @@ function App() {
       element: <>
                   <Sidebar/>
                   <UserProfile onFilmSelected={onFilmSelected}/>
-                  <MovieInfo filmId={filmId} setFilmId = {setFilmId}/>
+                  <MovieInfo filmId={filmId} setFilmId = {setFilmId} onFilmSelected={onFilmSelected}/>
                 </>,
     },
     
