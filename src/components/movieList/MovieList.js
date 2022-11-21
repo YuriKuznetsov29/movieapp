@@ -1,5 +1,7 @@
 import { useState, useEffect } from "react";
 import MovieService from '../../services/MovieService';
+import { setFilmId } from "../store/reducers/movieSlice";
+import { useDispatch } from "react-redux";
 
 import './movieList.scss';
 
@@ -7,6 +9,8 @@ const MovieList = (props) => {
     const [films, setFilms] = useState([]);
 
     const {getFilms} = MovieService();
+
+    const dispatch = useDispatch();
 
     useEffect(() => {
         loadData()
@@ -22,7 +26,7 @@ const MovieList = (props) => {
             return (
                 <div className="filmitem"
                 onClick={() => {
-                    props.onFilmSelected(item.id);
+                    dispatch(setFilmId(item.id));
                 }}>
                     <img src={item.posterUrl} alt="logo"/>
                 </div>
@@ -42,9 +46,9 @@ const MovieList = (props) => {
         <>  
             <div>
             {content}
-            <button className="btn">
+            {/* <button className="btn">
                 Load more
-            </button>
+            </button> */}
             </div>
         </>
     )

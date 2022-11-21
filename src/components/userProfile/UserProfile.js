@@ -1,12 +1,20 @@
 import { useState, useEffect } from 'react';
-import { getDatabase, ref, onValue, update, remove, set} from "firebase/database";
+import { getDatabase, ref, onValue, update, set} from "firebase/database";
 import { getAuth, onAuthStateChanged} from "firebase/auth";
+import { setFilmId } from '../store/reducers/movieSlice';
+import { setFavoriteFilms } from '../store/reducers/userProfileSlice';
+import { useDispatch, useSelector } from 'react-redux';
 
 import './userProfile.scss'
 
 const UserProfile = (props) => {
-    const [films, setFilms] = useState([]);
+    // const [favoriteFilms, setFavoriteFilms] = useState([]);
     const [data, setData] = useState([]);
+
+    const favoriteFilms = useSelector(state => state.userProfile.favoriteFilms);
+
+    const dispatch = useDispatch();
+
     useEffect(() => {
         autorizationStatus(auth)
     }, [])
@@ -20,7 +28,7 @@ const UserProfile = (props) => {
               const email = user.email;
               console.log('send to db');
               readData(uid);
-              console.log(films);
+              console.log(favoriteFilms);
             } else {
               console.log('User is signed out');
             }
@@ -33,7 +41,7 @@ const UserProfile = (props) => {
         onValue(Ref, (films) => {
         const data = films.val();
         setData(data);
-        setFilms(Object.entries(data));
+        dispatch(setFavoriteFilms(Object.entries(data)));
     })}
 
     const deleteFavoriteFilm = (key) => {
@@ -50,11 +58,10 @@ const UserProfile = (props) => {
                 } else {
                     set(ref(db, `users/` + uid + `/favoriteFilms/`), null);
                 }
-                
             } else {
               console.log('User is signed out');
             }
-          });
+        });
     }
 
     const renderFilms = (arr) => {
@@ -64,7 +71,7 @@ const UserProfile = (props) => {
                     <div 
                         className='find-poster'
                         onClick={() => {
-                            props.onFilmSelected(item[1].id);
+                            dispatch(setFilmId(item[1].id));
                         }}>
                             <img src={item[1].poster} alt="logo"/>
                     </div>
@@ -87,11 +94,11 @@ const UserProfile = (props) => {
         )
     }
 
-    let content = renderFilms(films);
+    let content = renderFilms(favoriteFilms);
     
     return (
         <div className='find-wrapper'>
-            <h1>Мои фильмы</h1>
+            <h1>Избранные фильмы</h1>
             {data ? content : null}
         </div>
     )

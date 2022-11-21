@@ -1,40 +1,106 @@
 .form-wrapper {
     margin: 0 auto;
-    width: 1300px;
+    width: 100vw;
+    height: 100vh;
     display: flex;
-    flex-direction: column;
     align-items: center;
 }
 
 .form-inner {
-    margin-top: 100px;
-    padding: 10px;
-    border-radius: 6px;
+    margin: auto;
+    padding: 30px;
+    width: 350px;
+    border-radius: 18px;
     box-shadow: 2px 2px 2px 1px rgba(0, 0, 0, 0.2);
     color: #fff;
+    font-size: 20px;
     background-color: rgb(37, 36, 36);
     display: flex;
     flex-direction: column;
-    align-items: center;
+    justify-content: space-between;
     input {
-        width: 100px;
-        height: 20px;
-        margin-bottom: 10px;
-        border: none;
-        border-radius: 3px;
+        margin-bottom: 30px;
+        padding: 10px;
+        width: 100%;
+        height: 50px;
+        color: #fff;
+        font-size: 20px;
+        border-radius: 10px;
+        vertical-align: top;
+        border: 1px solid #fff;
+        outline: none;
+        background: transparent;
+    }
+    input:-webkit-autofill,
+    input:-webkit-autofill:hover,
+    input:-webkit-autofill:focus,
+    textarea:-webkit-autofill,
+    textarea:-webkit-autofill:hover,
+    textarea:-webkit-autofill:focus,
+    select:-webkit-autofill,
+    select:-webkit-autofill:hover,
+    select:-webkit-autofill:focus {
+    border: 1px solid rgb(255, 255, 255);
+    -webkit-text-fill-color: rgb(255, 255, 255);
+    -webkit-box-shadow: 0 0 0px 1000px transparent inset;
+    transition: background-color 5000s ease-in-out 0s;
     }
 }
 
+.error-message {
+    position: relative;
+    bottom: 30px;
+    color: red;
+    font-size: 14px;
+}
+
 .formbtn {
-    width: 150px;
-    height: 20px;
-    border-radius: 3px;
+    margin-bottom: 20px;
+    width: 100%;
+    height: 50px;
+    border-radius: 10px;
     border: none;
-    color: #000;
+    color: #fff;
+    
+    font-size: 20px;
     background-color: rgb(122 116 116);
     transition: background-color .2s linear;
     &:hover {
         cursor: pointer;
         background-color: rgb(80, 76, 76);
     }
+}
+
+.input-btn {
+    background-color: rgb(253, 253, 137);
+    color: rgb(0, 0, 0);
+    &:hover {
+        background-color: yellow;
+    }
+}
+
+.link {
+    width: 100%;
+    height: 50px;
+    border-radius: 10px;
+    border: 1px #464646 solid;
+    color: #fff;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+    font-size: 20px;
+    background: transparent;
+    transition: background-color .2s linear;
+    &:hover {
+        cursor: pointer;
+        background-color: rgb(80, 76, 76);
+    }
+    a {
+        text-decoration: none;
+    }
+}
+
+.link-inner {
+    margin: 0 auto;
+    
 }

@@ -4,8 +4,6 @@ import { useHttp } from "../components/hooks/http.hook";
 
     const {request} = useHttp();
 
-    
-
     const getActualMonth = () => {
 
         const date = new Date();
@@ -76,17 +74,23 @@ import { useHttp } from "../components/hooks/http.hook";
 
     const getSimilarFilms = async (id) => {
         const res = await request(`https://kinopoiskapiunofficial.tech/api/v2.2/films/${id}/similars`);
-        return _transformFilms(res);
+        console.log(res);
+        return _transformSimilarFilms(res);
     };
 
     const getTrailer = async (id) => {
         const res = await request(`https://kinopoiskapiunofficial.tech/api/v2.2/films/${id}/videos`);
-        console.log(res);
+        // console.log(res);
         return res;
     };
 
+    const getStaff = async (id) => {
+        const res = await request(`https://kinopoiskapiunofficial.tech/api/v1/staff?filmId=${id}`);
+        return transformStaff(res);
+    };
 
-    //https://kinopoiskapiunofficial.tech/api/v2.2/films/301/videos
+
+    //https://kinopoiskapiunofficial.tech/api/v1/staff?filmId=301
 
     const _transformFilms = (res) => {
         let films = []
@@ -164,7 +168,41 @@ import { useHttp } from "../components/hooks/http.hook";
         return films;
     }
 
-    return {getFilms, getFilmInfo, getActualMonth, getFilmByName, getCounryList, getFimsByParametrs, getSimilarFilms, getTrailer}
+    const _transformSimilarFilms = (res) => {
+        let films = []
+        
+        films = res.items.map((films) => {
+            return (
+            {
+                name: films.nameEn,
+                posterUrl: films.posterUrl,
+                id: films.filmId
+            });
+        });
+        // console.log(films);
+        return films;
+    }
+
+    const transformStaff = (res) => {
+        let actors =[]
+        res.forEach(el => {
+            if (el.professionKey === "ACTOR") {
+                actors.push(el)
+            }
+        });
+
+        let directors =[]
+        res.forEach(el => {
+            if (el.professionKey === "DIRECTOR") {
+                directors.push(el)
+            }
+        });
+
+        const result = {actors: actors, directors: directors}
+        return result;
+    }
+
+    return {getFilms, getFilmInfo, getActualMonth, getFilmByName, getCounryList, getFimsByParametrs, getSimilarFilms, getTrailer, getStaff}
 }
 
 export default MovieService;

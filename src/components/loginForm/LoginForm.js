@@ -2,7 +2,7 @@ import { Formik, Form, Field, ErrorMessage } from 'formik';
 import * as Yup from 'yup';
 import { Link, Navigate } from "react-router-dom";
 import { useDispatch, useSelector } from 'react-redux';
-import { fetchLogin } from './loginSlice';
+import { fetchLogin } from '../store/reducers/loginSlice';
 
 import './loginForm.scss'
 
@@ -17,8 +17,8 @@ const LoginForm = () => {
         <Formik
             initialValues={{ email: '', password: '' }}
             validationSchema={Yup.object({
-                email: Yup.string().required('This field is required'),
-                password: Yup.string().required('This field is required')
+                email: Yup.string().required('Обязательное поле'),
+                password: Yup.string().required('Обязательное поле')
             })}
             onSubmit={(value) => {
                 dispatch(fetchLogin({email: value.email, password: value.password}))
@@ -27,20 +27,20 @@ const LoginForm = () => {
         >
             <Form className="form-wrapper">
                 <div className="form-inner">
-                    <label>Email</label>
-                    <Field type="email" name="email"></Field>
-                    <ErrorMessage name="email" component="div" />
-                    <label>Пароль</label>
-                    <Field type="password" name="password"></Field>
-                    <ErrorMessage name="password" component="div" />
-                    <button className='formbtn' type="submit">Войти</button>
-                    <Link to={'/registration'}>
-                        <div>Зарегистрироваться</div>
+                    <Field type="email" name="email" placeholder="Email"></Field>
+                    <ErrorMessage className='error-message' name="email" component="div" />
+                    <Field type="password" name="password" placeholder="Пароль"></Field>
+                    <ErrorMessage className='error-message' name="password" component="div" />
+                    <button className='formbtn input-btn' type="submit">Войти</button>
+                    <Link className='formbtn link'  to={'/registration'}>
+                        <span className='link-inner'>
+                            Зарегистрироваться
+                        </span>
                     </Link>
                 </div>
                 {loginStatus && 
-                        (<Navigate to="/profile" replace={true} />
-                    )}
+                    (<Navigate to="/profile" replace={true} />)
+                }
             </Form>
         </Formik>
 

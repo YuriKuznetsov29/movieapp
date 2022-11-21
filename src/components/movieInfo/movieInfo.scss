@@ -20,12 +20,19 @@
 
 .btn-favorites {
     width: 150px;
-    height: 30px;
+    height: 35px;
     color:#fff;
     display: flex;
-    align-items:center;
+    align-items: center;
     i {
         margin: 0 5px 0;
+        
+    }
+    span {
+        margin-left: 10px;
+        font-style: normal;
+        line-height: 16px;
+        font-family: 'PT Sans', sans-serif;
     }
 }
 .infowrapper {
@@ -39,6 +46,7 @@
     max-width: 100%;
     max-height: 100%;
     overflow-y: auto;
+    font-family: 'PT Sans', sans-serif;
     i {
         color: #fff;
         font-size: 26px;
@@ -64,7 +72,15 @@
         margin: 0 auto;
         width: 160px;
         border-radius: 6px;
+        &:hover {
+            cursor: pointer;
+        }
     }
+}
+
+.trailer-inner {
+    width: 300px;
+    height: 200px;
 }
 
 .poster {
@@ -85,7 +101,9 @@
 
 .info {
     padding: 0 20px;
+    font-weight: 400;
     h1,h3 {
+        font-family: 'Lato', sans-serif;
         color: #fff;
         text-align: left;
     }
@@ -94,14 +112,24 @@
 .filminfostring {
     display: grid;
     grid-template-columns: 1fr 3fr;
-    div {
-        padding: 8px 0;
-        color: #fff;
-    }
+}
+
+.info-line {
+    padding: 8px 0;
+    color: rgb(190, 186, 186);
+}
+
+.info-line-data {
+    padding: 8px 0;
+    color: #fff;
 }
 
 .raiting {
-    
+    color: #fff;
+    h3 {
+        margin-bottom: 10px;
+        font-family: 'Lato', sans-serif;
+    }
 }
 
 .choisewrapper {

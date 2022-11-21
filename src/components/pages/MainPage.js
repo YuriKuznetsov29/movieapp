@@ -1,16 +1,16 @@
-import Sidebar from '../sidebar/Sidebar';
-import MovieList from '../movieList/MovieList';
-import MovieInfo from '../movieInfo/MovieInfo';
-import './mainPage.scss'
+// import Sidebar from '../sidebar/Sidebar';
+// import MovieList from '../movieList/MovieList';
+// import MovieInfo from '../movieInfo/MovieInfo';
+// import './mainPage.scss'
 
-const MainPage = () => {
+// const MainPage = () => {
  
 
-    return (
-        <>
+//     return (
+//         <>
            
-        </>
-    )
-}
+//         </>
+//     )
+// }
 
-export default MainPage;
+// export default MainPage;

@@ -30,27 +30,24 @@ const RegForm = () => {
     return (
 
         <Formik
-            initialValues={{ login: '', password: '', repeatPasword: '' }}
+            initialValues={{ email: '', password: '', repeatPasword: '' }}
             validationSchema={Yup.object({
-                login: Yup.string().required('This field is required'),
-                password: Yup.string().required('This field is required'),
-                repeatPasword: Yup.string().required('This field is required')
+                email: Yup.string().required('Обязательное поле'),
+                password: Yup.string().required('Обязательное поле'),
+                repeatPasword: Yup.string().required('Обязательное поле')
             })}
             onSubmit={(value) => {
-                register(auth, value.login, value.password)
+                register(auth, value.email, value.password)
             }}
         >
             <Form className="form-wrapper">
                 <div className="form-inner">
-                    <label>Логин</label>
-                    <Field type="text" name="login"></Field>
-                    <ErrorMessage name="email" component="div" />
-                    <label>Пароль</label>
-                    <Field type="password" name="password"></Field>
-                    <ErrorMessage name="password" component="div" />
-                    <label>Пароль</label>
-                    <Field type="password" name="repeatPasword"></Field>
-                    <ErrorMessage name="repeatPasword" component="div" />
+                    <Field type="email" name="email" placeholder="Email"></Field>
+                    <ErrorMessage className='error-message' name="email" component="div" />
+                    <Field type="password" name="password" placeholder="Пароль"></Field>
+                    <ErrorMessage className='error-message' name="password" component="div" />
+                    <Field type="password" name="repeatPasword" placeholder="Повторите пароль"></Field>
+                    <ErrorMessage className='error-message' name="repeatPasword" component="div" />
                     <button className='formbtn' type="submit">Зарегистрироваться</button>
                 </div>
                 {loginStatus && 

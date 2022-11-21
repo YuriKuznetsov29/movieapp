@@ -1,7 +1,7 @@
 import { useEffect } from "react";
 import { Link } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import { fetchLogOut, changeStatusOnOnline, changeStatusOnOffline,  } from "../loginForm/loginSlice";
+import { fetchLogOut, changeStatusOnOnline, changeStatusOnOffline,  } from "../store/reducers/loginSlice";
 import { getAuth, onAuthStateChanged } from "firebase/auth";
 
 import './sidebar.scss';

@@ -1,5 +1,7 @@
 import { useState, useEffect } from 'react';
 import MovieService from '../../services/MovieService';
+import { setFilmId } from '../store/reducers/movieSlice';
+import { useDispatch } from 'react-redux';
 
 import './findFilms.scss';
 
@@ -17,6 +19,7 @@ const FindFilms = (props) => {
 
     const {getFilmByName, getCounryList, getFimsByParametrs} = MovieService();
 
+    const dispatch = useDispatch();
 
     useEffect(() => {
         getCounryList()
@@ -50,7 +53,7 @@ const FindFilms = (props) => {
                     <div 
                         className='find-poster' 
                         onClick={() => {
-                            props.onFilmSelected(item.id);
+                            dispatch(setFilmId(item.id));
                         }}>
                             <img src={item.posterUrl} alt="logo"/>
                     </div>
@@ -79,6 +82,7 @@ const FindFilms = (props) => {
         })
         return (
             <select name="select" onChange={(e) => setCountry(e.target.value)}>
+                <option value="none" selected>Выберете страну</option>
                 {items}
             </select>
 
@@ -93,6 +97,7 @@ const FindFilms = (props) => {
         })
         return (
             <select name="select" onChange={(e) => setGenre(e.target.value)}>
+                <option value="none" selected>Выберете жанр</option>
                 {items}
             </select>
         )
@@ -121,7 +126,7 @@ const FindFilms = (props) => {
                     <input type='text' value={startYear} onChange={(e) => setStartYear(e.target.value)}></input>
                     <label>Максимальный год</label>
                     <input type='text' value={endYear} onChange={(e) => setEndYear(e.target.value)}></input>
-                    <button className='btn' type='submit' onClick={() => loadDataByParametrs()}>Найти</button>
+                    <button className='btn-find' type='submit' onClick={() => loadDataByParametrs()}>Найти</button>
                 </div>
             </div>
                 
