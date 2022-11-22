@@ -1,10 +1,5 @@
-import { useState, useEffect } from 'react';
-import {
-    createBrowserRouter,
-    RouterProvider,
-    Route,
-  } from "react-router-dom";
-// import MainPage from "./components/pages/MainPage";
+import { useState } from 'react';
+import { createBrowserRouter, RouterProvider, Route } from "react-router-dom";
 import MovieInfo from "./components/movieInfo/MovieInfo";
 import MovieList from "./components/movieList/MovieList";
 import FindFilms from "./components/findFilms/FindFilms";

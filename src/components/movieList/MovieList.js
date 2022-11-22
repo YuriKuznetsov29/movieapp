@@ -14,7 +14,7 @@ const MovieList = () => {
 
     useEffect(() => {
         loadData();
-        console.log('EFFECT')
+        
         // return clearData();
     }, []);
 
@@ -50,12 +50,7 @@ const MovieList = () => {
 
     return (
         <>  
-            <div>
             {content}
-            {/* <button className="btn">
-                Load more
-            </button> */}
-            </div>
         </>
     )
 }
