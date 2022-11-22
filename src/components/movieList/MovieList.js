@@ -5,7 +5,7 @@ import { useDispatch } from "react-redux";
 
 import './movieList.scss';
 
-const MovieList = (props) => {
+const MovieList = () => {
     const [films, setFilms] = useState([]);
 
     const {getFilms} = MovieService();
@@ -13,13 +13,19 @@ const MovieList = (props) => {
     const dispatch = useDispatch();
 
     useEffect(() => {
-        loadData()
-    }, [])
+        loadData();
+        console.log('EFFECT')
+        // return clearData();
+    }, []);
 
     const loadData = () => {
         getFilms()
             .then(res => setFilms(res))
     }
+    
+    // const clearData = () => {
+    //     setFilms([])
+    // }
 
     const renderFilms = (arr) => {
         const items = arr.map(item => {

@@ -26,7 +26,6 @@ const MovieInfo = (props) => {
     const staff = useSelector(state => state.movieInfo.staff);
     const filmId = useSelector(state => state.movieInfo.filmId);
 
-
     const navigate = useNavigate();
 
     const dispatch = useDispatch();
@@ -45,9 +44,9 @@ const MovieInfo = (props) => {
         slidesToShow: 5,
         slidesToScroll: 5,
         autoplay: false,
-        speed: 5000,
+        speed: 2000,
         autoplaySpeed: 2000,
-        cssEase: "linear"
+        cssEase: "linear",
     };
     const VideosSettings = {
         dots: true,
@@ -57,7 +56,8 @@ const MovieInfo = (props) => {
         autoplay: false,
         speed: 1000,
         autoplaySpeed: 2000,
-        cssEase: "linear"
+        cssEase: "linear",
+        lazyLoad: "ondemand",
     };
 
     const openModal = () => {
@@ -260,7 +260,7 @@ const MovieInfo = (props) => {
                             <div className='favorites'>
                                 <span>
                                 <button 
-                                    className='btn btn-favorites'
+                                    className='btn-favorites'
                                     onClick={() => loginStatus ? autorizationStatus(auth) : (navigate("/login"), closeModal())
                                     }>
                                         <i class="ph-bookmark-simple"></i> <span>Добавить<br/> в избранное</span>
@@ -346,7 +346,6 @@ const MovieInfo = (props) => {
                         <h2>{`Тизеры и Трейлеры ${trailers.length}`}</h2>
                             {videosContent}
                     </div> : null
-                    
                 }
                     
                 { similarFilms.length >= 5 ? 

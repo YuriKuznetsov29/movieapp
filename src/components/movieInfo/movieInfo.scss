@@ -19,11 +19,14 @@
 }
 
 .btn-favorites {
+    margin: 30px auto;
     width: 150px;
-    height: 35px;
+    height: 40px;
     color:#fff;
+    background-color: rgb(66, 64, 64);
     display: flex;
     align-items: center;
+    border-radius: 20px;
     i {
         margin: 0 5px 0;
         
@@ -33,6 +36,10 @@
         font-style: normal;
         line-height: 16px;
         font-family: 'PT Sans', sans-serif;
+    }
+    &:hover {
+        cursor: pointer;
+        background-color: rgb(90, 86, 86);
     }
 }
 .infowrapper {

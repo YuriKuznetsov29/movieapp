@@ -9,10 +9,7 @@ import store from './components/store';
 
 import './index.scss';
 
-
-
-
-const app = initializeApp(
+const app = initializeApp (
   {
     apiKey: "AIzaSyCqK-150yqJ-W6wjyQK32YWgdFXAFxrR-U",
     authDomain: "movieapp-b5187.firebaseapp.com",
