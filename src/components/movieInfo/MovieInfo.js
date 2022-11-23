@@ -265,6 +265,12 @@ const MovieInfo = (props) => {
                                     }>
                                         <i class="ph-bookmark-simple"></i> <span>Добавить<br/> в избранное</span>
                                 </button>
+                                {/* <button 
+                                    className='btn-favorites'
+                                    onClick={() => loginStatus && autorizationStatus(auth)
+                                    }>
+                                        <i class="ph-trash delete"></i> <span>В избранном</span>
+                                </button> */}
                                 </span>
                             </div>
                             <h3>О фильме</h3>

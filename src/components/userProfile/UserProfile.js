@@ -71,7 +71,7 @@ const UserProfile = (props) => {
                     <div 
                         className='find-poster'
                         onClick={() => {
-                            dispatch(setFilmId(item[1].id));
+                            dispatch(setFilmId(item[1].id))
                         }}>
                             <img src={item[1].poster} alt="logo"/>
                     </div>
