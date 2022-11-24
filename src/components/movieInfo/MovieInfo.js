@@ -1,7 +1,8 @@
 import { useEffect, useState } from 'react';
 import MovieService from '../../services/MovieService';
-import { getAuth, onAuthStateChanged} from "firebase/auth";
-import {getDatabase, push, ref, set} from "firebase/database";
+import { getAuth} from "firebase/auth";
+import {getDatabase, push, ref, set, onValue} from "firebase/database";
+import { setFavoriteFilms } from '../store/reducers/userProfileSlice';
 import { useDispatch, useSelector } from 'react-redux';
 import {ModalShow, ModalClose, setFilmId, setFilmInfo, setSimilarFilms, setTrailars, setStaff} from '../store/reducers/movieSlice';
 import { useNavigate } from "react-router-dom";
@@ -11,14 +12,11 @@ import Slider from 'react-slick';
 import './movieInfo.scss';
 
 const MovieInfo = (props) => {
-    // const [modalState, setModalState] = useState('infowrapper');
-    // const [filmInfo, setFilmInfo] = useState({});
     const [gradeState, setGradeState] = useState({state: false, visible: {'display': 'block'}});
-    // const [similarFilms, setSimilarFilms] = useState([]);
-    // const [trailers, setTrailers] = useState([]);
-    // const [staff, setStaff] = useState({actors: [], directors: []});
+    const [key, setKey] = useState(null);
 
     const loginStatus = useSelector(state => state.login.loginStatus);
+    const userId = useSelector(state => state.login.userId);
     const modalState = useSelector(state => state.movieInfo.modalState);
     const filmInfo = useSelector(state => state.movieInfo.filmInfo);
     const similarFilms = useSelector(state => state.movieInfo.similarFilms);
@@ -32,11 +30,17 @@ const MovieInfo = (props) => {
 
     const auth = getAuth();
 
-    const {getFilmInfo, getSimilarFilms, getTrailer, getStaff} = MovieService();
+    const favoriteFilms = useSelector(state => state.userProfile.favoriteFilms);
+
+    const {getFilmInfo, getSimilarFilms, getTrailer, getStaff, deleteFavoriteFilm} = MovieService();
 
     useEffect(() => {
         openModal()
     }, [filmId])
+
+    useEffect(() => {
+        checkFavoriteFilms()
+    }, [favoriteFilms])
 
     const SimilarFilmsSettings = {
         dots: true,
@@ -66,29 +70,18 @@ const MovieInfo = (props) => {
             document.body.style.overflow = "hidden";
         }
     }
-    // {ModalShow, ModalClose, setFilmId, setFilmInfo, setSimilarilms, setStaff}
-    // const loadData = () => {
-    //     getFilmInfo(props.filmId)
-    //         .then(res => setFilmInfo(res))
-    //     setModalState('infowrapper show');
-        
-    //     getSimilarFilms(props.filmId)
-    //         .then(res => setSimilarFilms(res));
-    //     getTrailer(props.filmId)
-    //         .then(res => {
-    //                 let arr = [];
-    //                 for (let i = 0; i < res.items.length; i++) {
-    //                     if (res.items[i].site === 'YOUTUBE') {
-    //                         arr.push(res.items[i]);
-    //                     } else continue;
-    //                 }
-    //                 setTrailers(arr)
-    //             }
-    //         )
-    //         getStaff(props.filmId)
-    //             .then(res => setStaff(res))
-            
-    // }
+
+    const checkFavoriteFilms = () => {
+        favoriteFilms.forEach(item => {
+            if (item[1].id === filmId) {
+                setKey(item[0])
+                console.log('KEY')
+            } else {
+                setKey(null)
+            }
+
+        })
+    }
 
     const loadData = () => {
         dispatch(ModalShow())
@@ -109,19 +102,8 @@ const MovieInfo = (props) => {
             );
             getStaff(filmId)
                 .then(res => dispatch(setStaff(res)));
+        readData()
     }
-
-    // const closeModal = (e) => {
-    //     if (e.target.id === 'close') {
-    //         setModalState('infowrapper');
-    //         setFilmInfo({});
-    //         setSimilarFilms([]);
-    //         setTrailers([]);
-    //         setStaff({actors: [], directors: []})
-    //         props.setFilmId('');
-    //         document.body.style.overflow = "auto";
-    //     }
-    // }
 
     const closeModal = (e) => {
         if (e.target.id === 'close') {
@@ -131,6 +113,7 @@ const MovieInfo = (props) => {
             dispatch(setSimilarFilms([]));
             dispatch(setTrailars([]));
             dispatch(setStaff({actors: [], directors: []}));
+            setKey(null);
             document.body.style.overflow = "auto";
         }
     }
@@ -138,21 +121,8 @@ const MovieInfo = (props) => {
     const onShowGrade = () => {
         setGradeState({state: true, visible: {'display': 'none'}});
     }
-    
-    const autorizationStatus = (auth) => {
-        onAuthStateChanged(auth, (user) => {
-            if (user) {
-              const uid = user.uid;
-              const email = user.email;
-              console.log('send to db')
-              addData(uid, filmInfo)
-            } else {
-              console.log('User is signed out');
-            }
-          });
-    }
 
-    const addData = (userId, film) => {
+    const addData = (film) => {
         const db = getDatabase();
         const Ref = ref(db, `users/` + userId + `/favoriteFilms/`);
         const favoriteFilms = push(Ref);
@@ -160,6 +130,14 @@ const MovieInfo = (props) => {
             ...film
         });
     }
+
+    const readData = () => {
+        const db = getDatabase();
+        const Ref = ref(db, `users/` + userId + '/favoriteFilms/');
+        onValue(Ref, (films) => {
+        const data = films.val();
+        dispatch(setFavoriteFilms(Object.entries(data)));
+    })}
 
     const renderFilms = (arr) => {
         const items = arr.map(item => {
@@ -228,7 +206,8 @@ const MovieInfo = (props) => {
             </div>
         )
     }
-    
+
+    // const checkReult = checkFavoriteFilms();
     const similarContent = renderFilms(similarFilms);
     const videosContent = renderTrailars(trailers);
     const actors = renderActors(staff.actors);
@@ -259,18 +238,21 @@ const MovieInfo = (props) => {
                             </h1>
                             <div className='favorites'>
                                 <span>
-                                <button 
-                                    className='btn-favorites'
-                                    onClick={() => loginStatus ? autorizationStatus(auth) : (navigate("/login"), closeModal())
-                                    }>
-                                        <i class="ph-bookmark-simple"></i> <span>Добавить<br/> в избранное</span>
-                                </button>
-                                {/* <button 
-                                    className='btn-favorites'
-                                    onClick={() => loginStatus && autorizationStatus(auth)
-                                    }>
-                                        <i class="ph-trash delete"></i> <span>В избранном</span>
-                                </button> */}
+                                { key && loginStatus ? 
+                                    <button 
+                                        className='btn-favorites'
+                                        onClick={() => {
+                                            deleteFavoriteFilm(key);
+                                            setKey(null);
+                                            }}>
+                                            <i class="ph-trash"></i> <span>В избранном</span>
+                                    </button> :
+                                    <button 
+                                        className='btn-favorites'
+                                        onClick={() => loginStatus ? addData(filmInfo) : (navigate("/login"), closeModal())}>
+                                            <i class="ph-bookmark-simple"></i> <span>Добавить<br/> в избранное</span>
+                                    </button> 
+                                }
                                 </span>
                             </div>
                             <h3>О фильме</h3>

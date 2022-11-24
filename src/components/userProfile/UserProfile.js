@@ -1,68 +1,37 @@
 import { useState, useEffect } from 'react';
-import { getDatabase, ref, onValue, update, set} from "firebase/database";
+import { getDatabase, ref, onValue} from "firebase/database";
 import { getAuth, onAuthStateChanged} from "firebase/auth";
 import { setFilmId } from '../store/reducers/movieSlice';
-import { setFavoriteFilms } from '../store/reducers/userProfileSlice';
+import { setFavoriteFilms, setFavoriteFilmsData } from '../store/reducers/userProfileSlice';
 import { useDispatch, useSelector } from 'react-redux';
+import MovieService from '../../services/MovieService';
 
 import './userProfile.scss'
 
 const UserProfile = (props) => {
     // const [favoriteFilms, setFavoriteFilms] = useState([]);
-    const [data, setData] = useState([]);
+    // const [data, setData] = useState([]);
 
+    const {deleteFavoriteFilm} = MovieService();
+
+    const userId = useSelector(state => state.login.userId);
     const favoriteFilms = useSelector(state => state.userProfile.favoriteFilms);
+    const data = useSelector(state => state.userProfile.data);
 
     const dispatch = useDispatch();
 
     useEffect(() => {
-        autorizationStatus(auth)
-    }, [])
+        readData()
+    }, [userId])
 
-    const auth = getAuth();
-
-    const autorizationStatus = (auth) => {
-        onAuthStateChanged(auth, (user) => {
-            if (user) {
-              const uid = user.uid;
-              const email = user.email;
-              console.log('send to db');
-              readData(uid);
-              console.log(favoriteFilms);
-            } else {
-              console.log('User is signed out');
-            }
-          });
-    }
-
-    const readData = (userId) => {
+    const readData = () => {
         const db = getDatabase();
         const Ref = ref(db, `users/` + userId + '/favoriteFilms/');
         onValue(Ref, (films) => {
         const data = films.val();
-        setData(data);
+        dispatch(setFavoriteFilmsData(data));
         dispatch(setFavoriteFilms(Object.entries(data)));
     })}
-
-    const deleteFavoriteFilm = (key) => {
-        onAuthStateChanged(auth, (user) => {
-            if (user) {
-                const uid = user.uid;
-                const db = getDatabase();
-                let newData = Object.assign({}, data);
-                delete newData[key];
-                const updates = {};
-                updates[`users/` + uid + `/favoriteFilms/`] = newData;
-                if (newData !== {}) {
-                    update(ref(db), updates);
-                } else {
-                    set(ref(db, `users/` + uid + `/favoriteFilms/`), null);
-                }
-            } else {
-              console.log('User is signed out');
-            }
-        });
-    }
 
     const renderFilms = (arr) => {
         const items = arr.map(item => {

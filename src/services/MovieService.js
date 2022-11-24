@@ -1,8 +1,35 @@
 import { useHttp } from "../components/hooks/http.hook";
+import { getAuth, onAuthStateChanged} from "firebase/auth";
+import { getDatabase, ref, update, set} from "firebase/database";
+import { useSelector } from "react-redux";
 
     const MovieService = () => {
 
     const {request} = useHttp();
+
+    const auth = getAuth();
+
+    const data = useSelector(state => state.userProfile.data);
+
+    const deleteFavoriteFilm = (key) => {
+    onAuthStateChanged(auth, (user) => {
+        if (user) {
+            const uid = user.uid;
+            const db = getDatabase();
+            let newData = Object.assign({}, data);
+            delete newData[key];
+            const updates = {};
+            updates[`users/` + uid + `/favoriteFilms/`] = newData;
+            if (newData !== {}) {
+                update(ref(db), updates);
+            } else {
+                set(ref(db, `users/` + uid + `/favoriteFilms/`), null);
+            }
+        } else {
+          console.log('User is signed out');
+        }
+    });
+}
 
     const getActualMonth = () => {
 
@@ -202,7 +229,7 @@ import { useHttp } from "../components/hooks/http.hook";
         return result;
     }
 
-    return {getFilms, getFilmInfo, getActualMonth, getFilmByName, getCounryList, getFimsByParametrs, getSimilarFilms, getTrailer, getStaff}
+    return {getFilms, getFilmInfo, getActualMonth, getFilmByName, getCounryList, getFimsByParametrs, getSimilarFilms, getTrailer, getStaff, deleteFavoriteFilm}
 }
 
 export default MovieService;

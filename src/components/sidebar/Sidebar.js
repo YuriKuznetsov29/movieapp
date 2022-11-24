@@ -12,18 +12,15 @@ const Sidebar = () => {
 
     const loginStatus = useSelector(state => state.login.loginStatus)
 
-    
-
     const check = (auth) => {
         onAuthStateChanged(auth, (user) => {
             if (user) {
-                dispatch(changeStatusOnOnline(user.email));
+                dispatch(changeStatusOnOnline({email: user.email, userId: user.uid}));
             } else {
                 dispatch(changeStatusOnOffline());
             }
         })
     }
-
 
     useEffect(() => {
         check(auth);
@@ -53,10 +50,12 @@ const Sidebar = () => {
                         </li>
                         { loginStatus ?
                             <li>
-                                <i class="ph-sign-out"
-                                onClick={() => {
-                                    dispatch(fetchLogOut())
-                                }}></i>
+                                <Link to={'/'}>
+                                    <i class="ph-sign-out"
+                                    onClick={() => {
+                                        dispatch(fetchLogOut())
+                                    }}></i>
+                                </Link>
                             </li>
                                 :
                             <li>
