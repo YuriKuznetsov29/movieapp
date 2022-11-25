@@ -1,20 +1,16 @@
-import { useState } from 'react';
+import {lazy, Suspense} from 'react';
 import { createBrowserRouter, RouterProvider, Route } from "react-router-dom";
-import MovieInfo from "./components/movieInfo/MovieInfo";
-import MovieList from "./components/movieList/MovieList";
-import FindFilms from "./components/findFilms/FindFilms";
 import Sidebar from './components/sidebar/Sidebar';
-import LoginForm from './components/loginForm/LoginForm';
-import RegForm from './components/regForm/RegForm';
-import UserProfile from './components/userProfile/UserProfile';
+import Spinner from './components/Spinner/Spinner';
+
+const MovieList = lazy(() => import('./components/movieList/MovieList'));
+const MovieInfo = lazy(() => import('./components/movieInfo/MovieInfo'));
+const FindFilms = lazy(() => import('./components/findFilms/FindFilms'));
+const LoginForm = lazy(() => import('./components/loginForm/LoginForm'));
+const RegForm = lazy(() => import('./components/regForm/RegForm'));
+const UserProfile = lazy(() => import('./components/userProfile/UserProfile'));
 
 function App() {
-
-  const [filmId, setFilmId] = useState('');
-
-  // const onFilmSelected = (id) => {
-  //     setFilmId(id)
-  // }
 
   const router = createBrowserRouter([
     {
@@ -59,7 +55,9 @@ function App() {
 
   return (
     <>
-      <RouterProvider router={router} />
+      <Suspense fallback={<span>Loading...</span>}>
+        <RouterProvider router={router} />
+      </Suspense>
     </>
   );
 }

@@ -40,7 +40,7 @@ const MovieInfo = (props) => {
 
     useEffect(() => {
         checkFavoriteFilms()
-    }, [favoriteFilms])
+    }, [filmId, favoriteFilms])
 
     const SimilarFilmsSettings = {
         dots: true,
@@ -76,10 +76,9 @@ const MovieInfo = (props) => {
             if (item[1].id === filmId) {
                 setKey(item[0])
                 console.log('KEY')
-            } else {
-                setKey(null)
-            }
-
+                console.log(item[0])
+                console.log(key)
+            } 
         })
     }
 

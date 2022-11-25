@@ -36,15 +36,15 @@ const UserProfile = (props) => {
     const renderFilms = (arr) => {
         const items = arr.map(item => {
             return (
-                <div className='item-inner'>
+                <div className='favorite-item-inner'>
                     <div 
-                        className='find-poster'
+                        className='favorite-poster'
                         onClick={() => {
                             dispatch(setFilmId(item[1].id))
                         }}>
                             <img src={item[1].poster} alt="logo"/>
                     </div>
-                    <div className='find-info'>
+                    <div className='favorite-info'>
                         <h4>{item[1].name}</h4>
                         <div>{item[1].year}</div>
                         <div>{item[1].genre}</div>
@@ -56,7 +56,7 @@ const UserProfile = (props) => {
             )
         })
         return (
-            <div className="results">
+            <div className="results-favorite">
                 {items}
             </div>
 
@@ -66,7 +66,7 @@ const UserProfile = (props) => {
     let content = renderFilms(favoriteFilms);
     
     return (
-        <div className='find-wrapper'>
+        <div className='favorite-content-wrapper'>
             <h1>Избранные фильмы</h1>
             {data ? content : null}
         </div>
