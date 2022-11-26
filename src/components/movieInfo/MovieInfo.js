@@ -6,12 +6,12 @@ import { setFavoriteFilms } from '../store/reducers/userProfileSlice';
 import { useDispatch, useSelector } from 'react-redux';
 import {ModalShow, ModalClose, setFilmId, setFilmInfo, setSimilarFilms, setTrailars, setStaff} from '../store/reducers/movieSlice';
 import { useNavigate } from "react-router-dom";
-import Slider from 'react-slick';
-
+import SimilarFilms from '../similarFilms/SimilarFilms';
+import Trailers from '../trailers/Trailars';
 
 import './movieInfo.scss';
 
-const MovieInfo = (props) => {
+const MovieInfo = () => {
     const [gradeState, setGradeState] = useState({state: false, visible: {'display': 'block'}});
     const [key, setKey] = useState(null);
 
@@ -19,7 +19,6 @@ const MovieInfo = (props) => {
     const userId = useSelector(state => state.login.userId);
     const modalState = useSelector(state => state.movieInfo.modalState);
     const filmInfo = useSelector(state => state.movieInfo.filmInfo);
-    const similarFilms = useSelector(state => state.movieInfo.similarFilms);
     const trailers = useSelector(state => state.movieInfo.trailers);
     const staff = useSelector(state => state.movieInfo.staff);
     const filmId = useSelector(state => state.movieInfo.filmId);
@@ -32,37 +31,17 @@ const MovieInfo = (props) => {
 
     const favoriteFilms = useSelector(state => state.userProfile.favoriteFilms);
 
-    const {getFilmInfo, getSimilarFilms, getTrailer, getStaff, deleteFavoriteFilm} = MovieService();
+    const {getFilmInfo, getTrailer, getStaff, deleteFavoriteFilm} = MovieService();
 
     useEffect(() => {
         openModal()
     }, [filmId])
 
     useEffect(() => {
+        setKey(null)
         checkFavoriteFilms()
+        console.log('EFFECT')
     }, [filmId, favoriteFilms])
-
-    const SimilarFilmsSettings = {
-        dots: true,
-        infinite: true,
-        slidesToShow: 5,
-        slidesToScroll: 5,
-        autoplay: false,
-        speed: 2000,
-        autoplaySpeed: 2000,
-        cssEase: "linear",
-    };
-    const VideosSettings = {
-        dots: true,
-        infinite: true,
-        slidesToShow: 2,
-        slidesToScroll: 1,
-        autoplay: false,
-        speed: 1000,
-        autoplaySpeed: 2000,
-        cssEase: "linear",
-        lazyLoad: "ondemand",
-    };
 
     const openModal = () => {
         if (filmId) {
@@ -76,8 +55,8 @@ const MovieInfo = (props) => {
             if (item[1].id === filmId) {
                 setKey(item[0])
                 console.log('KEY')
-                console.log(item[0])
-                console.log(key)
+                // console.log(item[0])
+                // console.log(key)
             } 
         })
     }
@@ -86,8 +65,6 @@ const MovieInfo = (props) => {
         dispatch(ModalShow())
         getFilmInfo(filmId)
             .then(res => dispatch(setFilmInfo(res)));
-        getSimilarFilms(filmId)
-            .then(res => dispatch(setSimilarFilms(res)));
         getTrailer(filmId)
             .then(res => {
                     let arr = [];
@@ -138,55 +115,6 @@ const MovieInfo = (props) => {
         dispatch(setFavoriteFilms(Object.entries(data)));
     })}
 
-    const renderFilms = (arr) => {
-        const items = arr.map(item => {
-            return (
-                <>
-                    <img 
-                        src={item.posterUrl} 
-                        alt="poster"
-                        onClick={() => {
-                            dispatch(setFilmId(item.id));
-                        }} 
-                    />
-                </>
-            )
-        })
-        return (
-            <Slider {...SimilarFilmsSettings}>
-                {items}
-            </Slider>
-        )
-    }
-
-    const renderTrailars = (arr) => {
-        const items = arr.map(item => {
-            if (item.url.slice(0, 25) === 'https://www.youtube.com/v') {
-                // console.log(item.url)
-                // console.log(item.url.slice(0, 23) + '/embed/' + item.url.slice(-(item.url.length - 26)))
-                return ( 
-                    <iframe width="300" height="200" src={item.url.slice(0, 23) + '/embed/' + item.url.slice(-(item.url.length - 26))} title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; fullscreen" allowfullscreen></iframe>                
-                )
-            }
-            if (item.url.slice(0, 29) ==='https://www.youtube.com/watch') {
-                // console.log(item.url)
-                // console.log(item.url.slice(0, 27) + '/embed/' + item.url.slice(-(item.url.length - 32)))
-                return ( 
-                    <iframe width="300" height="200" src={item.url.slice(0, 23) + '/embed/' + item.url.slice(-(item.url.length - 32))} title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; fullscreen" allowfullscreen></iframe>                
-                )
-            }
-        })
-        return (
-            items.length > 1 ?
-                <Slider {...VideosSettings}>
-                    {items}
-                </Slider> :
-                <>
-                    {items}
-                </>
-        )
-    }
-
     const renderActors = (arr) => {
         const items = arr.map((item, i) => {
                 if (i < 9) {
@@ -206,9 +134,6 @@ const MovieInfo = (props) => {
         )
     }
 
-    // const checkReult = checkFavoriteFilms();
-    const similarContent = renderFilms(similarFilms);
-    const videosContent = renderTrailars(trailers);
     const actors = renderActors(staff.actors);
 
     return (
@@ -224,9 +149,9 @@ const MovieInfo = (props) => {
                             <div className='posterwrapper'>
                                 <img src={filmInfo.poster} alt='poster'></img>
                             </div>
-                            { trailers.length === 1 ?
+                            {trailers.length === 1 ?
                                 <div className='trailer-inner'>
-                                    {videosContent}
+                                    <Trailers />
                                 </div> : null
                             }
                             
@@ -328,19 +253,15 @@ const MovieInfo = (props) => {
                             {actors}                        
                         </div>
                 </div>
-                { (trailers.length > 1) ? 
+
+                {trailers.length > 1 ?
                     <div className='slider-inner'>
                         <h2>{`Тизеры и Трейлеры ${trailers.length}`}</h2>
-                            {videosContent}
+                        <Trailers />
                     </div> : null
                 }
-                    
-                { similarFilms.length >= 5 ? 
-                    <div className='slider-inner'>
-                        <h2>{`Похожие фильмы ${similarFilms.length}`}</h2>
-                            {similarContent}
-                    </div> : null
-                }
+                
+                <SimilarFilms />
                 
             </div>
         </>

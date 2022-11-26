@@ -1,5 +1,7 @@
+import { useEffect, memo } from 'react';
 import {useDispatch, useSelector } from 'react-redux';
 import MovieService from '../../services/MovieService';
+import { setSimilarFilms, setFilmId } from '../store/reducers/movieSlice';
 import Slider from 'react-slick';
 
 const SimilarFilms = () => {
@@ -25,48 +27,34 @@ const SimilarFilms = () => {
     useEffect(() => {
         getSimilarFilms(filmId)
             .then(res => dispatch(setSimilarFilms(res)));
-    }, [])
-
-    // const renderFilms = (arr) => {
-    //     const items = arr.map(item => {
-    //         return (
-    //             <>
-    //                 <img 
-    //                     src={item.posterUrl} 
-    //                     alt="poster"
-    //                     onClick={() => {
-    //                         dispatch(setFilmId(item.id));
-    //                     }} 
-    //                 />
-    //             </>
-    //         )
-    //     })
-    //     return (
-    //         <Slider {...SimilarFilmsSettings}>
-    //             {items}
-    //         </Slider>
-    //     )
-    // }
+        
+    }, [filmId])
 
     return (
-        <Slider {...settings}>
-            {
-                similarFilms.map(item => {
-                    return (
-                        <>
-                            <img 
-                                src={item.posterUrl} 
-                                alt="poster"
-                                onClick={() => {
-                                    dispatch(setFilmId(item.id));
-                                }} 
-                            />
-                        </>
-                    )
-                })
+        <>
+            { similarFilms.length >= 5 ? 
+                <div className='slider-inner'>
+                    <h2>{`Похожие фильмы ${similarFilms.length}`}</h2>
+                    <Slider {...settings}>
+                            {
+                                similarFilms.map(item => {
+                                return (
+                                    <>
+                                        <img 
+                                            src={item.posterUrl} 
+                                            alt="poster"
+                                            onClick={() => {
+                                                dispatch(setFilmId(item.id));
+                                            }} 
+                                        />
+                                    </>
+                                )})
+                            }        
+                        </Slider>
+                </div> : null
             }
-        </Slider>
+        </>
     )
 }
 
-export default SimilarFilms;
+export default memo(SimilarFilms);
