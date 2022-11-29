@@ -7,7 +7,9 @@ const initialState = {
     filmInfo: {},
     similarFilms: [],
     trailers: [],
-    staff: {actors: [], directors: []}
+    staff: {actors: [], directors: []},
+    
+    
 }
 
 const movieInfoSlice = createSlice({
@@ -35,6 +37,7 @@ const movieInfoSlice = createSlice({
         setStaff: (state, action) => {
             state.staff = action.payload;
         },
+        
     },
 });
 

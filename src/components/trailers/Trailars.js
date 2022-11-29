@@ -9,7 +9,7 @@ const Trailers = () => {
     const trailers = useSelector(state => state.movieInfo.trailers);
     
     const settings = {
-        dots: true,
+        dots: false,
         infinite: true,
         slidesToShow: 2,
         slidesToScroll: 1,

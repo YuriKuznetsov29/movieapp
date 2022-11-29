@@ -1,8 +1,9 @@
 import { useEffect } from "react";
 import { Link } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import { fetchLogOut, changeStatusOnOnline, changeStatusOnOffline,  } from "../store/reducers/loginSlice";
+import { fetchLogOut, changeStatusOnOnline, changeStatusOnOffline } from "../store/reducers/loginSlice";
 import { getAuth, onAuthStateChanged } from "firebase/auth";
+import { setViewdFilmsData, setViewedFilms, setFavoriteFilms, setFavoriteFilmsData, setGradeFilms } from "../store/reducers/userProfileSlice";
 
 import './sidebar.scss';
 
@@ -11,6 +12,7 @@ const Sidebar = () => {
     const auth = getAuth();
 
     const loginStatus = useSelector(state => state.login.loginStatus)
+    const userId = useSelector(state => state.login.userId)
 
     const check = (auth) => {
         onAuthStateChanged(auth, (user) => {
@@ -54,6 +56,11 @@ const Sidebar = () => {
                                     <i class="ph-sign-out"
                                     onClick={() => {
                                         dispatch(fetchLogOut())
+                                        dispatch(setViewdFilmsData({}));
+                                        dispatch(setViewedFilms([]));
+                                        dispatch(setFavoriteFilmsData({}));
+                                        dispatch(setFavoriteFilms([]));
+                                        dispatch(setGradeFilms([]));
                                     }}></i>
                                 </Link>
                             </li>

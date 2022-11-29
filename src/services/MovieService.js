@@ -9,14 +9,16 @@ import { useSelector } from "react-redux";
 
     const auth = getAuth();
 
-    const data = useSelector(state => state.userProfile.data);
+    const dataFavorite = useSelector(state => state.userProfile.dataFavorite);
+    const dataViewed = useSelector(state => state.userProfile.dataViewed);
+    
 
     const deleteFavoriteFilm = (key) => {
     onAuthStateChanged(auth, (user) => {
         if (user) {
             const uid = user.uid;
             const db = getDatabase();
-            let newData = Object.assign({}, data);
+            let newData = Object.assign({}, dataFavorite);
             delete newData[key];
             const updates = {};
             updates[`users/` + uid + `/favoriteFilms/`] = newData;
@@ -29,7 +31,27 @@ import { useSelector } from "react-redux";
           console.log('User is signed out');
         }
     });
-}
+    }
+
+    const deleteViewedFilm = (key) => {
+        onAuthStateChanged(auth, (user) => {
+            if (user) {
+                const uid = user.uid;
+                const db = getDatabase();
+                let newData = Object.assign({}, dataViewed);
+                delete newData[key];
+                const updates = {};
+                updates[`users/` + uid + `/viewedFilms/`] = newData;
+                if (newData !== {}) {
+                    update(ref(db), updates);
+                } else {
+                    set(ref(db, `users/` + uid + `/viewedFilms/`), null);
+                }
+            } else {
+              console.log('User is signed out');
+            }
+        });
+        }
 
     const getActualMonth = () => {
 
@@ -140,6 +162,7 @@ import { useSelector } from "react-redux";
         const info = 
             {
                 name: item.nameRu,
+                nameEn: item.nameEn,
                 poster: item.posterUrl,
                 year: item.year,
                 country: item.countries[0].country, //массив стран
@@ -229,7 +252,7 @@ import { useSelector } from "react-redux";
         return result;
     }
 
-    return {getFilms, getFilmInfo, getActualMonth, getFilmByName, getCounryList, getFimsByParametrs, getSimilarFilms, getTrailer, getStaff, deleteFavoriteFilm}
+    return {getFilms, getFilmInfo, getActualMonth, getFilmByName, getCounryList, getFimsByParametrs, getSimilarFilms, getTrailer, getStaff, deleteFavoriteFilm, deleteViewedFilm}
 }
 
 export default MovieService;

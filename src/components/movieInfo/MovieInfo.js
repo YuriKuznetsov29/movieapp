@@ -2,18 +2,21 @@ import { useEffect, useState } from 'react';
 import MovieService from '../../services/MovieService';
 import { getAuth} from "firebase/auth";
 import {getDatabase, push, ref, set, onValue} from "firebase/database";
-import { setFavoriteFilms } from '../store/reducers/userProfileSlice';
+import { setFavoriteFilms, setViewedFilms, setGrade } from '../store/reducers/userProfileSlice';
 import { useDispatch, useSelector } from 'react-redux';
-import {ModalShow, ModalClose, setFilmId, setFilmInfo, setSimilarFilms, setTrailars, setStaff} from '../store/reducers/movieSlice';
+import {ModalShow, ModalClose, setFilmId, setFilmInfo,setSimilarFilms, setTrailars, setStaff} from '../store/reducers/movieSlice';
 import { useNavigate } from "react-router-dom";
 import SimilarFilms from '../similarFilms/SimilarFilms';
 import Trailers from '../trailers/Trailars';
+import GradeFilms from '../grageFilms/GradeFilms';
 
 import './movieInfo.scss';
 
 const MovieInfo = () => {
     const [gradeState, setGradeState] = useState({state: false, visible: {'display': 'block'}});
-    const [key, setKey] = useState(null);
+    const [keyFavorite, setKeyFavorite] = useState(null);
+    const [keyViewed, setKeyViewed] = useState(null);
+    // const [similarFilms, setSimilarFilms] = useState([]);
 
     const loginStatus = useSelector(state => state.login.loginStatus);
     const userId = useSelector(state => state.login.userId);
@@ -24,24 +27,29 @@ const MovieInfo = () => {
     const filmId = useSelector(state => state.movieInfo.filmId);
 
     const navigate = useNavigate();
-
+ 
     const dispatch = useDispatch();
 
     const auth = getAuth();
 
     const favoriteFilms = useSelector(state => state.userProfile.favoriteFilms);
+    const viewedFilms = useSelector(state => state.userProfile.viewedFilms);
 
-    const {getFilmInfo, getTrailer, getStaff, deleteFavoriteFilm} = MovieService();
+    const {getFilmInfo, getTrailer, getStaff, deleteFavoriteFilm, deleteViewedFilm} = MovieService();
 
     useEffect(() => {
         openModal()
     }, [filmId])
 
     useEffect(() => {
-        setKey(null)
+        setKeyFavorite(null)
         checkFavoriteFilms()
-        console.log('EFFECT')
     }, [filmId, favoriteFilms])
+
+    useEffect(() => {
+        setKeyViewed(null)
+        checkViewedFilms()
+    }, [filmId, viewedFilms])
 
     const openModal = () => {
         if (filmId) {
@@ -53,7 +61,18 @@ const MovieInfo = () => {
     const checkFavoriteFilms = () => {
         favoriteFilms.forEach(item => {
             if (item[1].id === filmId) {
-                setKey(item[0])
+                setKeyFavorite(item[0])
+                console.log('KEY')
+                // console.log(item[0])
+                // console.log(key)
+            } 
+        })
+    }
+
+    const checkViewedFilms = () => {
+        viewedFilms.forEach(item => {
+            if (item[1].id === filmId) {
+                setKeyViewed(item[0])
                 console.log('KEY')
                 // console.log(item[0])
                 // console.log(key)
@@ -65,6 +84,8 @@ const MovieInfo = () => {
         dispatch(ModalShow())
         getFilmInfo(filmId)
             .then(res => dispatch(setFilmInfo(res)));
+        // getSimilarFilms(filmId)
+        //     .then(res => dispatch(setSimilarFilms(res)));
         getTrailer(filmId)
             .then(res => {
                     let arr = [];
@@ -78,7 +99,8 @@ const MovieInfo = () => {
             );
             getStaff(filmId)
                 .then(res => dispatch(setStaff(res)));
-        readData()
+            readFavoriteFilms()
+            readViewedFilms()
     }
 
     const closeModal = (e) => {
@@ -89,16 +111,15 @@ const MovieInfo = () => {
             dispatch(setSimilarFilms([]));
             dispatch(setTrailars([]));
             dispatch(setStaff({actors: [], directors: []}));
-            setKey(null);
+            setKeyFavorite(null);
+            setKeyViewed(null);
+            dispatch(setGrade(null));
             document.body.style.overflow = "auto";
         }
     }
 
-    const onShowGrade = () => {
-        setGradeState({state: true, visible: {'display': 'none'}});
-    }
 
-    const addData = (film) => {
+    const addFavoriteFilm = (film) => {
         const db = getDatabase();
         const Ref = ref(db, `users/` + userId + `/favoriteFilms/`);
         const favoriteFilms = push(Ref);
@@ -107,12 +128,30 @@ const MovieInfo = () => {
         });
     }
 
-    const readData = () => {
+    const addViewedFilm = (film) => {
+        const db = getDatabase();
+        const Ref = ref(db, `users/` + userId + `/viewedFilms/`);
+        const vievedFilms = push(Ref);
+        set(vievedFilms, {
+            ...film
+        });
+        console.log("READ")
+    }
+
+    const readFavoriteFilms = () => {
         const db = getDatabase();
         const Ref = ref(db, `users/` + userId + '/favoriteFilms/');
         onValue(Ref, (films) => {
         const data = films.val();
         dispatch(setFavoriteFilms(Object.entries(data)));
+    })}
+
+    const readViewedFilms = () => {
+        const db = getDatabase();
+        const Ref = ref(db, `users/` + userId + '/viewedFilms/');
+        onValue(Ref, (films) => {
+        const data = films.val();
+        dispatch(setViewedFilms(Object.entries(data)));
     })}
 
     const renderActors = (arr) => {
@@ -161,20 +200,37 @@ const MovieInfo = () => {
                                 {filmInfo.name}
                             </h1>
                             <div className='favorites'>
+                                
                                 <span>
-                                { key && loginStatus ? 
+                                    { keyViewed && loginStatus ?
+                                        <button className='btn-favorites'
+                                        onClick={() => {
+                                            deleteViewedFilm(keyViewed);
+                                            setKeyViewed(null);
+                                            }}>
+                                            <i class="ph-eye"></i> <span>Просмотрено</span>
+                                        </button> : 
+                                        <button 
+                                            className='btn-favorites'
+                                            onClick={() => loginStatus ? addViewedFilm(filmInfo) : (navigate("/login"), closeModal())}>
+                                            <i class="ph-eye"></i> <span>Не просмотрено</span>
+                                        </button>
+                                    }
+                                </span>
+                                <span>
+                                { keyFavorite && loginStatus ? 
                                     <button 
                                         className='btn-favorites'
                                         onClick={() => {
-                                            deleteFavoriteFilm(key);
-                                            setKey(null);
+                                            deleteFavoriteFilm(keyFavorite);
+                                            setKeyFavorite(null);
                                             }}>
                                             <i class="ph-trash"></i> <span>В избранном</span>
                                     </button> :
                                     <button 
                                         className='btn-favorites'
-                                        onClick={() => loginStatus ? addData(filmInfo) : (navigate("/login"), closeModal())}>
-                                            <i class="ph-bookmark-simple"></i> <span>Добавить<br/> в избранное</span>
+                                        onClick={() => loginStatus ? addFavoriteFilm(filmInfo) : (navigate("/login"), closeModal())}>
+                                            <i class="ph-bookmark-simple"></i> <span>Буду смотреть!</span>
                                     </button> 
                                 }
                                 </span>
@@ -210,46 +266,7 @@ const MovieInfo = () => {
                                 </div>
                         </div>
                         <div className='raiting'>
-                            <button className='btn' style={gradeState.visible}
-                            onClick={() => onShowGrade()}>Оценить</button>
-                            
-                            {gradeState.state ? <div className='choise'>
-                                <div className='choisewrapper'>
-                                    <div>
-                                        <i className="ph-star star"></i>
-                                    </div>
-                                    <div>
-                                        <span className='red'>1</span>
-                                    </div>
-                                    <div>
-                                        <span className='red'>2</span>
-                                    </div>
-                                    <div>
-                                        <span className='red'>3</span>
-                                    </div>
-                                    <div>
-                                        <span className='red'>4</span>
-                                    </div>
-                                    <div>
-                                        <span className='gray'>5</span>
-                                    </div>
-                                    <div>
-                                        <span className='gray'>6</span>
-                                    </div>
-                                    <div>
-                                        <span className='green'>7</span>
-                                    </div>
-                                    <div>
-                                        <span className='green'>8</span>
-                                    </div>
-                                    <div>
-                                        <span className='green'>9</span>
-                                    </div>
-                                    <div>
-                                        <span className='green'>10</span>
-                                    </div>
-                                </div>
-                            </div>: null}
+                            <GradeFilms />
                             {actors}                        
                         </div>
                 </div>

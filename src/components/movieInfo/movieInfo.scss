@@ -42,6 +42,23 @@
         background-color: rgb(90, 86, 86);
     }
 }
+
+.btn-grade {
+    margin: 0 auto;
+    width: 150px;
+    height: 40px;
+    color:#fff;
+    background-color: rgb(66, 64, 64);
+    display: flex;
+    align-items: center;
+    border-radius: 20px;
+    
+    &:hover {
+        cursor: pointer;
+        background-color: rgb(90, 86, 86);
+    }
+}
+
 .infowrapper {
     display: none;
     content: '';

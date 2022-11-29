@@ -1,4 +1,4 @@
-import { useEffect, memo } from 'react';
+import { useEffect, memo, useMemo, useCallback } from 'react';
 import {useDispatch, useSelector } from 'react-redux';
 import MovieService from '../../services/MovieService';
 import { setSimilarFilms, setFilmId } from '../store/reducers/movieSlice';
@@ -30,6 +30,21 @@ const SimilarFilms = () => {
         
     }, [filmId])
 
+    const renderFilms = () => {
+       return similarFilms.map(item => {
+            return (
+                <>
+                    <img 
+                        src={item.posterUrl} 
+                        alt="poster"
+                        onClick={() => {
+                            dispatch(setFilmId(item.id));
+                        }} 
+                    />
+                </>
+            )})
+    }
+
     return (
         <>
             { similarFilms.length >= 5 ? 
@@ -37,18 +52,7 @@ const SimilarFilms = () => {
                     <h2>{`Похожие фильмы ${similarFilms.length}`}</h2>
                     <Slider {...settings}>
                             {
-                                similarFilms.map(item => {
-                                return (
-                                    <>
-                                        <img 
-                                            src={item.posterUrl} 
-                                            alt="poster"
-                                            onClick={() => {
-                                                dispatch(setFilmId(item.id));
-                                            }} 
-                                        />
-                                    </>
-                                )})
+                                renderFilms()
                             }        
                         </Slider>
                 </div> : null

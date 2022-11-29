@@ -75,4 +75,4 @@ const {actions, reducer} = loginSlice;
 
 export default reducer;
 
-export const {changeStatusOnOnline, changeStatusOnOffline} = actions;
+export const {changeStatusOnOnline, changeStatusOnOffline, setUserId} = actions;

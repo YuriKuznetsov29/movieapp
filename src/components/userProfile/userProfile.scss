@@ -1,6 +1,13 @@
+.profileContainer {
+    margin: 0 auto;
+    width: 1200px;
+    position: relative;
+    // display: grid;
+    // grid-template-columns: 1fr 3fr;
+}
+
 .favorite-content-wrapper {
     margin: 0 auto;
-    width: 1300px;
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -10,7 +17,7 @@
 }
 
 .results-favorite {
-    width: 460px;
+    width: 680px;
     height: 618px;
     overflow-y: auto;
     display: block;
@@ -67,4 +74,45 @@
     &:hover {
         cursor: pointer;
     }
+}
+
+.profleSidebar {
+    width: 250px;
+    height: 660px;
+    position: absolute;
+    top: 0;
+    left: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    color: #fff;
+    background-color: rgb(0, 0, 0);
+}
+
+.avatar {
+    width: 250px;
+    height: 250px;
+    display: flex;
+    align-items: center;
+    img {
+       margin: 0 auto; 
+    }
+}
+
+.userInfo {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.profileBtn {
+    width: 100%;
+    height: 50px;
+    color: #fff;
+    background-color: rgb(54, 54, 54);
+    &:hover {
+        cursor: pointer;
+        background-color: rgb(85, 85, 85);
+    }
+
 }
