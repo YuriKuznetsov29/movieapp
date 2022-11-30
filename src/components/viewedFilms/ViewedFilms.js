@@ -59,37 +59,18 @@ const ViewedFilms = () => {
         })
         return (
             <div className="results-favorite">
+                <h1 className="result-title">Просмотренные фильмы</h1>
                 {items}
             </div>
 
         )
     }
 
-    // const addGrade = (gradeFilms) => {
-
-        
-    //         viewedFilms.map(item => {
-    //             if (item[1].id === filmId) {
-    //                 setKeyViewed(item[0])
-    //                 console.log('KEY')
-    //                 // console.log(item[0])
-    //                 // console.log(key)
-    //             } 
-    //         })
-        
-    //     return (
-            
-            
-    //     )
-    // }
-
-
     const content = renderViewedFilms(viewedFilms);
 
     return (
         <>
             <div className='favorite-content-wrapper'>
-                <h1>Просмотренные фильмы</h1>
                 {dataViewed ? content : null}
             </div>
         </>

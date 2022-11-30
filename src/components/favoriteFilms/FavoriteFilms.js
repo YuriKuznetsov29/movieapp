@@ -53,6 +53,7 @@ const FavoriteFilms = () => {
         })
         return (
             <div className="results-favorite">
+                <h1 className="result-title">Избранные фильмы</h1>
                 {items}
             </div>
 
@@ -65,7 +66,6 @@ const FavoriteFilms = () => {
     return (
         <>  {spinner}
             <div className='favorite-content-wrapper'>
-                <h1>Избранные фильмы</h1>
                 {dataFavorite ? content : null}
             </div>
         </>
