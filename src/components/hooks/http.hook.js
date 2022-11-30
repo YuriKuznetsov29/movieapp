@@ -1,12 +1,13 @@
-import { useCallback } from "react";
+import { useState, useCallback } from "react";
 
 export const useHttp = () => {
+    const [loading, setLoading] = useState(false);
     
     const request = useCallback(async (url, method ='GET', body = null, headers = {
         'X-API-KEY': 'd727b04e-f986-4937-88df-8a08ae791e53',
         'Content-Type': 'application/json',
     }) => {
-
+        setLoading(true);
         try {
             const response = await fetch(url, {method, body, headers});
             if (!response.ok) {
@@ -14,13 +15,15 @@ export const useHttp = () => {
             }
 
             const data = await response.json();
+            setLoading(false)
             return data;
         } catch (e) {
             throw e;
+            setLoading(false)
         }
     }, [])
 
-    return {request}
+    return {request, loading}
 }
 
 //'Content-type': 'application/json'

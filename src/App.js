@@ -55,7 +55,7 @@ function App() {
 
   return (
     <>
-      <Suspense fallback={<span>Loading...</span>}>
+      <Suspense fallback={<Spinner /> + `Loading...`}>
         <RouterProvider router={router} />
       </Suspense>
     </>

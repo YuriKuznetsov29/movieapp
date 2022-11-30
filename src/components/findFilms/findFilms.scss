@@ -35,7 +35,7 @@
 
 .btn-find {
     width: 100%;
-    height: 30px;
+    height: 40px;
     border-radius: 20px;
     border: 1px #464646 solid;
     color: #fff;
@@ -120,18 +120,6 @@
     label {
         color:#fff
     }
-    input {
-        width: 100px;
-        height: 20px;
-        margin-bottom: 20px;
-        padding: 8px 0 8px 16px;
-        font-family: Tahoma,Arial,Verdana,sans-serif;
-        font-size: 15px;
-        color: #fff;
-        border: none;
-        outline: none;
-        background: rgb(87, 84, 84);
-    }
     select {
         width: 140px;
         margin-bottom: 20px;
@@ -142,6 +130,25 @@
         outline: none;
         background: rgb(87, 84, 84);
     }
+}
+
+.parametersFind {
+    width: 100px;
+    height: 20px;
+    margin-bottom: 20px;
+    padding: 8px 0 8px 16px;
+    font-family: Tahoma,Arial,Verdana,sans-serif;
+    font-size: 15px;
+    color: #fff;
+    border: none;
+    outline: none;
+    background: rgb(87, 84, 84);
+}
+
+.rangeRate {
+    width: 100px;
+    height: 20px;
+    margin-bottom: 20px;
 }
 
 .options-wrapper {

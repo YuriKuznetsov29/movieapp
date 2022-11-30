@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, memo } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { getDatabase, ref, onValue, set, push} from "firebase/database";
 import { setGradeFilms, setGrade } from "../store/reducers/userProfileSlice";
@@ -20,6 +20,7 @@ const GradeFilms = () => {
     }, [userId])
 
     useEffect(() => {
+        dispatch(setGrade(null))
         checkGradeFilms()
     }, [filmId, gradeFilms])
 
@@ -35,9 +36,6 @@ const GradeFilms = () => {
         gradeFilms.forEach(item => {
             if (item[1].id === filmId) {
                 dispatch(setGrade(item[1].grade))
-                console.log('KEY')
-                // console.log(item[0])
-                // console.log(key)
             } 
         })
     }
@@ -129,4 +127,4 @@ const GradeFilms = () => {
     )
 }
 
-export default GradeFilms;
+export default memo(GradeFilms);

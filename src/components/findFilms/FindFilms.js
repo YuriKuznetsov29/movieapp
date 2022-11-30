@@ -2,6 +2,8 @@ import { useState, useEffect } from 'react';
 import MovieService from '../../services/MovieService';
 import { setFilmId } from '../store/reducers/movieSlice';
 import { useDispatch } from 'react-redux';
+import Spinner from '../Spinner/Spinner';
+import { useHttp } from '../hooks/http.hook';
 
 import './findFilms.scss';
 
@@ -14,11 +16,13 @@ const FindFilms = (props) => {
     const [genre, setGenre] = useState('');
     const [startYear, setStartYear] = useState('');
     const [endYear, setEndYear] = useState('');
+    const [maxRate, setMaxRate] = useState(10);
+    const [minRate, setMinRate] = useState(0);
     const [optionState, setOptionState] = useState({state: false, visible: {'display': 'none'}});
 
 
     const {getFilmByName, getCounryList, getFimsByParametrs} = MovieService();
-
+    const {loading} = useHttp();
     const dispatch = useDispatch();
 
     useEffect(() => {
@@ -35,7 +39,7 @@ const FindFilms = (props) => {
     }
 
     const loadDataByParametrs = () => {
-        getFimsByParametrs(country, genre, startYear, endYear)
+        getFimsByParametrs(country, genre, startYear, endYear, minRate, maxRate)
             .then(res => setFilms(res))
     }
 
@@ -106,6 +110,7 @@ const FindFilms = (props) => {
     const content = renderFilms(films);
     const countriesTransform = renderCountries(countriesArr);
     const genresTransform = renderGenres(genresArr);
+    const spinner = loading ? <Spinner/> : null;
 
 
     return (
@@ -123,13 +128,17 @@ const FindFilms = (props) => {
                     <label>Жанры</label>
                     {genresTransform}
                     <label>Минимальный год</label>
-                    <input type='text' value={startYear} onChange={(e) => setStartYear(e.target.value)}></input>
+                    <input className='parametersFind' type='text' value={startYear} onChange={(e) => setStartYear(e.target.value)}></input>
                     <label>Максимальный год</label>
-                    <input type='text' value={endYear} onChange={(e) => setEndYear(e.target.value)}></input>
+                    <input className='parametersFind' type='text' value={endYear} onChange={(e) => setEndYear(e.target.value)}></input>
+                    <label>{`Максимальный рейтинг ${maxRate}`}</label>
+                    <input className='rangeRate' type='range' min='0' max='10' step='1' value={maxRate} onChange={(e) => setMaxRate(e.target.value)}></input>
+                    <label>{`Минимальный рейтинг ${minRate}`}</label>
+                    <input className='rangeRate' type='range' min='0' max='10' step='1' value={minRate} onChange={(e) => setMinRate(e.target.value)}></input>
                     <button className='btn-find' type='submit' onClick={() => loadDataByParametrs()}>Найти</button>
                 </div>
             </div>
-                
+                {spinner}
                 {content}
         </div>
     )

@@ -33,18 +33,6 @@ const userProfileSlice = createSlice({
             state.grade = action.payload;
         },
     },
-    // extraReducers: (builder) => {
-    //     builder
-    //         .addCase(fetchdeleteFavoriteFilm.pending, state => {state.loginStatus = 'loading'})
-    //         .addCase(fetchdeleteFavoriteFilm.fulfilled, (state, action) => {
-    //             state.loginStatus = true;
-    //             state.email = action.payload;
-    //         })
-    //         .addCase(fetchdeleteFavoriteFilm.rejected, state => {
-    //             state.loginStatus = 'error';
-    //         })
-            
-    // },
 });
 
 const {actions, reducer} = userProfileSlice;

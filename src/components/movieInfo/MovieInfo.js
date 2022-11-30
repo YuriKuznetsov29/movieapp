@@ -1,6 +1,5 @@
 import { useEffect, useState } from 'react';
 import MovieService from '../../services/MovieService';
-import { getAuth} from "firebase/auth";
 import {getDatabase, push, ref, set, onValue} from "firebase/database";
 import { setFavoriteFilms, setViewedFilms, setGrade } from '../store/reducers/userProfileSlice';
 import { useDispatch, useSelector } from 'react-redux';
@@ -9,14 +8,14 @@ import { useNavigate } from "react-router-dom";
 import SimilarFilms from '../similarFilms/SimilarFilms';
 import Trailers from '../trailers/Trailars';
 import GradeFilms from '../grageFilms/GradeFilms';
+import { useHttp } from '../hooks/http.hook';
+import Spinner from '../Spinner/Spinner';
 
 import './movieInfo.scss';
 
 const MovieInfo = () => {
-    const [gradeState, setGradeState] = useState({state: false, visible: {'display': 'block'}});
     const [keyFavorite, setKeyFavorite] = useState(null);
     const [keyViewed, setKeyViewed] = useState(null);
-    // const [similarFilms, setSimilarFilms] = useState([]);
 
     const loginStatus = useSelector(state => state.login.loginStatus);
     const userId = useSelector(state => state.login.userId);
@@ -30,7 +29,7 @@ const MovieInfo = () => {
  
     const dispatch = useDispatch();
 
-    const auth = getAuth();
+    const loading = useHttp();
 
     const favoriteFilms = useSelector(state => state.userProfile.favoriteFilms);
     const viewedFilms = useSelector(state => state.userProfile.viewedFilms);
@@ -62,9 +61,6 @@ const MovieInfo = () => {
         favoriteFilms.forEach(item => {
             if (item[1].id === filmId) {
                 setKeyFavorite(item[0])
-                console.log('KEY')
-                // console.log(item[0])
-                // console.log(key)
             } 
         })
     }
@@ -73,9 +69,6 @@ const MovieInfo = () => {
         viewedFilms.forEach(item => {
             if (item[1].id === filmId) {
                 setKeyViewed(item[0])
-                console.log('KEY')
-                // console.log(item[0])
-                // console.log(key)
             } 
         })
     }
@@ -118,7 +111,6 @@ const MovieInfo = () => {
         }
     }
 
-
     const addFavoriteFilm = (film) => {
         const db = getDatabase();
         const Ref = ref(db, `users/` + userId + `/favoriteFilms/`);
@@ -135,7 +127,6 @@ const MovieInfo = () => {
         set(vievedFilms, {
             ...film
         });
-        console.log("READ")
     }
 
     const readFavoriteFilms = () => {

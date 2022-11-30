@@ -5,7 +5,7 @@ import { useSelector } from "react-redux";
 
     const MovieService = () => {
 
-    const {request} = useHttp();
+    const {request, loading} = useHttp();
 
     const auth = getAuth();
 
@@ -115,8 +115,8 @@ import { useSelector } from "react-redux";
         return res;
     };
 
-    const getFimsByParametrs = async (country, genre, startYear, endYear) => {
-        const res = await request(`https://kinopoiskapiunofficial.tech/api/v2.2/films?countries=${country}&genres=${genre}&order=RATING&type=ALL&ratingFrom=0&ratingTo=10&yearFrom=${startYear}&yearTo=${endYear}&page=1`);
+    const getFimsByParametrs = async (country, genre, startYear, endYear, minRate, maxRate) => {
+        const res = await request(`https://kinopoiskapiunofficial.tech/api/v2.2/films?countries=${country}&genres=${genre}&order=RATING&type=ALL&ratingFrom=${minRate}&ratingTo=${maxRate}&yearFrom=${startYear}&yearTo=${endYear}&page=1`);
         // console.log(res);
         return _transformFilmsForFindByParametrs(res);
     };
@@ -252,7 +252,7 @@ import { useSelector } from "react-redux";
         return result;
     }
 
-    return {getFilms, getFilmInfo, getActualMonth, getFilmByName, getCounryList, getFimsByParametrs, getSimilarFilms, getTrailer, getStaff, deleteFavoriteFilm, deleteViewedFilm}
+    return {getFilms, getFilmInfo, getActualMonth, getFilmByName, getCounryList, getFimsByParametrs, getSimilarFilms, getTrailer, getStaff, deleteFavoriteFilm, deleteViewedFilm, loading}
 }
 
 export default MovieService;

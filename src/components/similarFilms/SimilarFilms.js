@@ -3,6 +3,7 @@ import {useDispatch, useSelector } from 'react-redux';
 import MovieService from '../../services/MovieService';
 import { setSimilarFilms, setFilmId } from '../store/reducers/movieSlice';
 import Slider from 'react-slick';
+import Spinner from '../Spinner/Spinner';
 
 const SimilarFilms = () => {
 
@@ -11,7 +12,7 @@ const SimilarFilms = () => {
     const filmId = useSelector(state => state.movieInfo.filmId);
     const similarFilms = useSelector(state => state.movieInfo.similarFilms);
 
-    const { getSimilarFilms } = MovieService();
+    const { getSimilarFilms, loading } = MovieService();
 
     const settings = {
         dots: true,
@@ -45,8 +46,11 @@ const SimilarFilms = () => {
             )})
     }
 
+    const spinner = loading ? <Spinner/> : null
+
     return (
         <>
+            {spinner}
             { similarFilms.length >= 5 ? 
                 <div className='slider-inner'>
                     <h2>{`Похожие фильмы ${similarFilms.length}`}</h2>

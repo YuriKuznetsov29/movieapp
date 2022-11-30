@@ -4,10 +4,11 @@ import { setFilmId } from '../store/reducers/movieSlice';
 import { setFavoriteFilms, setFavoriteFilmsData } from "../store/reducers/userProfileSlice";
 import MovieService from "../../services/MovieService";
 import { getDatabase, ref, onValue} from "firebase/database";
+import Spinner from "../Spinner/Spinner";
 
 const FavoriteFilms = () => {
 
-    const {deleteFavoriteFilm} = MovieService();
+    const {deleteFavoriteFilm, loading} = MovieService();
 
     const dispatch = useDispatch();
 
@@ -58,10 +59,11 @@ const FavoriteFilms = () => {
         )
     }
 
-    let content = renderFavoiteFilms(favoriteFilms);
+    const content = renderFavoiteFilms(favoriteFilms);
+    const spinner = loading ? <Spinner/> : null
 
     return (
-        <>
+        <>  {spinner}
             <div className='favorite-content-wrapper'>
                 <h1>Избранные фильмы</h1>
                 {dataFavorite ? content : null}
