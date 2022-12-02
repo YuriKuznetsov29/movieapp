@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import MovieService from '../../services/MovieService';
 import { setFilmId } from '../store/reducers/movieSlice';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import Spinner from '../Spinner/Spinner';
 import { useHttp } from '../hooks/http.hook';
 
@@ -10,9 +10,7 @@ import './findFilms.scss';
 const FindFilms = (props) => {
     const [films, setFilms] = useState([]);
     const [keyword, setKeyword] = useState('');
-    const [countriesArr, setCountriesArr] = useState([]);
     const [country, setCountry] = useState('');
-    const [genresArr, setGenresArr] = useState([]);
     const [genre, setGenre] = useState('');
     const [startYear, setStartYear] = useState('');
     const [endYear, setEndYear] = useState('');
@@ -20,18 +18,12 @@ const FindFilms = (props) => {
     const [minRate, setMinRate] = useState(0);
     const [optionState, setOptionState] = useState({state: false, visible: {'display': 'none'}});
 
+    const genres = useSelector(state => state.movieInfo.genres);
+    const countries = useSelector(state => state.movieInfo.countries);
 
-    const {getFilmByName, getCounryList, getFimsByParametrs} = MovieService();
+    const {getFilmByName, getFimsByParametrs} = MovieService();
     const {loading} = useHttp();
     const dispatch = useDispatch();
-
-    useEffect(() => {
-        getCounryList()
-            .then(res => {
-                setGenresArr(res.genres) 
-                setCountriesArr(res.countries)
-            });
-    }, [])
 
     const loadDataByKeyword = () => {
         getFilmByName(keyword)
@@ -47,7 +39,6 @@ const FindFilms = (props) => {
         let state = optionState.state;
         state = !state;
         state ? setOptionState({state: true, visible: {'display': 'flex'}}) : setOptionState({state: false, visible: {'display': 'none'}});
-        
     }
 
     const renderFilms = (arr) => {
@@ -108,10 +99,9 @@ const FindFilms = (props) => {
     }
 
     const content = renderFilms(films);
-    const countriesTransform = renderCountries(countriesArr);
-    const genresTransform = renderGenres(genresArr);
+    const countriesTransform = renderCountries(countries);
+    const genresTransform = renderGenres(genres);
     const spinner = loading ? <Spinner/> : null;
-
 
     return (
 

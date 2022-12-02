@@ -1,5 +1,4 @@
 import { useHttp } from "../components/hooks/http.hook";
-import { getAuth, onAuthStateChanged} from "firebase/auth";
 import { getDatabase, ref, update, set} from "firebase/database";
 import { useSelector } from "react-redux";
 
@@ -7,51 +6,36 @@ import { useSelector } from "react-redux";
 
     const {request, loading} = useHttp();
 
-    const auth = getAuth();
-
+    const userId = useSelector(state => state.login.userId);
     const dataFavorite = useSelector(state => state.userProfile.dataFavorite);
     const dataViewed = useSelector(state => state.userProfile.dataViewed);
     
 
     const deleteFavoriteFilm = (key) => {
-    onAuthStateChanged(auth, (user) => {
-        if (user) {
-            const uid = user.uid;
-            const db = getDatabase();
-            let newData = Object.assign({}, dataFavorite);
-            delete newData[key];
-            const updates = {};
-            updates[`users/` + uid + `/favoriteFilms/`] = newData;
-            if (newData !== {}) {
-                update(ref(db), updates);
-            } else {
-                set(ref(db, `users/` + uid + `/favoriteFilms/`), null);
-            }
+        const db = getDatabase();
+        let newData = Object.assign({}, dataFavorite);
+        delete newData[key];
+        const updates = {};
+        updates[`users/` + userId + `/favoriteFilms/`] = newData;
+        if (newData !== {}) {
+            update(ref(db), updates);
         } else {
-          console.log('User is signed out');
+            set(ref(db, `users/` + userId + `/favoriteFilms/`), null);
         }
-    });
     }
 
     const deleteViewedFilm = (key) => {
-        onAuthStateChanged(auth, (user) => {
-            if (user) {
-                const uid = user.uid;
-                const db = getDatabase();
-                let newData = Object.assign({}, dataViewed);
-                delete newData[key];
-                const updates = {};
-                updates[`users/` + uid + `/viewedFilms/`] = newData;
-                if (newData !== {}) {
-                    update(ref(db), updates);
-                } else {
-                    set(ref(db, `users/` + uid + `/viewedFilms/`), null);
-                }
-            } else {
-              console.log('User is signed out');
-            }
-        });
+        const db = getDatabase();
+        let newData = Object.assign({}, dataViewed);
+        delete newData[key];
+        const updates = {};
+        updates[`users/` + userId + `/viewedFilms/`] = newData;
+        if (newData !== {}) {
+            update(ref(db), updates);
+        } else {
+            set(ref(db, `users/` + userId + `/viewedFilms/`), null);
         }
+    }
 
     const getActualMonth = () => {
 
@@ -104,20 +88,17 @@ import { useSelector } from "react-redux";
 
     const getFilmByName = async (keyword) => {
         const res = await request(`https://kinopoiskapiunofficial.tech/api/v2.1/films/search-by-keyword?keyword=${keyword}&page=1`)
-        // console.log(res)
         return _transformFilmsForFind(res);
                     
     };
 
     const getCounryList = async () => {
         const res = await request(`https://kinopoiskapiunofficial.tech/api/v2.2/films/filters`);
-        // console.log(res);
         return res;
     };
 
     const getFimsByParametrs = async (country, genre, startYear, endYear, minRate, maxRate) => {
         const res = await request(`https://kinopoiskapiunofficial.tech/api/v2.2/films?countries=${country}&genres=${genre}&order=RATING&type=ALL&ratingFrom=${minRate}&ratingTo=${maxRate}&yearFrom=${startYear}&yearTo=${endYear}&page=1`);
-        // console.log(res);
         return _transformFilmsForFindByParametrs(res);
     };
 
@@ -138,9 +119,6 @@ import { useSelector } from "react-redux";
         return transformStaff(res);
     };
 
-
-    //https://kinopoiskapiunofficial.tech/api/v1/staff?filmId=301
-
     const _transformFilms = (res) => {
         let films = []
         
@@ -153,7 +131,6 @@ import { useSelector } from "react-redux";
                 id: films.kinopoiskId
             });
         });
-        // console.log(films);
         return films;
     }
 
@@ -173,8 +150,6 @@ import { useSelector } from "react-redux";
                 background: item.coverUrl,
                 id: item.kinopoiskId,
             }
-        
-        // console.log(info);
         return info;
     }
 
@@ -194,7 +169,6 @@ import { useSelector } from "react-redux";
 
             });
         });
-        //  console.log(films);
         return films;
     }
 
@@ -214,7 +188,6 @@ import { useSelector } from "react-redux";
 
             });
         });
-        //  console.log(films);
         return films;
     }
 
@@ -229,7 +202,6 @@ import { useSelector } from "react-redux";
                 id: films.filmId
             });
         });
-        // console.log(films);
         return films;
     }
 

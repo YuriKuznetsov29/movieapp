@@ -23,6 +23,7 @@
     padding: 10px;
     width: 680px;
     height: 680px;
+    position: relative;
     overflow-y: auto;
     display: block;
     background-color: #362d2d;
@@ -99,7 +100,9 @@
     display: flex;
     align-items: center;
     img {
-       margin: 0 auto; 
+        margin: 0 auto;
+        width: 250px;
+        height: 250px; 
     }
 }
 
@@ -120,29 +123,104 @@
         cursor: pointer;
         background-color: rgb(85, 85, 85);
     }
-    &:before {
-        content: "";
-            display: block;
-            width: 100%;
-            height: 1px;
-            position: absolute;
-            top: 0;
-            left: 0;
-            z-index: 1;
-            background-color: #fff;
-    }
-    // &:after {
+    // &:before {
     //     content: "";
     //         display: block;
     //         width: 100%;
     //         height: 1px;
     //         position: absolute;
-    //         bottom: 0;
+    //         top: 0;
     //         left: 0;
     //         z-index: 1;
     //         background-color: #fff;
     // }
-   
+    &:after {
+        content: "";
+        display: block;
+        width: 100%;
+        height: 1px;
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        // z-index: 1;
+        background-color: #fff;
+    }
+}
 
+.filters {
+    padding: 0 50px;
+    margin-bottom: 10px;
+    display: flex;
+    justify-content: space-between;
+    color: #fff;
+    span {
+        display: flex;
+        flex-direction: column;
+        justify-content: space-around;
+    }
+}
+
+.inputYear {
+    width: 140px;
+    height: 25px;
+    font-size: 15px;
+    color: #fff;
+    border: none;
+    outline: none;
+    background: rgb(87, 84, 84);
+}
+
+.inputSelect {
+    width: 140px;
+    height: 25px;
+    font-size: 15px;
+    color: #fff;
+    border: none;
+    outline: none;
+    background: rgb(87, 84, 84);
+}
+
+.rangeRate {
+    width: 140px;
+}
+
+.showFilters {
+    position: absolute;
+    top: 15px;
+    right: 15px;
+    font-size: 24px;
+    color: #fff;
+    &:hover {
+        cursor: pointer;
+    }
+}
+
+.statistic {
+    padding: 0 50px;
+    margin-bottom: 10px;
+    display: flex;
+    justify-content: space-between;
+    color: #fff;
+}
+
+.statItem {
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;
+    background-color: #000;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+}
+
+.hidden {
+    opacity: 0;
+    height: 0;
+    width: 0;
+    line-height: 0;
+    overflow: 0;
+    padding: 0;
+    margin: 0;
 }
 

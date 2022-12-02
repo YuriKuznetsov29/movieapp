@@ -3,6 +3,7 @@ import ReactDOM from 'react-dom/client';
 import { Provider } from 'react-redux';
 import { initializeApp } from 'firebase/app';
 import { getDatabase } from "firebase/database";
+import { getStorage } from "firebase/storage";
 
 import App from './App';
 import store from './components/store';
@@ -18,12 +19,16 @@ const app = initializeApp (
     storageBucket: "movieapp-b5187.appspot.com",
     messagingSenderId: "195990776993",
     appId: "1:195990776993:web:853b6781c19f93124c54e0",
-    databaseURL: "https://movieapp-b5187-default-rtdb.firebaseio.com/"
+    databaseURL: "https://movieapp-b5187-default-rtdb.firebaseio.com/",
+    storageBucket: 'gs://movieapp-b5187.appspot.com/'
   }
 );
 
 // Initialize Realtime Database and get a reference to the service
 const database = getDatabase(app);
+
+// Initialize Cloud Storage and get a reference to the service
+const storage = getStorage(app);
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(

@@ -1,4 +1,4 @@
-import { useEffect, memo, useMemo, useCallback } from 'react';
+import { useEffect, memo} from 'react';
 import {useDispatch, useSelector } from 'react-redux';
 import MovieService from '../../services/MovieService';
 import { setSimilarFilms, setFilmId } from '../store/reducers/movieSlice';
@@ -55,10 +55,10 @@ const SimilarFilms = () => {
                 <div className='slider-inner'>
                     <h2>{`Похожие фильмы ${similarFilms.length}`}</h2>
                     <Slider {...settings}>
-                            {
-                                renderFilms()
-                            }        
-                        </Slider>
+                        {
+                            renderFilms()
+                        }        
+                    </Slider>
                 </div> : null
             }
         </>
