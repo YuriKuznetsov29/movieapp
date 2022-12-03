@@ -104,13 +104,11 @@ import { useSelector } from "react-redux";
 
     const getSimilarFilms = async (id) => {
         const res = await request(`https://kinopoiskapiunofficial.tech/api/v2.2/films/${id}/similars`);
-        console.log(res);
         return _transformSimilarFilms(res);
     };
 
     const getTrailer = async (id) => {
         const res = await request(`https://kinopoiskapiunofficial.tech/api/v2.2/films/${id}/videos`);
-        // console.log(res);
         return res;
     };
 
@@ -135,7 +133,7 @@ import { useSelector } from "react-redux";
     }
 
     const _getTransformFilmInfo = (item) => {
-
+        console.log(item)
         const info = 
             {
                 name: item.nameRu,
@@ -148,6 +146,7 @@ import { useSelector } from "react-redux";
                 time: item.filmLength,
                 description: item.description,
                 background: item.coverUrl,
+                ratingKinopoisk: item.ratingKinopoisk,
                 id: item.kinopoiskId,
             }
         return info;

@@ -2,14 +2,15 @@ import { useState, useEffect } from 'react';
 import { setFilmId } from '../store/reducers/movieSlice';
 import { useDispatch, useSelector } from 'react-redux';
 import { setViewedFilms, setViewdFilmsData} from '../store/reducers/userProfileSlice';
+import { setMaxYear, setMinYear, setGenre, setCountry, setMaxRate, setMinRate } from '../store/reducers/filtersSlice';
 import { getDatabase, ref, onValue} from "firebase/database";
 import MovieService from '../../services/MovieService';
 
 const ViewedFilms = () => {
     const [startYear, setStartYear] = useState('');
     const [endYear, setEndYear] = useState('');
-    const [maxRate, setMaxRate] = useState(10);
-    const [minRate, setMinRate] = useState(0);
+    // const [maxRate, setMaxRate] = useState(10);
+    // const [minRate, setMinRate] = useState(0);
     const [filtersState, setFiltersState] = useState({state: false, style: {'display': 'none'}});
 
     const {deleteViewedFilm} = MovieService();
@@ -22,6 +23,9 @@ const ViewedFilms = () => {
     const gradeFilms = useSelector(state => state.userProfile.gradeFilms);
     const genres = useSelector(state => state.movieInfo.genres);
     const countries = useSelector(state => state.movieInfo.countries);
+
+    const maxRate = useSelector(state => state.filters.maxRate);
+    const minRate = useSelector(state => state.filters.minRate);
 
     useEffect(() => {
         readDataViewed()
@@ -61,6 +65,7 @@ const ViewedFilms = () => {
                         <div>{item[1].year}</div>
                         <div>{item[1].genre}</div>
                         <div>{item[1].time + ' мин'}</div>
+                        <div>{`Рейтинг кинопоиска ${item[1].ratingKinopoisk}`}</div>
                         {gradeFilms.map(el => {
                             if (item[1].id === el[1].id) {
                                 return <div>Ваша оценка {el[1].grade}</div>
@@ -88,24 +93,32 @@ const ViewedFilms = () => {
                 </div>
                 <div className="filters" style={filtersState.style}>
                     <span>
-                        <input className="inputYear" placeholder="max год"></input>
-                        <input className="inputYear" placeholder="min год"></input>
+                        <input 
+                            className="inputYear" 
+                            placeholder="max год"
+                            onChange={(e) => dispatch(setMaxYear(e.target.value))}>
+                        </input>
+                        <input 
+                            className="inputYear" 
+                            placeholder="min год"
+                            onChange={(e) => dispatch(setMinYear(e.target.value))}>
+                        </input>
                     </span>
                     <span>
-                        <select className="inputSelect">
+                        <select className="inputSelect" onChange={(e) => dispatch(setCountry(e.target.value))}>
                             <option value="none" selected>Выберете страну</option>
-                            {countries.map(item => <option value={item.id}>{item.country}</option>)}
+                            {countries.map(item => <option value={item.country}>{item.country}</option>)}
                         </select>
-                        <select className="inputSelect">
+                        <select className="inputSelect" onChange={(e) => dispatch(setGenre(e.target.value))}>
                             <option value="none" selected>Выберете жанр</option>
-                            {genres.map(item => <option value={item.id}>{item.genre}</option>)}
+                            {genres.map(item => <option value={item.genre}>{item.genre}</option>)}
                         </select>
                     </span>
                     <span>
                         <label>{`Макс рейтинг ${maxRate}`}</label>
-                        <input className='rangeRate' type='range' min='0' max='10' step='1' value={maxRate} onChange={(e) => setMaxRate(e.target.value)}></input>
+                        <input className='rangeRate' type='range' min='0' max='10' step='1' value={maxRate} onChange={(e) => dispatch(setMaxRate(e.target.value))}></input>
                         <label>{`Мин рейтинг ${minRate}`}</label>
-                        <input className='rangeRate' type='range' min='0' max='10' step='1' value={minRate} onChange={(e) => setMinRate(e.target.value)}></input>
+                        <input className='rangeRate' type='range' min='0' max='10' step='1' value={minRate} onChange={(e) => dispatch(setMinRate(e.target.value))}></input>
                     </span>
                 </div>
                 {items}

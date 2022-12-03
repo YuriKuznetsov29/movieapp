@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef, useMemo, useCallback } from 'react';
 import {useSelector } from 'react-redux';
 import FavoriteFilms from '../favoriteFilms/FavoriteFilms';
 import ViewedFilms from '../viewedFilms/ViewedFilms';
@@ -6,38 +6,28 @@ import { getStorage, ref, uploadBytes, getDownloadURL} from "firebase/storage";
 
 import './userProfile.scss'
 
-const UserProfile = (props) => {
+const UserProfile = () => {
     const [content, setContent] = useState(<FavoriteFilms />);
-    const [selectedFile, setSelectedFile] = useState(null);
     const [avatar, setAvatar] = useState(null);
     const inputAvatar = useRef(null);
+    const [btnClass, setBtnClass] = useState({btnFavorite: 'profileBtn profileBtnActive', btnViewed: 'profileBtn'})
+
 
     const email = useSelector(state => state.login.email);
+    const loginStatus = useSelector(state => state.login.loginStatus);
 
     const storage = getStorage();
-    const avatarRef = ref(storage, email + 'avatar.jpg');
+    const avatarRef = ref(storage, email + '/avatar')
+
 
     useEffect(() => {
         getAvatar()
-    }, [avatarRef])
+        console.log('GET');
 
-    useEffect(() => {
-        uploadAvatar()
-    }, [selectedFile])
+    }, [avatarRef])
 
     const inputClick = () => {
         inputAvatar.current.click()
-    }
-
-    const uploadAvatar = () => {
-        uploadBytes(avatarRef, selectedFile).then((snapshot) => {
-        console.log('Uploaded a blob or file!');
-        getAvatar()
-        });
-    }
-
-    const handleChange = (e) => {
-        setSelectedFile(e.target.files[0])
     }
 
     const getAvatar = () => {
@@ -46,6 +36,32 @@ const UserProfile = (props) => {
             setAvatar(url)
         })
     }
+
+    const uploadAvatar = (image) => {
+        uploadBytes(avatarRef, image).then((snapshot) => {
+        console.log('Uploaded a blob or file!');
+        getAvatar()
+        });
+    }
+
+    const handleChange = (e) => {
+        uploadAvatar(e.target.files[0])
+
+    }
+
+    const activeButton = (key) => {
+        switch (key) {
+         case FavoriteFilms:
+             setBtnClass({btnFavorite: 'profileBtn profileBtnActive', btnViewed: 'profileBtn'})
+             break;
+         case ViewedFilms:
+             setBtnClass({btnFavorite: 'profileBtn', btnViewed: 'profileBtn profileBtnActive'})
+             break;
+         default:
+             setBtnClass({btnFavorite: 'profileBtn profileBtnActive', btnViewed: 'profileBtn'})
+             break;
+        }
+     }
 
     return (
         <>  
@@ -60,8 +76,8 @@ const UserProfile = (props) => {
                     <div>На сайте</div>
                 </div>
                 <button className='profileBtn' onClick={() => inputClick()}>Загрузить аватар</button>
-                <button className='profileBtn' onClick={() => setContent(<FavoriteFilms />)} >Избранные фильмы</button>
-                <button className='profileBtn' onClick={() => setContent(<ViewedFilms />)}>Просмотренные фильмы</button>
+                <button className={btnClass.btnFavorite} onClick={() => {setContent(<FavoriteFilms />); activeButton(FavoriteFilms)}} >Избранные фильмы</button>
+                <button className={btnClass.btnViewed} onClick={() => {setContent(<ViewedFilms />); activeButton(ViewedFilms)}}>Просмотренные фильмы</button>
                 <input 
                     className='hidden' 
                     type='file' 
@@ -69,6 +85,7 @@ const UserProfile = (props) => {
                     ref={inputAvatar} 
                     onChange={(e) => handleChange(e)}
                 />
+                {/* <button onClick={() => getAvatar()}>Get AVATAR</button> */}
             </div>
             {content}
             </div>

@@ -62,6 +62,7 @@ const FavoriteFilms = () => {
                         <h4>{item[1].name}</h4>
                         <div>{item[1].year}</div>
                         <div>{item[1].genre}</div>
+                        <div>{`Рейтинг кинопоиска ${item[1].ratingKinopoisk}`}</div>
                         
                     </div>
                     <i class="ph-trash delete"

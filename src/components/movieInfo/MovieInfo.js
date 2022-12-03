@@ -258,6 +258,7 @@ const MovieInfo = () => {
                         </div>
                         <div className='raiting'>
                             <GradeFilms />
+                            {`Рейтинг кинопоиска ${filmInfo.ratingKinopoisk}`}
                             {actors}                        
                         </div>
                 </div>
