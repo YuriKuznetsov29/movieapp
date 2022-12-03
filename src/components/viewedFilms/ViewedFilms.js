@@ -26,6 +26,7 @@ const ViewedFilms = () => {
 
     const maxRate = useSelector(state => state.filters.maxRate);
     const minRate = useSelector(state => state.filters.minRate);
+    const genre = useSelector(state => state.filters.genre);
 
     useEffect(() => {
         readDataViewed()
@@ -47,6 +48,16 @@ const ViewedFilms = () => {
         else {
             setFiltersState({state: true, style: {'display': 'flex'}});
         }
+    }
+
+    const filterFilms = (arr, genre = 'драма', country, maxYear, minYear, maxRate, minRate) => {
+        console.log(arr)
+        const filteredFilms = arr.filter(item => {
+                return item[1].genre === 'драма'
+                });
+        console.log(filteredFilms)
+        
+        
     }
 
     const renderViewedFilms = (arr) => {
@@ -86,10 +97,13 @@ const ViewedFilms = () => {
             <div className="results-favorite">
                 <i class="ph-sliders showFilters" onClick={() => showFilters()}></i>
                 <h1 className="result-title">Просмотренные фильмы</h1>
+                <button onClick={() => filterFilms(viewedFilms, genre)}>test</button>
+
                 <div className='statistic'>
                     <div className='statItem'>{fimsQuantity}</div>
                     <div className='statItem'>{hourseQuantity}</div>
                     <div className='statItem'>{daysQuantity}</div>
+
                 </div>
                 <div className="filters" style={filtersState.style}>
                     <span>
@@ -125,6 +139,8 @@ const ViewedFilms = () => {
             </div>
         )
     }
+
+    
 
     const content = renderViewedFilms(viewedFilms);
 
