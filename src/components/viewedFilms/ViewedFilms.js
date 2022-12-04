@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { setFilmId } from '../store/reducers/movieSlice';
 import { useDispatch, useSelector } from 'react-redux';
 import { setViewedFilms, setViewdFilmsData} from '../store/reducers/userProfileSlice';
-import { setMaxYear, setMinYear, setGenre, setCountry, setMaxRate, setMinRate } from '../store/reducers/filtersSlice';
+import { setMaxYear, setMinYear, setGenre, setCountry, setMaxRate, setMinRate, clearFilters } from '../store/reducers/filtersSlice';
 import { getDatabase, ref, onValue} from "firebase/database";
 import MovieService from '../../services/MovieService';
 
@@ -11,6 +11,7 @@ const ViewedFilms = () => {
     const [endYear, setEndYear] = useState('');
     // const [maxRate, setMaxRate] = useState(10);
     // const [minRate, setMinRate] = useState(0);
+    const [filteredFilms, setFilteredFilms] = useState([]);
     const [filtersState, setFiltersState] = useState({state: false, style: {'display': 'none'}});
 
     const {deleteViewedFilm} = MovieService();
@@ -24,13 +25,21 @@ const ViewedFilms = () => {
     const genres = useSelector(state => state.movieInfo.genres);
     const countries = useSelector(state => state.movieInfo.countries);
 
+    
+    const genre = useSelector(state => state.filters.genre);
+    const country = useSelector(state => state.filters.country);
+    const maxYear = useSelector(state => state.filters.maxYear);
+    const minYear = useSelector(state => state.filters.minYear);
     const maxRate = useSelector(state => state.filters.maxRate);
     const minRate = useSelector(state => state.filters.minRate);
-    const genre = useSelector(state => state.filters.genre);
 
     useEffect(() => {
         readDataViewed()
     }, [userId])
+
+    useEffect(() => {
+        filterFilms(viewedFilms, genre, country, maxYear, minYear, maxRate, minRate)
+    }, [viewedFilms, genre, country, maxYear, minYear, maxRate, minRate])
 
     const readDataViewed = () => {
         const db = getDatabase();
@@ -50,14 +59,37 @@ const ViewedFilms = () => {
         }
     }
 
-    const filterFilms = (arr, genre = 'драма', country, maxYear, minYear, maxRate, minRate) => {
+    const filterFilms = (arr, genre, country, maxYear, minYear, maxRate, minRate) => {
         console.log(arr)
-        const filteredFilms = arr.filter(item => {
-                return item[1].genre === 'драма'
-                });
+        let filteredFilms = genre ? arr.filter(item => {
+                return item[1].genre === genre
+                }) : arr;
+
+        filteredFilms = country ? filteredFilms.filter(item => {
+            return item[1].country === country
+            }) : filteredFilms;
+
+        filteredFilms = maxYear ? filteredFilms.filter(item => {
+            return item[1].year <= maxYear
+            }) : filteredFilms;
+
+        filteredFilms = minYear ? filteredFilms.filter(item => {
+            return item[1].year >= minYear
+            }) : filteredFilms;
+
+        filteredFilms = filteredFilms.filter(item => {
+            if (!item[1].ratingKinopoisk) return item
+            return item[1].ratingKinopoisk <= maxRate
+            });
+
+        filteredFilms = filteredFilms.filter(item => {
+            if (!item[1].ratingKinopoisk) return item
+            return item[1].ratingKinopoisk >= minRate
+            });
+
         console.log(filteredFilms)
         
-        
+        setFilteredFilms(filteredFilms)
     }
 
     const renderViewedFilms = (arr) => {
@@ -73,10 +105,11 @@ const ViewedFilms = () => {
                     </div>
                     <div className='favorite-info'>
                         <h4>{item[1].name}</h4>
+                        <h4>{item[1].country}</h4>
                         <div>{item[1].year}</div>
                         <div>{item[1].genre}</div>
-                        <div>{item[1].time + ' мин'}</div>
-                        <div>{`Рейтинг кинопоиска ${item[1].ratingKinopoisk}`}</div>
+                        {item[1].time ? <div>{item[1].time + ' мин'}</div> : null}
+                        {item[1].ratingKinopoisk ? <div>{`Рейтинг кинопоиска ${item[1].ratingKinopoisk}`}</div> : null}
                         {gradeFilms.map(el => {
                             if (item[1].id === el[1].id) {
                                 return <div>Ваша оценка {el[1].grade}</div>
@@ -92,13 +125,10 @@ const ViewedFilms = () => {
         const fimsQuantity = arr.length + ' фильмов';
         const hourseQuantity = Math.floor(arr.reduce((acc, curr) => (acc + (curr[1].time !== null ? curr[1].time : 0) / 60), 0)) + ' часов';
         const daysQuantity = (arr.reduce((acc, curr) => (acc + (curr[1].time !== null ? curr[1].time : 0) / 60 / 24), 0)).toFixed(1) + ' дней';
-
         return (
             <div className="results-favorite">
                 <i class="ph-sliders showFilters" onClick={() => showFilters()}></i>
                 <h1 className="result-title">Просмотренные фильмы</h1>
-                <button onClick={() => filterFilms(viewedFilms, genre)}>test</button>
-
                 <div className='statistic'>
                     <div className='statItem'>{fimsQuantity}</div>
                     <div className='statItem'>{hourseQuantity}</div>
@@ -120,11 +150,11 @@ const ViewedFilms = () => {
                     </span>
                     <span>
                         <select className="inputSelect" onChange={(e) => dispatch(setCountry(e.target.value))}>
-                            <option value="none" selected>Выберете страну</option>
+                            <option value={''} selected>Выберете страну</option>
                             {countries.map(item => <option value={item.country}>{item.country}</option>)}
                         </select>
                         <select className="inputSelect" onChange={(e) => dispatch(setGenre(e.target.value))}>
-                            <option value="none" selected>Выберете жанр</option>
+                            <option value={''} selected>Выберете жанр</option>
                             {genres.map(item => <option value={item.genre}>{item.genre}</option>)}
                         </select>
                     </span>
@@ -134,15 +164,16 @@ const ViewedFilms = () => {
                         <label>{`Мин рейтинг ${minRate}`}</label>
                         <input className='rangeRate' type='range' min='0' max='10' step='1' value={minRate} onChange={(e) => dispatch(setMinRate(e.target.value))}></input>
                     </span>
+                    <div className="clearFilters" onClick={() => dispatch(clearFilters())}>
+                        <i class="ph-paint-brush-household"></i>
+                    </div>
                 </div>
                 {items}
             </div>
         )
     }
 
-    
-
-    const content = renderViewedFilms(viewedFilms);
+    const content = renderViewedFilms(filteredFilms);
 
     return (
         <>

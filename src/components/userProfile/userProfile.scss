@@ -148,7 +148,7 @@
 }
 
 .profileBtnActive {
-    background-color: rgb(194, 13, 200);
+    background-color: rgb(85, 85, 85);
 }
 
 .filters {
@@ -157,6 +157,7 @@
     display: flex;
     justify-content: space-between;
     color: #fff;
+    position: relative;
     span {
         display: flex;
         flex-direction: column;
@@ -194,6 +195,16 @@
     right: 15px;
     font-size: 24px;
     color: #fff;
+    &:hover {
+        cursor: pointer;
+    }
+}
+
+.clearFilters {
+    position: absolute;
+    bottom: 0px;
+    right: 5px;
+    font-size: 24px;
     &:hover {
         cursor: pointer;
     }

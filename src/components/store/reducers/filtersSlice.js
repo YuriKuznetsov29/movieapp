@@ -32,6 +32,15 @@ const filtersSlice = createSlice({
         setMinRate: (state, action) => {
             state.minRate = action.payload;
         },
+        clearFilters: (state) => {
+            state.maxYear = null;
+            state.minYear = null;
+            state.genre = null;
+            state.country = null;
+            state.maxRate = 10;
+            state.minRate = 0;
+        },
+        
     },
 });
 
@@ -39,4 +48,4 @@ const {actions, reducer} = filtersSlice;
 
 export default reducer;
 
-export const {setMaxYear, setMinYear, setGenre, setCountry, setMaxRate, setMinRate} = actions;
+export const {setMaxYear, setMinYear, setGenre, setCountry, setMaxRate, setMinRate, clearFilters} = actions;

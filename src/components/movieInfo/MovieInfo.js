@@ -77,8 +77,6 @@ const MovieInfo = () => {
         dispatch(ModalShow())
         getFilmInfo(filmId)
             .then(res => dispatch(setFilmInfo(res)));
-        // getSimilarFilms(filmId)
-        //     .then(res => dispatch(setSimilarFilms(res)));
         getTrailer(filmId)
             .then(res => {
                     let arr = [];
@@ -258,7 +256,7 @@ const MovieInfo = () => {
                         </div>
                         <div className='raiting'>
                             <GradeFilms />
-                            {`Рейтинг кинопоиска ${filmInfo.ratingKinopoisk}`}
+                            {filmInfo.ratingKinopoisk ? `Рейтинг кинопоиска ${filmInfo.ratingKinopoisk}` : null}
                             {actors}                        
                         </div>
                 </div>

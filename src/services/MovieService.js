@@ -149,7 +149,9 @@ import { useSelector } from "react-redux";
                 ratingKinopoisk: item.ratingKinopoisk,
                 id: item.kinopoiskId,
             }
+            console.log(info)
         return info;
+
     }
 
     const _transformFilmsForFind = (res) => {
