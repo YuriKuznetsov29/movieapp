@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef, useMemo, useCallback } from 'react';
+import { useState, useEffect, useRef, memo, useMemo, useCallback } from 'react';
 import {useSelector } from 'react-redux';
 import FavoriteFilms from '../favoriteFilms/FavoriteFilms';
 import ViewedFilms from '../viewedFilms/ViewedFilms';
@@ -85,7 +85,6 @@ const UserProfile = () => {
                     ref={inputAvatar} 
                     onChange={(e) => handleChange(e)}
                 />
-                {/* <button onClick={() => getAvatar()}>Get AVATAR</button> */}
             </div>
             {content}
             </div>
@@ -93,4 +92,4 @@ const UserProfile = () => {
     )
 }
 
-export default UserProfile;
+export default memo(UserProfile);

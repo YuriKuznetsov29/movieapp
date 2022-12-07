@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, memo } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { setFilmId } from '../store/reducers/movieSlice';
 import { setFavoriteFilms, setFavoriteFilmsData } from "../store/reducers/userProfileSlice";
@@ -166,9 +166,6 @@ const FavoriteFilms = () => {
             </div>
         </>
     )
-
-
-
 }
 
 export default FavoriteFilms;

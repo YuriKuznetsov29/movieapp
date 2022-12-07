@@ -5,12 +5,25 @@ import { setSimilarFilms, setFilmId } from '../store/reducers/movieSlice';
 import Slider from 'react-slick';
 import Spinner from '../Spinner/Spinner';
 
-const SimilarFilms = () => {
+
+function propsCompare (prevProps, nextProps ) {
+    if (prevProps.similarFilms.length > 0) {
+        console.log("COMPARE")
+        return prevProps.similarFilms[0].name === nextProps.similarFilms[0].name;
+    } 
+    
+    console.log(prevProps)
+    console.log(nextProps)
+    return false;
+    // return prevProps.similarFilms.length === nextProps.similarFilms.length;
+}
+
+const SimilarFilms = memo((props) => {
 
     const dispatch = useDispatch();
 
     const filmId = useSelector(state => state.movieInfo.filmId);
-    const similarFilms = useSelector(state => state.movieInfo.similarFilms);
+    // const similarFilms = useSelector(state => state.movieInfo.similarFilms);
 
     const { getSimilarFilms, loading } = MovieService();
 
@@ -25,14 +38,14 @@ const SimilarFilms = () => {
         cssEase: "linear",
     };
 
-    useEffect(() => {
-        getSimilarFilms(filmId)
-            .then(res => dispatch(setSimilarFilms(res)));
+    // useEffect(() => {
+    //     getSimilarFilms(filmId)
+    //         .then(res => dispatch(setSimilarFilms(res)));
         
-    }, [filmId])
+    // }, [filmId])
 
-    const renderFilms = () => {
-       return similarFilms.map(item => {
+    const renderFilms = (arr) => {
+       return arr.map(item => {
             return (
                 <>
                     <img 
@@ -47,22 +60,21 @@ const SimilarFilms = () => {
     }
 
     const spinner = loading ? <Spinner/> : null
-
     return (
         <>
             {spinner}
-            { similarFilms.length >= 5 ? 
+            { props.similarFilms.length >= 5 ? 
                 <div className='slider-inner'>
-                    <h2>{`Похожие фильмы ${similarFilms.length}`}</h2>
+                    <h2>{`Похожие фильмы ${props.similarFilms.length}`}</h2>
                     <Slider {...settings}>
                         {
-                            renderFilms()
+                            renderFilms(props.similarFilms)
                         }        
                     </Slider>
                 </div> : null
             }
         </>
     )
-}
+}, propsCompare)
 
-export default memo(SimilarFilms);
+export default SimilarFilms;

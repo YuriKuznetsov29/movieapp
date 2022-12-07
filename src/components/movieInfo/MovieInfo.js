@@ -1,9 +1,9 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, memo } from 'react';
 import MovieService from '../../services/MovieService';
 import {getDatabase, push, ref, set, onValue} from "firebase/database";
 import { setFavoriteFilms, setViewedFilms, setGrade } from '../store/reducers/userProfileSlice';
 import { useDispatch, useSelector } from 'react-redux';
-import {ModalShow, ModalClose, setFilmId, setFilmInfo,setSimilarFilms, setTrailars, setStaff} from '../store/reducers/movieSlice';
+import {ModalShow, ModalClose, setFilmId, setFilmInfo, setSimilarFilms, setTrailars, setStaff} from '../store/reducers/movieSlice';
 import { useNavigate } from "react-router-dom";
 import SimilarFilms from '../similarFilms/SimilarFilms';
 import Trailers from '../trailers/Trailars';
@@ -14,6 +14,7 @@ import Spinner from '../Spinner/Spinner';
 import './movieInfo.scss';
 
 const MovieInfo = () => {
+    const [similarFilms, setSimilarFilms] = useState([])
     const [keyFavorite, setKeyFavorite] = useState(null);
     const [keyViewed, setKeyViewed] = useState(null);
 
@@ -25,6 +26,8 @@ const MovieInfo = () => {
     const staff = useSelector(state => state.movieInfo.staff);
     const filmId = useSelector(state => state.movieInfo.filmId);
 
+    // const similarFilms = useSelector(state => state.movieInfo.similarFilms);
+
     const navigate = useNavigate();
  
     const dispatch = useDispatch();
@@ -34,7 +37,7 @@ const MovieInfo = () => {
     const favoriteFilms = useSelector(state => state.userProfile.favoriteFilms);
     const viewedFilms = useSelector(state => state.userProfile.viewedFilms);
 
-    const {getFilmInfo, getTrailer, getStaff, deleteFavoriteFilm, deleteViewedFilm} = MovieService();
+    const {getFilmInfo, getTrailer, getSimilarFilms, getStaff, deleteFavoriteFilm, deleteViewedFilm} = MovieService();
 
     useEffect(() => {
         openModal()
@@ -77,6 +80,8 @@ const MovieInfo = () => {
         dispatch(ModalShow())
         getFilmInfo(filmId)
             .then(res => dispatch(setFilmInfo(res)));
+        getSimilarFilms(filmId)
+            .then(res => setSimilarFilms(res));
         getTrailer(filmId)
             .then(res => {
                     let arr = [];
@@ -268,7 +273,7 @@ const MovieInfo = () => {
                     </div> : null
                 }
                 
-                <SimilarFilms />
+                <SimilarFilms similarFilms={similarFilms}/>
                 
             </div>
         </>
