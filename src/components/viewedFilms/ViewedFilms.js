@@ -2,19 +2,20 @@ import { useState, useEffect } from 'react';
 import { setFilmId } from '../store/reducers/movieSlice';
 import { useDispatch, useSelector } from 'react-redux';
 import { setViewedFilms, setViewdFilmsData} from '../store/reducers/userProfileSlice';
-import { setMaxYear, setMinYear, setGenre, setCountry, setMaxRate, setMinRate, clearFilters } from '../store/reducers/filtersSlice';
 import { getDatabase, ref, onValue} from "firebase/database";
-import MovieService from '../../services/MovieService';
+import useFirebase from "../hooks/firebase.hook";
 
 const ViewedFilms = () => {
-    const [startYear, setStartYear] = useState('');
-    const [endYear, setEndYear] = useState('');
-    // const [maxRate, setMaxRate] = useState(10);
-    // const [minRate, setMinRate] = useState(0);
+    const [genre, setGenre] = useState(null);
+    const [country, setCountry] = useState(null);
+    const [maxYear, setMaxYear] = useState(null);
+    const [minYear, setMinYear] = useState(null);
+    const [maxRate, setMaxRate] = useState(10);
+    const [minRate, setMinRate] = useState(0);
     const [filteredFilms, setFilteredFilms] = useState([]);
     const [filtersState, setFiltersState] = useState({state: false, style: {'display': 'none'}});
-
-    const {deleteViewedFilm} = MovieService();
+    
+    const {deleteViewedFilm} = useFirebase();
 
     const dispatch = useDispatch();
 
@@ -24,14 +25,6 @@ const ViewedFilms = () => {
     const gradeFilms = useSelector(state => state.userProfile.gradeFilms);
     const genres = useSelector(state => state.movieInfo.genres);
     const countries = useSelector(state => state.movieInfo.countries);
-
-    
-    const genre = useSelector(state => state.filters.genre);
-    const country = useSelector(state => state.filters.country);
-    const maxYear = useSelector(state => state.filters.maxYear);
-    const minYear = useSelector(state => state.filters.minYear);
-    const maxRate = useSelector(state => state.filters.maxRate);
-    const minRate = useSelector(state => state.filters.minRate);
 
     useEffect(() => {
         readDataViewed()
@@ -57,6 +50,15 @@ const ViewedFilms = () => {
         else {
             setFiltersState({state: true, style: {'display': 'flex'}});
         }
+    }
+
+    const clearFilters = () => {
+        setGenre(null);
+        setCountry(null);
+        setMaxYear(null);
+        setMinYear(null);
+        setMaxRate(10);
+        setMinRate(0);
     }
 
     const filterFilms = (arr, genre, country, maxYear, minYear, maxRate, minRate) => {

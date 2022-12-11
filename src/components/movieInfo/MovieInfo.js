@@ -1,20 +1,21 @@
-import { useEffect, useState, memo } from 'react';
+import { useEffect, useState, memo, useMemo } from 'react';
 import MovieService from '../../services/MovieService';
-import {getDatabase, push, ref, set, onValue} from "firebase/database";
-import { setFavoriteFilms, setViewedFilms, setGrade } from '../store/reducers/userProfileSlice';
+import { setGrade } from '../store/reducers/userProfileSlice';
 import { useDispatch, useSelector } from 'react-redux';
 import {ModalShow, ModalClose, setFilmId, setFilmInfo, setSimilarFilms, setTrailars, setStaff} from '../store/reducers/movieSlice';
 import { useNavigate } from "react-router-dom";
 import SimilarFilms from '../similarFilms/SimilarFilms';
 import Trailers from '../trailers/Trailars';
 import GradeFilms from '../grageFilms/GradeFilms';
+import ActorsOfCurrentFilm from '../actorsOfCurrentFilm/ActorsOfCurrentFilm';
 import { useHttp } from '../hooks/http.hook';
 import Spinner from '../Spinner/Spinner';
+import useFirebase from '../hooks/firebase.hook';
 
 import './movieInfo.scss';
 
 const MovieInfo = () => {
-    const [similarFilms, setSimilarFilms] = useState([])
+    const [similarFilms, setSimilarFilms] = useState([]);
     const [keyFavorite, setKeyFavorite] = useState(null);
     const [keyViewed, setKeyViewed] = useState(null);
 
@@ -37,7 +38,9 @@ const MovieInfo = () => {
     const favoriteFilms = useSelector(state => state.userProfile.favoriteFilms);
     const viewedFilms = useSelector(state => state.userProfile.viewedFilms);
 
-    const {getFilmInfo, getTrailer, getSimilarFilms, getStaff, deleteFavoriteFilm, deleteViewedFilm} = MovieService();
+    const {getFilmInfo, getTrailer, getSimilarFilms, getStaff} = MovieService();
+
+    const {addFavoriteFilm, addViewedFilm, readFavoriteFilms, readViewedFilms, deleteFavoriteFilm, deleteViewedFilm} = useFirebase();
 
     useEffect(() => {
         openModal()
@@ -80,8 +83,8 @@ const MovieInfo = () => {
         dispatch(ModalShow())
         getFilmInfo(filmId)
             .then(res => dispatch(setFilmInfo(res)));
-        getSimilarFilms(filmId)
-            .then(res => setSimilarFilms(res));
+        // getSimilarFilms(filmId)
+        //     .then(res => setSimilarFilms(res));
         getTrailer(filmId)
             .then(res => {
                     let arr = [];
@@ -93,8 +96,8 @@ const MovieInfo = () => {
                     dispatch(setTrailars(arr))
                 }
             );
-            getStaff(filmId)
-                .then(res => dispatch(setStaff(res)));
+            // getStaff(filmId)
+            //     .then(res => dispatch(setStaff(res)));
             readFavoriteFilms()
             readViewedFilms()
     }
@@ -113,61 +116,6 @@ const MovieInfo = () => {
             document.body.style.overflow = "auto";
         }
     }
-
-    const addFavoriteFilm = (film) => {
-        const db = getDatabase();
-        const Ref = ref(db, `users/` + userId + `/favoriteFilms/`);
-        const favoriteFilms = push(Ref);
-        set(favoriteFilms, {
-            ...film
-        });
-    }
-
-    const addViewedFilm = (film) => {
-        const db = getDatabase();
-        const Ref = ref(db, `users/` + userId + `/viewedFilms/`);
-        const vievedFilms = push(Ref);
-        set(vievedFilms, {
-            ...film
-        });
-    }
-
-    const readFavoriteFilms = () => {
-        const db = getDatabase();
-        const Ref = ref(db, `users/` + userId + '/favoriteFilms/');
-        onValue(Ref, (films) => {
-        const data = films.val();
-        dispatch(setFavoriteFilms(Object.entries(data)));
-    })}
-
-    const readViewedFilms = () => {
-        const db = getDatabase();
-        const Ref = ref(db, `users/` + userId + '/viewedFilms/');
-        onValue(Ref, (films) => {
-        const data = films.val();
-        dispatch(setViewedFilms(Object.entries(data)));
-    })}
-
-    const renderActors = (arr) => {
-        const items = arr.map((item, i) => {
-                if (i < 9) {
-                    return (
-                        <>
-                            <div>{item.nameRu}</div>
-                        </>
-                    )
-                }
-            }
-        )
-        return (
-            <div>
-                <h3>{`В главных ролях ${staff.actors.length}`}</h3>
-                {items}
-            </div>
-        )
-    }
-
-    const actors = renderActors(staff.actors);
 
     return (
         <>
@@ -212,21 +160,21 @@ const MovieInfo = () => {
                                     }
                                 </span>
                                 <span>
-                                { keyFavorite && loginStatus ? 
-                                    <button 
-                                        className='btn-favorites'
-                                        onClick={() => {
-                                            deleteFavoriteFilm(keyFavorite);
-                                            setKeyFavorite(null);
-                                            }}>
-                                            <i class="ph-trash"></i> <span>В избранном</span>
-                                    </button> :
-                                    <button 
-                                        className='btn-favorites'
-                                        onClick={() => loginStatus ? addFavoriteFilm(filmInfo) : (navigate("/login"), closeModal())}>
-                                            <i class="ph-bookmark-simple"></i> <span>Буду смотреть!</span>
-                                    </button> 
-                                }
+                                    { keyFavorite && loginStatus ? 
+                                        <button 
+                                            className='btn-favorites'
+                                            onClick={() => {
+                                                deleteFavoriteFilm(keyFavorite);
+                                                setKeyFavorite(null);
+                                                }}>
+                                                <i class="ph-trash"></i> <span>В избранном</span>
+                                        </button> :
+                                        <button 
+                                            className='btn-favorites'
+                                            onClick={() => loginStatus ? addFavoriteFilm(filmInfo) : (navigate("/login"), closeModal())}>
+                                                <i class="ph-bookmark-simple"></i> <span>Буду смотреть!</span>
+                                        </button> 
+                                    }
                                 </span>
                             </div>
                             <h3>О фильме</h3>
@@ -255,26 +203,23 @@ const MovieInfo = () => {
                                 </div>
                             </div>
                             <div className='filminfostring'>
-                                    <div className='info-line'>Описание</div>
-                                    <div className='info-line-data'>{filmInfo.description}</div>
-                                </div>
+                                <div className='info-line'>Описание</div>
+                                <div className='info-line-data'>{filmInfo.description}</div>
+                            </div>
                         </div>
                         <div className='raiting'>
-                            <GradeFilms />
+                            <GradeFilms/>
                             {filmInfo.ratingKinopoisk ? `Рейтинг кинопоиска ${filmInfo.ratingKinopoisk}` : null}
-                            {actors}                        
+                            <ActorsOfCurrentFilm />                      
                         </div>
                 </div>
-
                 {trailers.length > 1 ?
                     <div className='slider-inner'>
                         <h2>{`Тизеры и Трейлеры ${trailers.length}`}</h2>
                         <Trailers />
                     </div> : null
                 }
-                
-                <SimilarFilms similarFilms={similarFilms}/>
-                
+                <SimilarFilms/>
             </div>
         </>
     )

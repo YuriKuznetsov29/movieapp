@@ -48,9 +48,11 @@ const Trailers = () => {
         )
     }
 
+    const content = renderTrailars(trailers)
+
     return (
         <>
-            {renderTrailars(trailers)}
+            {content}
         </>
     )
 }

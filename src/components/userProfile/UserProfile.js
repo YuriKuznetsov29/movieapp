@@ -22,8 +22,6 @@ const UserProfile = () => {
 
     useEffect(() => {
         getAvatar()
-        console.log('GET');
-
     }, [avatarRef])
 
     const inputClick = () => {
@@ -92,4 +90,4 @@ const UserProfile = () => {
     )
 }
 
-export default memo(UserProfile);
+export default UserProfile;

@@ -1,41 +1,9 @@
+import { useMemo } from "react";
 import { useHttp } from "../components/hooks/http.hook";
-import { getDatabase, ref, update, set} from "firebase/database";
-import { useSelector } from "react-redux";
 
-    const MovieService = () => {
+const MovieService = () => {
 
     const {request, loading} = useHttp();
-
-    const userId = useSelector(state => state.login.userId);
-    const dataFavorite = useSelector(state => state.userProfile.dataFavorite);
-    const dataViewed = useSelector(state => state.userProfile.dataViewed);
-    
-
-    const deleteFavoriteFilm = (key) => {
-        const db = getDatabase();
-        let newData = Object.assign({}, dataFavorite);
-        delete newData[key];
-        const updates = {};
-        updates[`users/` + userId + `/favoriteFilms/`] = newData;
-        if (newData !== {}) {
-            update(ref(db), updates);
-        } else {
-            set(ref(db, `users/` + userId + `/favoriteFilms/`), null);
-        }
-    }
-
-    const deleteViewedFilm = (key) => {
-        const db = getDatabase();
-        let newData = Object.assign({}, dataViewed);
-        delete newData[key];
-        const updates = {};
-        updates[`users/` + userId + `/viewedFilms/`] = newData;
-        if (newData !== {}) {
-            update(ref(db), updates);
-        } else {
-            set(ref(db, `users/` + userId + `/viewedFilms/`), null);
-        }
-    }
 
     const getActualMonth = () => {
 
@@ -204,7 +172,7 @@ import { useSelector } from "react-redux";
             });
         });
         return films;
-    }
+    };
 
     const transformStaff = (res) => {
         let actors =[]
@@ -225,7 +193,7 @@ import { useSelector } from "react-redux";
         return result;
     }
 
-    return {getFilms, getFilmInfo, getActualMonth, getFilmByName, getCounryList, getFimsByParametrs, getSimilarFilms, getTrailer, getStaff, deleteFavoriteFilm, deleteViewedFilm, loading}
+    return {getFilms, getFilmInfo, getActualMonth, getFilmByName, getCounryList, getFimsByParametrs, getSimilarFilms, getTrailer, getStaff, loading}
 }
 
 export default MovieService;

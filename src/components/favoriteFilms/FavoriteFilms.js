@@ -2,16 +2,23 @@ import { useState, useEffect, memo } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { setFilmId } from '../store/reducers/movieSlice';
 import { setFavoriteFilms, setFavoriteFilmsData } from "../store/reducers/userProfileSlice";
-import { setMaxYear, setMinYear, setGenre, setCountry, setMaxRate, setMinRate, clearFilters } from '../store/reducers/filtersSlice';
 import { getDatabase, ref, onValue} from "firebase/database";
 import MovieService from "../../services/MovieService";
+import useFirebase from "../hooks/firebase.hook";
 import Spinner from "../Spinner/Spinner";
 
 const FavoriteFilms = () => {
+    const [genre, setGenre] = useState(null);
+    const [country, setCountry] = useState(null);
+    const [maxYear, setMaxYear] = useState(null);
+    const [minYear, setMinYear] = useState(null);
+    const [maxRate, setMaxRate] = useState(10);
+    const [minRate, setMinRate] = useState(0);
     const [filteredFilms, setFilteredFilms] = useState([]);
     const [filtersState, setFiltersState] = useState({state: false, style: {'display': 'none'}});
 
-    const {deleteFavoriteFilm, loading} = MovieService();
+    const {loading} = MovieService();
+    const {deleteFavoriteFilm} = useFirebase();
 
     const dispatch = useDispatch();
 
@@ -20,14 +27,6 @@ const FavoriteFilms = () => {
     const dataFavorite = useSelector(state => state.userProfile.dataFavorite);
     const genres = useSelector(state => state.movieInfo.genres);
     const countries = useSelector(state => state.movieInfo.countries);
-
-    const genre = useSelector(state => state.filters.genre);
-    const country = useSelector(state => state.filters.country);
-    const maxYear = useSelector(state => state.filters.maxYear);
-    const minYear = useSelector(state => state.filters.minYear);
-    const maxRate = useSelector(state => state.filters.maxRate);
-    const minRate = useSelector(state => state.filters.minRate);
-
 
     useEffect(() => {
         readDataFavorite()
@@ -48,7 +47,6 @@ const FavoriteFilms = () => {
 
     const showFilters = () => {
         if (filtersState.state) {
-            console.log('TRUE')
             setFiltersState({state: false, style: {'display': 'none'}});
         }
         else {
@@ -56,8 +54,16 @@ const FavoriteFilms = () => {
         }
     }
 
+    const clearFilters = () => {
+        setGenre(null);
+        setCountry(null);
+        setMaxYear(null);
+        setMinYear(null);
+        setMaxRate(10);
+        setMinRate(0);
+    }
+
     const filterFilms = (arr, genre, country, maxYear, minYear, maxRate, minRate) => {
-        console.log(arr)
         let filteredFilms = genre ? arr.filter(item => {
                 return item[1].genre === genre
                 }) : arr;
@@ -84,8 +90,6 @@ const FavoriteFilms = () => {
             return item[1].ratingKinopoisk >= minRate
             });
 
-        console.log(filteredFilms)
-        
         setFilteredFilms(filteredFilms)
     }
     

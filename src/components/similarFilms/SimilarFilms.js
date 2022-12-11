@@ -1,4 +1,4 @@
-import { useEffect, memo} from 'react';
+import { useState, useEffect, useCallback, useMemo, memo} from 'react';
 import {useDispatch, useSelector } from 'react-redux';
 import MovieService from '../../services/MovieService';
 import { setSimilarFilms, setFilmId } from '../store/reducers/movieSlice';
@@ -7,19 +7,19 @@ import Spinner from '../Spinner/Spinner';
 
 
 function propsCompare (prevProps, nextProps ) {
-    if (prevProps.similarFilms.length > 0) {
-        console.log("COMPARE")
-        return prevProps.similarFilms[0].name === nextProps.similarFilms[0].name;
-    } 
+    // if (prevProps.similarFilms.length > 0) {
+    //     console.log("COMPARE")
+    //     return prevProps.similarFilms[0].name === nextProps.similarFilms[0].name;
+    // } 
     
-    console.log(prevProps)
-    console.log(nextProps)
-    return false;
-    // return prevProps.similarFilms.length === nextProps.similarFilms.length;
+    // console.log(prevProps)
+    // console.log(nextProps)
+    // return false;
+    return prevProps.similarFilms === nextProps.similarFilms;
 }
 
-const SimilarFilms = memo((props) => {
-
+const SimilarFilms = () => {
+    const [similarFilms, setSimilarFilms] = useState([])
     const dispatch = useDispatch();
 
     const filmId = useSelector(state => state.movieInfo.filmId);
@@ -38,14 +38,15 @@ const SimilarFilms = memo((props) => {
         cssEase: "linear",
     };
 
-    // useEffect(() => {
-    //     getSimilarFilms(filmId)
-    //         .then(res => dispatch(setSimilarFilms(res)));
+    useEffect(() => {
+        getSimilarFilms(filmId)
+            .then(res => dispatch(setSimilarFilms(res)));
         
-    // }, [filmId])
+    }, [filmId])
+    
 
     const renderFilms = (arr) => {
-       return arr.map(item => {
+       const items = arr.map(item => {
             return (
                 <>
                     <img 
@@ -57,24 +58,26 @@ const SimilarFilms = memo((props) => {
                     />
                 </>
             )})
+
+        return (
+             arr.length >= 5 ? 
+            <div className='slider-inner'>
+                <h2>{`Похожие фильмы ${arr.length}`}</h2>
+                <Slider {...settings}>
+                    {items}        
+                </Slider>
+            </div> : null
+        )
     }
 
-    const spinner = loading ? <Spinner/> : null
+    // const spinner = loading ? <Spinner/> : null
+    const content = renderFilms(similarFilms)
+
     return (
         <>
-            {spinner}
-            { props.similarFilms.length >= 5 ? 
-                <div className='slider-inner'>
-                    <h2>{`Похожие фильмы ${props.similarFilms.length}`}</h2>
-                    <Slider {...settings}>
-                        {
-                            renderFilms(props.similarFilms)
-                        }        
-                    </Slider>
-                </div> : null
-            }
+            {content}
         </>
     )
-}, propsCompare)
+}
 
-export default SimilarFilms;
+export default memo(SimilarFilms);
