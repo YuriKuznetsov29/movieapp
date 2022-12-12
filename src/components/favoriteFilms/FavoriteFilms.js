@@ -1,8 +1,6 @@
 import { useState, useEffect, memo } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { setFilmId } from '../store/reducers/movieSlice';
-import { setFavoriteFilms, setFavoriteFilmsData } from "../store/reducers/userProfileSlice";
-import { getDatabase, ref, onValue} from "firebase/database";
 import MovieService from "../../services/MovieService";
 import useFirebase from "../hooks/firebase.hook";
 import Spinner from "../Spinner/Spinner";
@@ -18,7 +16,7 @@ const FavoriteFilms = () => {
     const [filtersState, setFiltersState] = useState({state: false, style: {'display': 'none'}});
 
     const {loading} = MovieService();
-    const {deleteFavoriteFilm} = useFirebase();
+    const {deleteFavoriteFilm, readDataFavorite} = useFirebase();
 
     const dispatch = useDispatch();
 
@@ -35,15 +33,6 @@ const FavoriteFilms = () => {
     useEffect(() => {
         filterFilms(favoriteFilms, genre, country, maxYear, minYear, maxRate, minRate)
     }, [favoriteFilms, genre, country, maxYear, minYear, maxRate, minRate])
-
-    const readDataFavorite = () => {
-        const db = getDatabase();
-        const Ref = ref(db, `users/` + userId + '/favoriteFilms/');
-        onValue(Ref, (films) => {
-        const dataFavorite = films.val();
-        dispatch(setFavoriteFilmsData(dataFavorite));
-        dispatch(setFavoriteFilms(Object.entries(dataFavorite)));
-    })}
 
     const showFilters = () => {
         if (filtersState.state) {

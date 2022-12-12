@@ -1,8 +1,6 @@
 import { useState, useEffect } from 'react';
 import { setFilmId } from '../store/reducers/movieSlice';
 import { useDispatch, useSelector } from 'react-redux';
-import { setViewedFilms, setViewdFilmsData} from '../store/reducers/userProfileSlice';
-import { getDatabase, ref, onValue} from "firebase/database";
 import useFirebase from "../hooks/firebase.hook";
 
 const ViewedFilms = () => {
@@ -15,7 +13,7 @@ const ViewedFilms = () => {
     const [filteredFilms, setFilteredFilms] = useState([]);
     const [filtersState, setFiltersState] = useState({state: false, style: {'display': 'none'}});
     
-    const {deleteViewedFilm} = useFirebase();
+    const {deleteViewedFilm, readDataFavorite} = useFirebase();
 
     const dispatch = useDispatch();
 
@@ -27,21 +25,12 @@ const ViewedFilms = () => {
     const countries = useSelector(state => state.movieInfo.countries);
 
     useEffect(() => {
-        readDataViewed()
+        readDataFavorite()
     }, [userId])
 
     useEffect(() => {
         filterFilms(viewedFilms, genre, country, maxYear, minYear, maxRate, minRate)
     }, [viewedFilms, genre, country, maxYear, minYear, maxRate, minRate])
-
-    const readDataViewed = () => {
-        const db = getDatabase();
-        const Ref = ref(db, `users/` + userId + '/viewedFilms/');
-        onValue(Ref, (films) => {
-        const dataViewed = films.val();
-        dispatch(setViewdFilmsData(dataViewed));
-        dispatch(setViewedFilms(Object.entries(dataViewed)));
-    })}
 
     const showFilters = () => {
         if (filtersState.state) {
