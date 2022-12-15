@@ -7,7 +7,6 @@ const initialState = {
     dataViewed: {},
     gradeFilms: [],
     grade: null,
-
 }
 
 const userProfileSlice = createSlice({

@@ -4,11 +4,13 @@
     position: relative;
     display: flex;
     // grid-template-columns: 1fr 3fr;
-    justify-content: space-around;
+    justify-content:center;
+    // flex-direction: column;
+    // align-items: center;
 }
 
 .favorite-content-wrapper {
-    margin: 0 auto;
+    // margin: 0 auto;
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -83,6 +85,7 @@
 }
 
 .profleSidebar {
+    margin-right: 10px;
     width: 250px;
     height: 680px;
     // position: absolute;

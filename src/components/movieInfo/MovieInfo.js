@@ -3,12 +3,12 @@ import MovieService from '../../services/MovieService';
 import { setGrade } from '../store/reducers/userProfileSlice';
 import { useDispatch, useSelector } from 'react-redux';
 import {ModalShow, ModalClose, setFilmId, setFilmInfo, setSimilarFilms, setTrailars, setStaff} from '../store/reducers/movieSlice';
+import { getLoginState, getMovieInfoState, getUserProfileState } from '../store/selectors';
 import { useNavigate } from "react-router-dom";
 import SimilarFilms from '../similarFilms/SimilarFilms';
 import Trailers from '../trailers/Trailars';
 import GradeFilms from '../grageFilms/GradeFilms';
 import ActorsOfCurrentFilm from '../actorsOfCurrentFilm/ActorsOfCurrentFilm';
-import { useHttp } from '../hooks/http.hook';
 import Spinner from '../Spinner/Spinner';
 import useFirebase from '../hooks/firebase.hook';
 
@@ -19,26 +19,15 @@ const MovieInfo = () => {
     const [keyFavorite, setKeyFavorite] = useState(null);
     const [keyViewed, setKeyViewed] = useState(null);
 
-    const loginStatus = useSelector(state => state.login.loginStatus);
-    const userId = useSelector(state => state.login.userId);
-    const modalState = useSelector(state => state.movieInfo.modalState);
-    const filmInfo = useSelector(state => state.movieInfo.filmInfo);
-    const trailers = useSelector(state => state.movieInfo.trailers);
-    const staff = useSelector(state => state.movieInfo.staff);
-    const filmId = useSelector(state => state.movieInfo.filmId);
-
-    // const similarFilms = useSelector(state => state.movieInfo.similarFilms);
+    const {loginStatus, userId} = useSelector(getLoginState);
+    const {modalState, filmInfo, trailers, staff, filmId} = useSelector(getMovieInfoState);
+    const {favoriteFilms, viewedFilms} = useSelector(getUserProfileState);
 
     const navigate = useNavigate();
  
     const dispatch = useDispatch();
 
-    const loading = useHttp();
-
-    const favoriteFilms = useSelector(state => state.userProfile.favoriteFilms);
-    const viewedFilms = useSelector(state => state.userProfile.viewedFilms);
-
-    const {getFilmInfo, getTrailer, getSimilarFilms, getStaff} = MovieService();
+    const {getFilmInfo, getTrailer, getSimilarFilms, getStaff, loading} = MovieService();
 
     const {addFavoriteFilm, addViewedFilm, readFavoriteFilms, readViewedFilms, deleteFavoriteFilm, deleteViewedFilm} = useFirebase();
 

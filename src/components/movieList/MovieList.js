@@ -2,13 +2,14 @@ import { useState, useEffect } from "react";
 import MovieService from '../../services/MovieService';
 import { setFilmId } from "../store/reducers/movieSlice";
 import { useDispatch } from "react-redux";
+import Spinner from "../Spinner/Spinner";
 
 import './movieList.scss';
 
 const MovieList = () => {
     const [films, setFilms] = useState([]);
 
-    const {getFilms} = MovieService();
+    const {getFilms, loading} = MovieService();
 
     const dispatch = useDispatch();
 
@@ -46,7 +47,7 @@ const MovieList = () => {
         )
     }
 
-    const content = renderFilms(films);
+    const content = loading ? <Spinner/> : renderFilms(films);
 
     return (
         <>  

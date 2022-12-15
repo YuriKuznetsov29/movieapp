@@ -2,8 +2,8 @@ import { useState, useEffect } from 'react';
 import MovieService from '../../services/MovieService';
 import { setFilmId } from '../store/reducers/movieSlice';
 import { useDispatch, useSelector } from 'react-redux';
+import { getMovieInfoState } from '../store/selectors';
 import Spinner from '../Spinner/Spinner';
-import { useHttp } from '../hooks/http.hook';
 
 import './findFilms.scss';
 
@@ -18,11 +18,9 @@ const FindFilms = (props) => {
     const [minRate, setMinRate] = useState(0);
     const [optionState, setOptionState] = useState({state: false, visible: {'display': 'none'}});
 
-    const genres = useSelector(state => state.movieInfo.genres);
-    const countries = useSelector(state => state.movieInfo.countries);
+    const {genres, countries} = useSelector(getMovieInfoState);
 
-    const {getFilmByName, getFimsByParametrs} = MovieService();
-    const {loading} = useHttp();
+    const {getFilmByName, getFimsByParametrs, loading} = MovieService();
     const dispatch = useDispatch();
 
     const loadDataByKeyword = () => {
@@ -98,10 +96,9 @@ const FindFilms = (props) => {
         )
     }
 
-    const content = renderFilms(films);
+    const content = loading ? <Spinner/> : renderFilms(films);
     const countriesTransform = renderCountries(countries);
     const genresTransform = renderGenres(genres);
-    const spinner = loading ? <Spinner/> : null;
 
     return (
 
@@ -128,7 +125,6 @@ const FindFilms = (props) => {
                     <button className='btn-find' type='submit' onClick={() => loadDataByParametrs()}>Найти</button>
                 </div>
             </div>
-                {spinner}
                 {content}
         </div>
     )

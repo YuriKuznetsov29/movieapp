@@ -1,5 +1,6 @@
 import { useState, useEffect, memo } from "react";
 import { useDispatch, useSelector } from "react-redux";
+import { getLoginState, getMovieInfoState, getUserProfileState } from "../store/selectors";
 import { getDatabase, ref, onValue, set, push} from "firebase/database";
 import { setGradeFilms, setGrade } from "../store/reducers/userProfileSlice";
 
@@ -7,11 +8,9 @@ const GradeFilms = () => {
     // const [grade, setGrade] = useState(null);
     const [gradeState, setGradeState] = useState({state: false, visible: {'display': 'block'}});
 
-    const userId = useSelector(state => state.login.userId);
-    const filmId = useSelector(state => state.movieInfo.filmId);
-    const filmInfo = useSelector(state => state.movieInfo.filmInfo);
-    const gradeFilms = useSelector(state => state.userProfile.gradeFilms);
-    const grade = useSelector(state => state.userProfile.grade);
+    const {userId} = useSelector(getLoginState);
+    const {filmId, filmInfo} = useSelector(getMovieInfoState);
+    const {gradeFilms, grade} = useSelector(getUserProfileState);
 
     const dispatch = useDispatch();
 

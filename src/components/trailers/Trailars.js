@@ -1,12 +1,13 @@
 import { useEffect, memo } from "react";
 import { useSelector, useDispatch } from "react-redux";
+import { getMovieInfoState } from '../store/selectors';
 import { setTrailars } from "../store/reducers/movieSlice";
 import MovieService from "../../services/MovieService";
 import Slider from "react-slick";
 
 const Trailers = () => {
 
-    const trailers = useSelector(state => state.movieInfo.trailers);
+    const trailers = useSelector(getMovieInfoState);
     
     const settings = {
         dots: false,

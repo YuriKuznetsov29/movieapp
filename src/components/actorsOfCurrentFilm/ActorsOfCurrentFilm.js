@@ -1,11 +1,11 @@
 import { useEffect, memo } from "react";
 import { useDispatch, useSelector } from "react-redux";
+import { getMovieInfoState } from "../store/selectors";
 import MovieService from "../../services/MovieService";
 import { setStaff } from "../store/reducers/movieSlice";
 
 const ActorsOfCurrentFilm = () => {
-    const filmId = useSelector(state => state.movieInfo.filmId);
-    const staff = useSelector(state => state.movieInfo.staff);
+    const {filmId, staff} = useSelector(getMovieInfoState);
 
     const {getStaff} = MovieService();
 

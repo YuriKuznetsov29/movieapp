@@ -1,6 +1,7 @@
 import { useEffect } from "react";
 import { Link } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
+import { getLoginState } from "../store/selectors";
 import { fetchLogOut, changeStatusOnOnline, changeStatusOnOffline } from "../store/reducers/loginSlice";
 import { getAuth, onAuthStateChanged } from "firebase/auth";
 import { setViewdFilmsData, setViewedFilms, setFavoriteFilms, setFavoriteFilmsData, setGradeFilms } from "../store/reducers/userProfileSlice";
@@ -11,8 +12,7 @@ const Sidebar = () => {
     const dispatch = useDispatch();
     const auth = getAuth();
 
-    const loginStatus = useSelector(state => state.login.loginStatus)
-    const userId = useSelector(state => state.login.userId)
+    const {loginStatus, userId} = useSelector(getLoginState)
 
     const check = (auth) => {
         onAuthStateChanged(auth, (user) => {

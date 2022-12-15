@@ -1,5 +1,6 @@
 import { useState, useEffect, useRef, memo, useMemo, useCallback } from 'react';
 import {useSelector } from 'react-redux';
+import { getLoginState } from '../store/selectors';
 import FavoriteFilms from '../favoriteFilms/FavoriteFilms';
 import ViewedFilms from '../viewedFilms/ViewedFilms';
 import { getStorage, ref, uploadBytes, getDownloadURL} from "firebase/storage";
@@ -7,14 +8,12 @@ import { getStorage, ref, uploadBytes, getDownloadURL} from "firebase/storage";
 import './userProfile.scss'
 
 const UserProfile = () => {
-    const [content, setContent] = useState(<FavoriteFilms />);
+    const [content, setContent] = useState(<ViewedFilms />);
     const [avatar, setAvatar] = useState(null);
     const inputAvatar = useRef(null);
     const [btnClass, setBtnClass] = useState({btnFavorite: 'profileBtn profileBtnActive', btnViewed: 'profileBtn'})
 
-
-    const email = useSelector(state => state.login.email);
-    const loginStatus = useSelector(state => state.login.loginStatus);
+    const {email, loginStatus} = useSelector(getLoginState);
 
     const storage = getStorage();
     const avatarRef = ref(storage, email + '/avatar')

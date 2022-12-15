@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { setFilmId } from '../store/reducers/movieSlice';
 import { useDispatch, useSelector } from 'react-redux';
+import { getLoginState, getMovieInfoState, getUserProfileState } from "../store/selectors";
 import useFirebase from "../hooks/firebase.hook";
 
 const ViewedFilms = () => {
@@ -17,12 +18,9 @@ const ViewedFilms = () => {
 
     const dispatch = useDispatch();
 
-    const userId = useSelector(state => state.login.userId);
-    const viewedFilms = useSelector(state => state.userProfile.viewedFilms);
-    const dataViewed = useSelector(state => state.userProfile.dataViewed);
-    const gradeFilms = useSelector(state => state.userProfile.gradeFilms);
-    const genres = useSelector(state => state.movieInfo.genres);
-    const countries = useSelector(state => state.movieInfo.countries);
+    const {userId} = useSelector(getLoginState);
+    const {viewedFilms, dataViewed, gradeFilms} = useSelector(getUserProfileState);
+    const {genres, countries} = useSelector(getMovieInfoState);
 
     useEffect(() => {
         readDataFavorite()

@@ -7,6 +7,7 @@ const initialState = {
     filmInfo: {},
     similarFilms: [],
     trailers: [],
+    loading: false,
     staff: {actors: [], directors: []},
     genres: [
         {
@@ -1163,6 +1164,9 @@ const movieInfoSlice = createSlice({
         setStaff: (state, action) => {
             state.staff = action.payload;
         },
+        setLoading: (state, action) => {
+            state.loading = action.payload;
+        },
     },
 });
 
@@ -1170,4 +1174,4 @@ const {actions, reducer} = movieInfoSlice;
 
 export default reducer;
 
-export const {ModalShow, ModalClose, setFilmId, setFilmInfo, setSimilarFilms, setTrailars, setStaff} = actions;
+export const {ModalShow, ModalClose, setFilmId, setFilmInfo, setSimilarFilms, setTrailars, setStaff, setLoading} = actions;

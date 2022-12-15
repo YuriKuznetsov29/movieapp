@@ -2,6 +2,7 @@ import { Formik, Form, Field, ErrorMessage } from 'formik';
 import * as Yup from 'yup';
 import { Link, Navigate } from "react-router-dom";
 import { useDispatch, useSelector } from 'react-redux';
+import { getLoginState } from "../store/selectors";
 import { fetchLogin } from '../store/reducers/loginSlice';
 
 import './loginForm.scss'
@@ -10,7 +11,7 @@ const LoginForm = () => {
 
     const dispatch = useDispatch();
 
-    const loginStatus = useSelector(state => state.login.loginStatus);
+    const loginStatus = useSelector(getLoginState);
 
     return (
 

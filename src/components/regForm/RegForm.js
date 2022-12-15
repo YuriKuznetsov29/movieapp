@@ -3,12 +3,13 @@ import * as Yup from 'yup';
 import { getAuth, createUserWithEmailAndPassword} from "firebase/auth";
 import { getDatabase, ref, set} from "firebase/database";
 import { useSelector } from 'react-redux';
+import { getLoginState } from '../store/selectors';
 import { Navigate } from "react-router-dom";
 
 import './regForm.scss'
 
 const RegForm = () => {
-    const loginStatus = useSelector(state => state.login.loginStatus);
+    const loginStatus = useSelector(getLoginState);
 
     const auth = getAuth();
 

@@ -1,5 +1,6 @@
 import { useState, useEffect, useCallback, useMemo, memo} from 'react';
 import {useDispatch, useSelector } from 'react-redux';
+import { getMovieInfoState } from '../store/selectors';
 import MovieService from '../../services/MovieService';
 import { setSimilarFilms, setFilmId } from '../store/reducers/movieSlice';
 import Slider from 'react-slick';
@@ -22,7 +23,7 @@ const SimilarFilms = () => {
     const [similarFilms, setSimilarFilms] = useState([])
     const dispatch = useDispatch();
 
-    const filmId = useSelector(state => state.movieInfo.filmId);
+    const {filmId} = useSelector(getMovieInfoState);
     // const similarFilms = useSelector(state => state.movieInfo.similarFilms);
 
     const { getSimilarFilms, loading } = MovieService();
@@ -71,7 +72,7 @@ const SimilarFilms = () => {
     }
 
     // const spinner = loading ? <Spinner/> : null
-    const content = renderFilms(similarFilms)
+    const content = loading ? <Spinner/> : renderFilms(similarFilms)
 
     return (
         <>
