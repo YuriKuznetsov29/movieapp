@@ -10,7 +10,7 @@ import Trailers from '../trailers/Trailars';
 import GradeFilms from '../grageFilms/GradeFilms';
 import ActorsOfCurrentFilm from '../actorsOfCurrentFilm/ActorsOfCurrentFilm';
 import Spinner from '../Spinner/Spinner';
-import useFirebase from '../hooks/firebase.hook';
+import useFirebase from "../../hooks/firebase.hook";
 
 import './movieInfo.scss';
 
@@ -102,7 +102,7 @@ const MovieInfo = () => {
             setKeyFavorite(null);
             setKeyViewed(null);
             dispatch(setGrade(null));
-            document.body.style.overflow = "auto";
+            document.body.style.overflow = "auto"; // найти в какой строке ошибка т. к. не доходит до этой строки
         }
     }
 

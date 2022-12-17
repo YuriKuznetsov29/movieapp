@@ -3,7 +3,7 @@ import { useSelector, useDispatch } from "react-redux";
 import { getLoginState, getMovieInfoState,  } from "../store/selectors";
 import { setFilmId } from '../store/reducers/movieSlice';
 import MovieService from "../../services/MovieService";
-import useFirebase from "../hooks/firebase.hook";
+import useFirebase from "../../hooks/firebase.hook";
 import Spinner from "../Spinner/Spinner";
 
 const FavoriteFilms = () => {

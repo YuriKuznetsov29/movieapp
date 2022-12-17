@@ -8,7 +8,7 @@ import { getStorage, ref, uploadBytes, getDownloadURL} from "firebase/storage";
 import './userProfile.scss'
 
 const UserProfile = () => {
-    const [content, setContent] = useState(<ViewedFilms />);
+    const [content, setContent] = useState(<FavoriteFilms />);
     const [avatar, setAvatar] = useState(null);
     const inputAvatar = useRef(null);
     const [btnClass, setBtnClass] = useState({btnFavorite: 'profileBtn profileBtnActive', btnViewed: 'profileBtn'})

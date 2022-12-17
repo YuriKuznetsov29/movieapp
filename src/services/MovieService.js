@@ -1,5 +1,5 @@
 import { useMemo } from "react";
-import { useHttp } from "../components/hooks/http.hook";
+import { useHttp } from "../hooks/http.hook";
 
 const MovieService = () => {
 
@@ -101,7 +101,6 @@ const MovieService = () => {
     }
 
     const _getTransformFilmInfo = (item) => {
-        console.log(item)
         const info = 
             {
                 name: item.nameRu,
@@ -111,13 +110,12 @@ const MovieService = () => {
                 country: item.countries[0].country, //массив стран
                 genre: item.genres[0].genre, //массив жанров
                 slogan: item.slogan,
-                time: item.filmLength,
+                time: item.filmLength ? item.filmLength : 0,
                 description: item.description,
                 background: item.coverUrl,
                 ratingKinopoisk: item.ratingKinopoisk,
                 id: item.kinopoiskId,
             }
-            console.log(info)
         return info;
 
     }

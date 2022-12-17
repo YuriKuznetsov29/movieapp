@@ -1,6 +1,6 @@
 import { useDispatch, useSelector } from "react-redux";
 import {getDatabase, push, ref, set, onValue, update} from "firebase/database";
-import { setFavoriteFilms, setViewdFilmsData, setViewedFilms, setFavoriteFilmsData } from "../store/reducers/userProfileSlice";
+import { setFavoriteFilms, setViewdFilmsData, setViewedFilms, setFavoriteFilmsData } from "../components/store/reducers/userProfileSlice";
 
 const useFirebase = () => {
     const userId = useSelector(state => state.login.userId);

@@ -1,8 +1,9 @@
 import { useState, useEffect } from 'react';
 import { setFilmId } from '../store/reducers/movieSlice';
 import { useDispatch, useSelector } from 'react-redux';
+import { createSelector } from 'reselect';
 import { getLoginState, getMovieInfoState, getUserProfileState } from "../store/selectors";
-import useFirebase from "../hooks/firebase.hook";
+import useFirebase from "../../hooks/firebase.hook";
 
 const ViewedFilms = () => {
     const [genre, setGenre] = useState(null);
@@ -14,16 +15,45 @@ const ViewedFilms = () => {
     const [filteredFilms, setFilteredFilms] = useState([]);
     const [filtersState, setFiltersState] = useState({state: false, style: {'display': 'none'}});
     
-    const {deleteViewedFilm, readDataFavorite} = useFirebase();
+    const {deleteViewedFilm, readDataViewed} = useFirebase();
 
     const dispatch = useDispatch();
 
-    const {userId} = useSelector(getLoginState);
-    const {viewedFilms, dataViewed, gradeFilms} = useSelector(getUserProfileState);
-    const {genres, countries} = useSelector(getMovieInfoState);
+    // const {userId} = useSelector(getLoginState);
+    // const {viewedFilms, dataViewed, gradeFilms} = useSelector(getUserProfileState);
+
+    // const profileStates = useSelector(getUserProfileState);
+    // console.log(profileStates);
+
+    // const {genres, countries} = useSelector(getMovieInfoState);
+
+    const userId = useSelector(state => state.login.userId);
+    const viewedFilms = useSelector(state => state.userProfile.viewedFilms);
+    const dataViewed = useSelector(state => state.userProfile.dataViewed);
+    const gradeFilms = useSelector(state => state.userProfile.gradeFilms);
+    const genres = useSelector(state => state.movieInfo.genres);
+    const countries = useSelector(state => state.movieInfo.countries);
+
+    // const selectorData = createSelector(
+    //     state => state.login.userId,
+    //     state => state.userProfile.viewedFilms,
+    //     state => state.userProfile.dataViewed,
+    //     state => state.userProfile.gradeFilms,
+    //     state => state.movieInfo.genres,
+    //     state => state.movieInfo.countries,
+    //     (userId, viewedFilms, dataViewed, gradeFilms, genres, countries) => {
+    //         return {userId, viewedFilms, dataViewed, gradeFilms, genres, countries}
+    //     }
+    // )
+
+    // const {userId, viewedFilms, dataViewed, gradeFilms, genres, countries} = useSelector(selectorData)
+
+     console.log('render')
+
+    //{userId, viewedFilms, dataViewed, gradeFilms, genres, countries}
 
     useEffect(() => {
-        readDataFavorite()
+        readDataViewed()
     }, [userId])
 
     useEffect(() => {
@@ -49,7 +79,6 @@ const ViewedFilms = () => {
     }
 
     const filterFilms = (arr, genre, country, maxYear, minYear, maxRate, minRate) => {
-        console.log(arr)
         let filteredFilms = genre ? arr.filter(item => {
                 return item[1].genre === genre
                 }) : arr;
@@ -76,8 +105,6 @@ const ViewedFilms = () => {
             return item[1].ratingKinopoisk >= minRate
             });
 
-        console.log(filteredFilms)
-        
         setFilteredFilms(filteredFilms)
     }
 
@@ -112,7 +139,7 @@ const ViewedFilms = () => {
         })
 
         const fimsQuantity = arr.length + ' фильмов';
-        const hourseQuantity = Math.floor(arr.reduce((acc, curr) => (acc + (curr[1].time !== null ? curr[1].time : 0) / 60), 0)) + ' часов';
+        const hourseQuantity = Math.floor(arr.reduce((acc, curr) => (acc + (curr[1].time !== null ? curr[1].time : 0) / 60), 0)) + ' часов'; // во viewedFilms нет поля time поэтому сейчас NaN
         const daysQuantity = (arr.reduce((acc, curr) => (acc + (curr[1].time !== null ? curr[1].time : 0) / 60 / 24), 0)).toFixed(1) + ' дней';
         return (
             <div className="results-favorite">

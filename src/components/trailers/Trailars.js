@@ -7,7 +7,7 @@ import Slider from "react-slick";
 
 const Trailers = () => {
 
-    const trailers = useSelector(getMovieInfoState);
+    const {trailers} = useSelector(getMovieInfoState);
     
     const settings = {
         dots: false,
