@@ -19,20 +19,17 @@ const ViewedFilms = () => {
 
     const dispatch = useDispatch();
 
-    // const {userId} = useSelector(getLoginState);
-    // const {viewedFilms, dataViewed, gradeFilms} = useSelector(getUserProfileState);
+    const {userId} = useSelector(getLoginState);
+    const {viewedFilms, dataViewed, gradeFilms} = useSelector(getUserProfileState);
 
-    // const profileStates = useSelector(getUserProfileState);
-    // console.log(profileStates);
+    const {genres, countries} = useSelector(getMovieInfoState);
 
-    // const {genres, countries} = useSelector(getMovieInfoState);
-
-    const userId = useSelector(state => state.login.userId);
-    const viewedFilms = useSelector(state => state.userProfile.viewedFilms);
-    const dataViewed = useSelector(state => state.userProfile.dataViewed);
-    const gradeFilms = useSelector(state => state.userProfile.gradeFilms);
-    const genres = useSelector(state => state.movieInfo.genres);
-    const countries = useSelector(state => state.movieInfo.countries);
+    // const userId = useSelector(state => state.login.userId);
+    // const viewedFilms = useSelector(state => state.userProfile.viewedFilms);
+    // const dataViewed = useSelector(state => state.userProfile.dataViewed);
+    // const gradeFilms = useSelector(state => state.userProfile.gradeFilms);
+    // const genres = useSelector(state => state.movieInfo.genres);
+    // const countries = useSelector(state => state.movieInfo.countries);
 
     // const selectorData = createSelector(
     //     state => state.login.userId,

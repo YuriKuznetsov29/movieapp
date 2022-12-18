@@ -1,6 +1,6 @@
 import { useState, useEffect, memo } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import { getLoginState, getMovieInfoState,  } from "../store/selectors";
+import { getLoginState, getMovieInfoState, getUserProfileState  } from "../store/selectors";
 import { setFilmId } from '../store/reducers/movieSlice';
 import MovieService from "../../services/MovieService";
 import useFirebase from "../../hooks/firebase.hook";
@@ -21,11 +21,13 @@ const FavoriteFilms = () => {
 
     const dispatch = useDispatch();
 
-    const userId = useSelector(state => state.login.userId);
-    const favoriteFilms = useSelector(state => state.userProfile.favoriteFilms);
-    const dataFavorite = useSelector(state => state.userProfile.dataFavorite);
-    const genres = useSelector(state => state.movieInfo.genres);
-    const countries = useSelector(state => state.movieInfo.countries);
+    const {favoriteFilms, dataFavorite} = useSelector(getUserProfileState);
+    const {genres, countries} = useSelector(getMovieInfoState);
+    const {userId} = useSelector(getLoginState);
+    // const favoriteFilms = useSelector(state => state.userProfile.favoriteFilms);
+    // const dataFavorite = useSelector(state => state.userProfile.dataFavorite);
+    // const genres = useSelector(state => state.movieInfo.genres);
+    // const countries = useSelector(state => state.movieInfo.countries);
 
     useEffect(() => {
         readDataFavorite()

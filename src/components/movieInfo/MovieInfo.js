@@ -15,7 +15,6 @@ import useFirebase from "../../hooks/firebase.hook";
 import './movieInfo.scss';
 
 const MovieInfo = () => {
-    const [similarFilms, setSimilarFilms] = useState([]);
     const [keyFavorite, setKeyFavorite] = useState(null);
     const [keyViewed, setKeyViewed] = useState(null);
 
@@ -102,7 +101,7 @@ const MovieInfo = () => {
             setKeyFavorite(null);
             setKeyViewed(null);
             dispatch(setGrade(null));
-            document.body.style.overflow = "auto"; // найти в какой строке ошибка т. к. не доходит до этой строки
+            document.body.style.overflow = "auto";
         }
     }
 

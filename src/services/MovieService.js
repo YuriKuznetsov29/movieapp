@@ -110,7 +110,7 @@ const MovieService = () => {
                 country: item.countries[0].country, //массив стран
                 genre: item.genres[0].genre, //массив жанров
                 slogan: item.slogan,
-                time: item.filmLength ? item.filmLength : 0,
+                time: item.filmLength,
                 description: item.description,
                 background: item.coverUrl,
                 ratingKinopoisk: item.ratingKinopoisk,
