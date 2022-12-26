@@ -42,7 +42,7 @@ const FindFilms = (props) => {
     const renderFilms = (arr) => {
         const items = arr.map(item => {
             return (
-                <div className='item-inner'>
+                <div className='item-inner' key={item.id}>
                     <div 
                         className='find-poster' 
                         onClick={() => {
@@ -70,7 +70,7 @@ const FindFilms = (props) => {
     const renderCountries = (arr) => {
         const items = arr.map(item => {
             return (
-                <option value={item.id}>{item.country}</option>
+                <option value={item.id} key={item.id}>{item.country}</option>
             )
         })
         return (
@@ -85,7 +85,7 @@ const FindFilms = (props) => {
     const renderGenres = (arr) => {
         const items = arr.map((item, i) => {
             return (
-                <option value={item.id}>{item.genre}</option>
+                <option value={item.id} key={item.id}>{item.genre}</option>
             )
         })
         return (

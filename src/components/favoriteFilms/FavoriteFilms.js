@@ -1,94 +1,31 @@
-import { useState, useEffect, memo } from "react";
+import { useEffect, memo } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { getLoginState, getMovieInfoState, getUserProfileState  } from "../store/selectors";
 import { setFilmId } from '../store/reducers/movieSlice';
+import { setMaxYear, setMinYear, setGenre, setCountry, setMaxRate, setMinRate, clearFilters, favoriteSelector, setFiltersVisibility } from "../store/reducers/userProfileSlice";
 import MovieService from "../../services/MovieService";
 import useFirebase from "../../hooks/firebase.hook";
 import Spinner from "../Spinner/Spinner";
 
 const FavoriteFilms = () => {
-    const [genre, setGenre] = useState(null);
-    const [country, setCountry] = useState(null);
-    const [maxYear, setMaxYear] = useState(null);
-    const [minYear, setMinYear] = useState(null);
-    const [maxRate, setMaxRate] = useState(10);
-    const [minRate, setMinRate] = useState(0);
-    const [filteredFilms, setFilteredFilms] = useState([]);
-    const [filtersState, setFiltersState] = useState({state: false, style: {'display': 'none'}});
-
     const {loading} = MovieService();
     const {deleteFavoriteFilm, readDataFavorite} = useFirebase();
 
     const dispatch = useDispatch();
 
-    const {favoriteFilms, dataFavorite} = useSelector(getUserProfileState);
+    const {dataFavorite, maxRate, minRate, filtersVisibility} = useSelector(getUserProfileState);
     const {genres, countries} = useSelector(getMovieInfoState);
     const {userId} = useSelector(getLoginState);
-    // const favoriteFilms = useSelector(state => state.userProfile.favoriteFilms);
-    // const dataFavorite = useSelector(state => state.userProfile.dataFavorite);
-    // const genres = useSelector(state => state.movieInfo.genres);
-    // const countries = useSelector(state => state.movieInfo.countries);
+    const favoriteFilms = useSelector(favoriteSelector);
 
     useEffect(() => {
         readDataFavorite()
     }, [userId])
-
-    useEffect(() => {
-        filterFilms(favoriteFilms, genre, country, maxYear, minYear, maxRate, minRate)
-    }, [favoriteFilms, genre, country, maxYear, minYear, maxRate, minRate])
-
-    const showFilters = () => {
-        if (filtersState.state) {
-            setFiltersState({state: false, style: {'display': 'none'}});
-        }
-        else {
-            setFiltersState({state: true, style: {'display': 'flex'}});
-        }
-    }
-
-    const clearFilters = () => {
-        setGenre(null);
-        setCountry(null);
-        setMaxYear(null);
-        setMinYear(null);
-        setMaxRate(10);
-        setMinRate(0);
-    }
-
-    const filterFilms = (arr, genre, country, maxYear, minYear, maxRate, minRate) => {
-        let filteredFilms = genre ? arr.filter(item => {
-                return item[1].genre === genre
-                }) : arr;
-
-        filteredFilms = country ? filteredFilms.filter(item => {
-            return item[1].country === country
-            }) : filteredFilms;
-
-        filteredFilms = maxYear ? filteredFilms.filter(item => {
-            return item[1].year <= maxYear
-            }) : filteredFilms;
-
-        filteredFilms = minYear ? filteredFilms.filter(item => {
-            return item[1].year >= minYear
-            }) : filteredFilms;
-
-        filteredFilms = filteredFilms.filter(item => {
-            if (!item[1].ratingKinopoisk) return item
-            return item[1].ratingKinopoisk <= maxRate
-            });
-
-        filteredFilms = filteredFilms.filter(item => {
-            if (!item[1].ratingKinopoisk) return item
-            return item[1].ratingKinopoisk >= minRate
-            });
-
-        setFilteredFilms(filteredFilms)
-    }
     
     const renderFavoiteFilms = (arr) => {
         const items = arr.map(item => {
             return (
-                <div className='favorite-item-inner'>
+                <div className='favorite-item-inner' key={item[1].id}>
                     <div 
                         className='favorite-poster'
                         onClick={() => {
@@ -112,9 +49,9 @@ const FavoriteFilms = () => {
         
         return (
             <div className="results-favorite">
-                <i class="ph-sliders showFilters" onClick={() => showFilters()}></i>
+                <i class="ph-sliders showFilters" onClick={() => dispatch(setFiltersVisibility())}></i>
                 <h1 className="result-title">Избранные фильмы</h1>
-                <div className="filters" style={filtersState.style}>
+                <div className="filters" style={filtersVisibility ? {'display': 'flex'} : {'display': 'none'}}>
                     <span>
                     <input 
                             className="inputYear" 
@@ -152,15 +89,13 @@ const FavoriteFilms = () => {
         )
     }
 
-    const content = renderFavoiteFilms(filteredFilms);
-    const spinner = loading ? <Spinner/> : null
+    const content = renderFavoiteFilms(favoriteFilms);
 
     return (
-        <>  {spinner}
-            <div className='favorite-content-wrapper'>
-                {dataFavorite ? content : null}
-            </div>
-        </>
+        <div className='favorite-content-wrapper'>
+            {loading ? <Spinner/> : null}
+            {dataFavorite ? content : null}
+        </div>
     )
 }
 

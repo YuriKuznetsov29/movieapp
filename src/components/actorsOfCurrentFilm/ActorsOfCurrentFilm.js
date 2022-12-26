@@ -21,7 +21,7 @@ const ActorsOfCurrentFilm = () => {
                 if (i < 9) {
                     return (
                         <>
-                            <div>{item.nameRu}</div>
+                            <div key={item.id}>{item.nameRu}</div>
                         </>
                     )
                 }

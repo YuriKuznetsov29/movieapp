@@ -53,6 +53,7 @@ const SimilarFilms = () => {
                     <img 
                         src={item.posterUrl} 
                         alt="poster"
+                        key={item.id}
                         onClick={() => {
                             dispatch(setFilmId(item.id));
                         }} 

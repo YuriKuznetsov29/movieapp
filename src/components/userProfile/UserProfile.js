@@ -1,6 +1,7 @@
 import { useState, useEffect, useRef, memo, useMemo, useCallback } from 'react';
-import {useSelector } from 'react-redux';
+import {useSelector, useDispatch } from 'react-redux';
 import { getLoginState } from '../store/selectors';
+import { clearFilters } from '../store/reducers/userProfileSlice';
 import FavoriteFilms from '../favoriteFilms/FavoriteFilms';
 import ViewedFilms from '../viewedFilms/ViewedFilms';
 import { getStorage, ref, uploadBytes, getDownloadURL} from "firebase/storage";
@@ -12,6 +13,8 @@ const UserProfile = () => {
     const [avatar, setAvatar] = useState(null);
     const inputAvatar = useRef(null);
     const [btnClass, setBtnClass] = useState({btnFavorite: 'profileBtn profileBtnActive', btnViewed: 'profileBtn'})
+
+    const dispatch = useDispatch();
 
     const {email, loginStatus} = useSelector(getLoginState);
 
@@ -73,8 +76,8 @@ const UserProfile = () => {
                     <div>На сайте</div>
                 </div>
                 <button className='profileBtn' onClick={() => inputClick()}>Загрузить аватар</button>
-                <button className={btnClass.btnFavorite} onClick={() => {setContent(<FavoriteFilms />); activeButton(FavoriteFilms)}} >Избранные фильмы</button>
-                <button className={btnClass.btnViewed} onClick={() => {setContent(<ViewedFilms />); activeButton(ViewedFilms)}}>Просмотренные фильмы</button>
+                <button className={btnClass.btnFavorite} onClick={() => {setContent(<FavoriteFilms />); activeButton(FavoriteFilms); dispatch(clearFilters())}} >Избранные фильмы</button>
+                <button className={btnClass.btnViewed} onClick={() => {setContent(<ViewedFilms />); activeButton(ViewedFilms); dispatch(clearFilters())}}>Просмотренные фильмы</button>
                 <input 
                     className='hidden' 
                     type='file' 

@@ -15,7 +15,7 @@ const MovieList = () => {
 
     useEffect(() => {
         loadData();
-        
+        console.log('render')
         // return clearData();
     }, []);
 
@@ -31,11 +31,13 @@ const MovieList = () => {
     const renderFilms = (arr) => {
         const items = arr.map(item => {
             return (
-                <div className="filmitem"
-                onClick={() => {
-                    dispatch(setFilmId(item.id));
-                }}>
-                    <img src={item.posterUrl} alt="logo"/>
+                <div 
+                    className="filmitem"
+                    key={item.id}
+                    onClick={() => {
+                        dispatch(setFilmId(item.id));
+                    }}>
+                        <img src={item.posterUrl} alt="logo"/>
                 </div>
             )
         })
