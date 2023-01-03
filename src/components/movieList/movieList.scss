@@ -17,6 +17,9 @@
     &:hover {
         transform: translateY(-10px);
     }
+    &:focus {
+        transform: translateY(-10px);
+    }
     img {
         width: 300px;
         height: 450px;

@@ -9,7 +9,7 @@ import { Navigate } from "react-router-dom";
 import './regForm.scss'
 
 const RegForm = () => {
-    const loginStatus = useSelector(getLoginState);
+    const {loginStatus} = useSelector(getLoginState);
 
     const auth = getAuth();
 

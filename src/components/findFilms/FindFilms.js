@@ -28,6 +28,10 @@ const FindFilms = (props) => {
             .then(res => setFilms(res))
     }
 
+    const onKeyDown = (e) => {
+        if (e.key === "Enter") loadDataByKeyword();
+    }
+
     const loadDataByParametrs = () => {
         getFimsByParametrs(country, genre, startYear, endYear, minRate, maxRate)
             .then(res => setFilms(res))
@@ -104,7 +108,7 @@ const FindFilms = (props) => {
 
         <div className='find-wrapper'>
             <div className='advanced-search'>
-                <input className='find-input' value={keyword} onChange={(e) => setKeyword(e.target.value)}/>
+                <input className='find-input' value={keyword} onChange={(e) => setKeyword(e.target.value)}  onKeyDown={(e) => onKeyDown(e)}/>
                 <div className="buttons-wrapper">
                     <i class="ph-faders-horizontal" onClick={() => showOptions()}></i>
                     <i className="ph-magnifying-glass" onClick={() => loadDataByKeyword()}></i>

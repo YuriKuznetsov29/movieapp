@@ -11,7 +11,7 @@ const LoginForm = () => {
 
     const dispatch = useDispatch();
 
-    const loginStatus = useSelector(getLoginState);
+    const {loginStatus} = useSelector(getLoginState);
 
     return (
 

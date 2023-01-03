@@ -40,12 +40,16 @@ const Trailers = () => {
         })
         return (
             items.length > 1 ?
+            <div className='slider-inner'>
+                <h2>{`Тизеры и Трейлеры ${trailers.length}`}</h2>
                 <Slider {...settings}>
                     {items}
-                </Slider> :
-                <>
-                    {items}
-                </>
+                </Slider> 
+            </div>
+            :
+            <div className='trailer-inner'>
+                {items}
+            </div>
         )
     }
 

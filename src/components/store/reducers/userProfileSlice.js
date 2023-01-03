@@ -1,4 +1,4 @@
-import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
+import { createSlice } from "@reduxjs/toolkit";
 import { createSelector } from "@reduxjs/toolkit";
 
 const initialState = {
@@ -16,6 +16,7 @@ const initialState = {
     minRate: 0,
     filtersVisibility: false,
     content: 'FavoriteFilms',
+    msgModalState: {display: 'none'},
 }
 
 const userProfileSlice = createSlice({
@@ -72,6 +73,9 @@ const userProfileSlice = createSlice({
             state.maxRate = 10;
             state.minRate = 0;
         },
+        setMsgModalState: (state, action) => {
+            state.msgModalState = action.payload;
+        },
     },
 });
 
@@ -113,10 +117,10 @@ export const favoriteSelector = createSelector(
             if (!item[1].ratingKinopoisk) return item
             return item[1].ratingKinopoisk >= minRate
             });
-        console.log(filteredFilms)
         return filteredFilms;
     }
 )
+
 export const viewedSelector = createSelector(
     (state) => state.userProfile.viewedFilms,
     (state) => state.userProfile.genre,
@@ -151,9 +155,8 @@ export const viewedSelector = createSelector(
             if (!item[1].ratingKinopoisk) return item
             return item[1].ratingKinopoisk >= minRate
             });
-        console.log(filteredFilms)
         return filteredFilms;
     }
 )
 
-export const {setFavoriteFilms, setFavoriteFilmsData, setViewedFilms, setViewdFilmsData, setGradeFilms, setGrade, setMaxYear, setMinYear, setGenre, setCountry, setMaxRate, setMinRate, clearFilters, setFiltersVisibility, setContent} = actions;
+export const {setFavoriteFilms, setFavoriteFilmsData, setViewedFilms, setViewdFilmsData, setGradeFilms, setGrade, setMaxYear, setMinYear, setGenre, setCountry, setMaxRate, setMinRate, clearFilters, setFiltersVisibility, setContent, setMsgModalState} = actions;

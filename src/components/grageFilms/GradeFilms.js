@@ -1,6 +1,7 @@
 import { useState, useEffect, memo } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { getLoginState, getMovieInfoState, getUserProfileState } from "../store/selectors";
+import { setMsgModalState } from "../store/reducers/userProfileSlice";
 import { getDatabase, ref, onValue, set, push} from "firebase/database";
 import { setGradeFilms, setGrade } from "../store/reducers/userProfileSlice";
 
@@ -8,7 +9,7 @@ const GradeFilms = () => {
     // const [grade, setGrade] = useState(null);
     const [gradeState, setGradeState] = useState({state: false, visible: {'display': 'block'}});
 
-    const {userId} = useSelector(getLoginState);
+    const {userId, loginStatus} = useSelector(getLoginState);
     const {filmId, filmInfo} = useSelector(getMovieInfoState);
     const {gradeFilms, grade} = useSelector(getUserProfileState);
 
@@ -53,7 +54,7 @@ const GradeFilms = () => {
     return (
         <>
             <button className='btn-grade' style={gradeState.visible}
-            onClick={() => setGradeState({state: true, visible: {'display': 'none'}})}>Оценить</button>
+            onClick={() => loginStatus ? setGradeState({state: true, visible: {'display': 'none'}}) : dispatch(setMsgModalState({display: 'block'}))}>Оценить</button>
             
             {gradeState.state ? <div className='choise'>
                 <div className='choisewrapper'>

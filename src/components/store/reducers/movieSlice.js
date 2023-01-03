@@ -1148,6 +1148,11 @@ const movieInfoSlice = createSlice({
         },
         ModalClose: (state) => {
             state.modalState = 'infowrapper';
+            state.filmId = null;
+            state.filmInfo = {};
+            state.similarFilms = [];
+            state.trailers  = [];
+            state.staff  = {actors: [], directors: []};
         },
         setFilmId: (state, action) => {
             state.filmId = action.payload;

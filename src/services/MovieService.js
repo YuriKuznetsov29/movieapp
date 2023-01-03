@@ -77,7 +77,7 @@ const MovieService = () => {
 
     const getTrailer = async (id) => {
         const res = await request(`https://kinopoiskapiunofficial.tech/api/v2.2/films/${id}/videos`);
-        return res;
+        return _transformTrailers(res);
     };
 
     const getStaff = async (id) => {
@@ -170,6 +170,16 @@ const MovieService = () => {
             });
         });
         return films;
+    };
+
+    const _transformTrailers = (res) => {
+        let arr = [];
+        for (let i = 0; i < res.items.length; i++) {
+            if (res.items[i].site === 'YOUTUBE') {
+                arr.push(res.items[i]);
+            } else continue;
+        };
+        return arr;
     };
 
     const transformStaff = (res) => {

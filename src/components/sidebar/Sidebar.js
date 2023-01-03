@@ -8,7 +8,7 @@ import { setViewdFilmsData, setViewedFilms, setFavoriteFilms, setFavoriteFilmsDa
 
 import './sidebar.scss';
 
-const Sidebar = () => {
+const Sidebar = (props) => {
     const dispatch = useDispatch();
     const auth = getAuth();
 
@@ -74,6 +74,7 @@ const Sidebar = () => {
                     </ul>
                 </nav>
             </aside>
+            {props.children}
         </>
     )
     
