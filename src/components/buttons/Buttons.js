@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import {getUserProfileState, getMovieInfoState, getLoginState} from '../store/selectors';
-import { setMsgModalState } from "../store/reducers/userProfileSlice";
+import { setMsgModalState, setNotification } from "../store/reducers/userProfileSlice";
 import useFirebase from "../../hooks/firebase.hook";
 import { useNavigate } from "react-router-dom";
 
@@ -57,7 +57,7 @@ const Buttons = () => {
                     </button> : 
                     <button 
                         className='btn-favorites'
-                        onClick={() => loginStatus ? addViewedFilm(filmInfo) : dispatch(setMsgModalState({display: 'block'}))}> 
+                        onClick={() => loginStatus ? (addViewedFilm(filmInfo), dispatch(setNotification('addViewed'))) : dispatch(setMsgModalState({display: 'block'}))}> 
                         <i class="ph-eye"></i> <span>Не просмотрено</span>
                     </button>
                 }
@@ -74,7 +74,7 @@ const Buttons = () => {
                     </button> :
                     <button 
                         className='btn-favorites'
-                        onClick={() => loginStatus ? addFavoriteFilm(filmInfo) : dispatch(setMsgModalState({display: 'block'}))}>
+                        onClick={() => loginStatus ? (addFavoriteFilm(filmInfo), dispatch(setNotification('addFavorite'))) : dispatch(setMsgModalState({display: 'block'}))}>
                             <i class="ph-bookmark-simple"></i> <span>Буду смотреть!</span>
                     </button> 
                 }

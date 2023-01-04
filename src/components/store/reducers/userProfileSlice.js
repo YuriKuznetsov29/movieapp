@@ -17,6 +17,7 @@ const initialState = {
     filtersVisibility: false,
     content: 'FavoriteFilms',
     msgModalState: {display: 'none'},
+    notification: null,
 }
 
 const userProfileSlice = createSlice({
@@ -75,6 +76,9 @@ const userProfileSlice = createSlice({
         },
         setMsgModalState: (state, action) => {
             state.msgModalState = action.payload;
+        },
+        setNotification: (state, action) => {
+            state.notification = action.payload;
         },
     },
 });
@@ -159,4 +163,4 @@ export const viewedSelector = createSelector(
     }
 )
 
-export const {setFavoriteFilms, setFavoriteFilmsData, setViewedFilms, setViewdFilmsData, setGradeFilms, setGrade, setMaxYear, setMinYear, setGenre, setCountry, setMaxRate, setMinRate, clearFilters, setFiltersVisibility, setContent, setMsgModalState} = actions;
+export const {setFavoriteFilms, setFavoriteFilmsData, setViewedFilms, setViewdFilmsData, setGradeFilms, setGrade, setMaxYear, setMinYear, setGenre, setCountry, setMaxRate, setMinRate, clearFilters, setFiltersVisibility, setContent, setMsgModalState, setNotification} = actions;

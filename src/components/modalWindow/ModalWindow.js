@@ -11,7 +11,8 @@ import Trailers from '../trailers/Trailars';
 import GradeFilms from '../grageFilms/GradeFilms';
 import ActorsOfCurrentFilm from '../actorsOfCurrentFilm/ActorsOfCurrentFilm';
 import Buttons from '../buttons/Buttons';
-import Msg from '../Msg/Msg';
+import Msg from '../msg/Msg';
+import Notification from '../notification/Notification';
 import Spinner from '../Spinner/Spinner';
 import useFirebase from "../../hooks/firebase.hook";
 
@@ -86,6 +87,7 @@ const ModalWindow = () => {
             />
             {trailers.length > 1 ? <Trailers /> : null}
             <SimilarFilms/>
+            <Notification/>
         </div>
     )
 }
