@@ -19,7 +19,7 @@ export const useHttp = () => {
             return data;
         } catch (e) {
             throw e;
-            setLoading(false)
+            setLoading(false);
         }
     }, [])
 

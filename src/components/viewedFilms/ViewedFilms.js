@@ -50,7 +50,7 @@ const ViewedFilms = () => {
         })
 
         const fimsQuantity = arr.length + ' фильмов';
-        const hourseQuantity = Math.floor(arr.reduce((acc, curr) => (acc + (curr[1].time !== null ? curr[1].time : 0) / 60), 0)) + ' часов'; // во viewedFilms нет поля time поэтому сейчас NaN
+        const hourseQuantity = Math.floor(arr.reduce((acc, curr) => (acc + (curr[1].time !== null ? curr[1].time : 0) / 60), 0)) + ' часов';
         const daysQuantity = (arr.reduce((acc, curr) => (acc + (curr[1].time !== null ? curr[1].time : 0) / 60 / 24), 0)).toFixed(1) + ' дней';
         return (
             <div className="results-favorite">

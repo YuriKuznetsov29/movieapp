@@ -1,7 +1,9 @@
 import {lazy, Suspense} from 'react';
-import { createBrowserRouter, RouterProvider, Route } from "react-router-dom";
+import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import Sidebar from './components/sidebar/Sidebar';
 import Spinner from './components/Spinner/Spinner';
+import FavoriteFilms from '../src/components/favoriteFilms/FavoriteFilms';
+import ViewedFilms from '../src/components/viewedFilms/ViewedFilms';
 
 const MovieList = lazy(() => import('./components/movieList/MovieList'));
 const ModalWindow = lazy(() => import('./components/modalWindow/ModalWindow'));
@@ -9,6 +11,8 @@ const FindFilms = lazy(() => import('./components/findFilms/FindFilms'));
 const LoginForm = lazy(() => import('./components/loginForm/LoginForm'));
 const RegForm = lazy(() => import('./components/regForm/RegForm'));
 const UserProfile = lazy(() => import('./components/userProfile/UserProfile'));
+// const FavoriteFilms = lazy(() => import('./components/favoriteFilms/FavoriteFilms'));
+// const ViewedFilms = lazy(() => import('./components/viewedFilms/ViewedFilms'));
 
 function App() {
 
@@ -54,6 +58,16 @@ function App() {
                     <ModalWindow />
                   </Sidebar>
                 </>,
+      children: [
+        {
+          path: "1",
+          element: <FavoriteFilms />,
+        },
+        {
+          path: "2",
+          element: <ViewedFilms />,
+        },
+      ],
     },
     
   ]);

@@ -1,12 +1,15 @@
-import { useEffect } from "react"
+import { useState, useEffect, useRef } from "react"
 import { useDispatch, useSelector } from "react-redux";
-import { setNotification } from "../store/reducers/userProfileSlice";
+import { setNotification, setStartTransition } from "../store/reducers/userProfileSlice";
 import { getLoginState, getMovieInfoState, getUserProfileState } from '../store/selectors';
 import { createSelector } from "@reduxjs/toolkit";
+import { CSSTransition } from "react-transition-group";
 
 import './notification.scss'
 
 const Notification = () => {
+    const [inProp, setInProp] = useState(false);
+    const notificationRef = useRef(null);
     const dispatch = useDispatch();
 
     // const notificationSelector = createSelector(
@@ -15,21 +18,23 @@ const Notification = () => {
     // )
 
     // const notification = useSelector(notificationSelector);
-    const {notification} = useSelector(getUserProfileState);
+    const {notification, startTransition} = useSelector(getUserProfileState);
     const {filmInfo} = useSelector(getMovieInfoState);
 
     
 
     useEffect(() => {
         const timeoutNotification = setTimeout(() => {
-            dispatch(setNotification(null));
+            dispatch(setStartTransition(false));
+            // dispatch(setNotification(null));
         }, 3000);
-        console.log('render');
 
         return () => {
            clearTimeout(timeoutNotification);
         };
-    },[notification]);
+    },[startTransition]);
+
+    
 
     
 
@@ -56,7 +61,11 @@ const Notification = () => {
     const content = renderNotification(notification)
     return (
         <>
-            {content}
+        <CSSTransition notificationRef={notificationRef} in={startTransition} timeout={1000} classNames="my-notification">
+            <div ref={notificationRef}>
+                {content}
+            </div>
+        </CSSTransition>
         </>
     )
 }

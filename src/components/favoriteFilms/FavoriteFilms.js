@@ -1,4 +1,4 @@
-import { useEffect, memo } from "react";
+import { useEffect, useTransition } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { getLoginState, getMovieInfoState, getUserProfileState  } from "../store/selectors";
 import { setFilmId } from '../store/reducers/movieSlice';
@@ -9,6 +9,7 @@ import Spinner from "../Spinner/Spinner";
 
 const FavoriteFilms = () => {
     const {loading} = MovieService();
+    const [isPending, startTransition] = useTransition();
     const {deleteFavoriteFilm, readDataFavorite} = useFirebase();
 
     const dispatch = useDispatch();
@@ -21,6 +22,36 @@ const FavoriteFilms = () => {
     useEffect(() => {
         readDataFavorite()
     }, [userId])
+
+    const onFilterChange = (e) => {
+        startTransition(() => {
+            switch (e.target.id) {
+                case "maxYear":
+                    dispatch(setMaxYear(e.target.value));
+                    break;
+                case "minYear":
+                    dispatch(setMinYear(e.target.value));
+                    break;
+                case "country":
+                    dispatch(setCountry(e.target.value));
+                    break;
+                case "genre":
+                    dispatch(setGenre(e.target.value));
+                    break;
+                case "maxRate":
+                    dispatch(setMaxRate(e.target.value));
+                    break;
+                case "minRate":
+                    dispatch(setMinRate(e.target.value));
+                    break;
+            
+                default:
+                    dispatch(clearFilters());
+                    break;
+            }
+        })
+        
+    }
     
     const renderFavoiteFilms = (arr) => {
         const items = arr.map(item => {
@@ -54,37 +85,39 @@ const FavoriteFilms = () => {
                 <div className="filters" style={filtersVisibility ? {'display': 'flex'} : {'display': 'none'}}>
                     <span>
                     <input 
-                            className="inputYear" 
+                            className="inputYear"
+                            id="maxYear" 
                             placeholder="max год"
-                            onChange={(e) => dispatch(setMaxYear(e.target.value))}>
+                            onChange={(e) => onFilterChange(e)}>
                         </input>
                         <input 
-                            className="inputYear" 
+                            className="inputYear"
+                            id="minYear" 
                             placeholder="min год"
-                            onChange={(e) => dispatch(setMinYear(e.target.value))}>
+                            onChange={(e) => onFilterChange(e)}>
                         </input>
                     </span>
                     <span>
-                        <select className="inputSelect" onChange={(e) => dispatch(setCountry(e.target.value))}>
+                        <select className="inputSelect" id="country" onChange={(e) => onFilterChange(e)}>
                             <option value={''} selected>Выберете страну</option>
                             {countries.map(item => <option value={item.country}>{item.country}</option>)}
                         </select>
-                        <select className="inputSelect" onChange={(e) => dispatch(setGenre(e.target.value))}>
+                        <select className="inputSelect" id="genre" onChange={(e) => onFilterChange(e)}>
                             <option value={''} selected>Выберете жанр</option>
                             {genres.map(item => <option value={item.genre}>{item.genre}</option>)}
                         </select>
                     </span>
                     <span>
                         <label>{`Макс рейтинг ${maxRate}`}</label>
-                        <input className='rangeRate' type='range' min='0' max='10' step='1' value={maxRate} onChange={(e) => dispatch(setMaxRate(e.target.value))}></input>
+                        <input className='rangeRate' id="maxRate" type='range' min='0' max='10' step='1' value={maxRate} onChange={(e) => onFilterChange(e)}></input>
                         <label>{`Мин рейтинг ${minRate}`}</label>
-                        <input className='rangeRate' type='range' min='0' max='10' step='1' value={minRate} onChange={(e) => dispatch(setMinRate(e.target.value))}></input>
+                        <input className='rangeRate' id="minRate" type='range' min='0' max='10' step='1' value={minRate} onChange={(e) => onFilterChange(e)} ></input>
                     </span>
-                    <div className="clearFilters" onClick={() => dispatch(clearFilters())}>
+                    <div className="clearFilters" onClick={() => onFilterChange()}>
                         <i class="ph-paint-brush-household"></i>
                     </div>
                 </div>
-                {items}
+                {isPending ? <Spinner/> : items}
             </div>
         )
     }
@@ -95,6 +128,7 @@ const FavoriteFilms = () => {
         <div className='favorite-content-wrapper'>
             {loading ? <Spinner/> : null}
             {dataFavorite ? content : null}
+            {/* {isPending ? <Spinner/> : content} */}
         </div>
     )
 }

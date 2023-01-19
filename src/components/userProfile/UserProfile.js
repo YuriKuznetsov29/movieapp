@@ -2,17 +2,14 @@ import { useState, useEffect, useRef, memo, useMemo, useCallback } from 'react';
 import {useSelector, useDispatch } from 'react-redux';
 import { getLoginState } from '../store/selectors';
 import { clearFilters } from '../store/reducers/userProfileSlice';
-import FavoriteFilms from '../favoriteFilms/FavoriteFilms';
-import ViewedFilms from '../viewedFilms/ViewedFilms';
+import { Outlet, NavLink } from 'react-router-dom';
 import { getStorage, ref, uploadBytes, getDownloadURL} from "firebase/storage";
 
 import './userProfile.scss'
 
 const UserProfile = () => {
-    const [content, setContent] = useState(<FavoriteFilms />);
     const [avatar, setAvatar] = useState(null);
     const inputAvatar = useRef(null);
-    const [btnClass, setBtnClass] = useState({btnFavorite: 'profileBtn profileBtnActive', btnViewed: 'profileBtn'})
 
     const dispatch = useDispatch();
 
@@ -49,20 +46,6 @@ const UserProfile = () => {
 
     }
 
-    const activeButton = (key) => {
-        switch (key) {
-         case FavoriteFilms:
-             setBtnClass({btnFavorite: 'profileBtn profileBtnActive', btnViewed: 'profileBtn'})
-             break;
-         case ViewedFilms:
-             setBtnClass({btnFavorite: 'profileBtn', btnViewed: 'profileBtn profileBtnActive'})
-             break;
-         default:
-             setBtnClass({btnFavorite: 'profileBtn profileBtnActive', btnViewed: 'profileBtn'})
-             break;
-        }
-     }
-
     return (
         <>  
             <div className='profileContainer'>
@@ -76,8 +59,16 @@ const UserProfile = () => {
                     <div>На сайте</div>
                 </div>
                 <button className='profileBtn' onClick={() => inputClick()}>Загрузить аватар</button>
-                <button className={btnClass.btnFavorite} onClick={() => {setContent(<FavoriteFilms />); activeButton(FavoriteFilms); dispatch(clearFilters())}} >Избранные фильмы</button>
-                <button className={btnClass.btnViewed} onClick={() => {setContent(<ViewedFilms />); activeButton(ViewedFilms); dispatch(clearFilters())}}>Просмотренные фильмы</button>
+                <NavLink to={`/profile/1`} end className="profileBtn"  
+                    style={({ isActive}) => { return {background: isActive ? "#555555" : "inherit",};}}
+                    onClick={() => clearFilters()}>
+                        <div>Избранные фильмы</div>
+                </NavLink>
+                <NavLink to={`/profile/2`} end className="profileBtn"  
+                    style={({ isActive}) => { return {background: isActive ? "#555555" : "inherit",};}}
+                    onClick={() => clearFilters()}>
+                        <div>Просмотренные фильмы</div>
+                </NavLink>
                 <input 
                     className='hidden' 
                     type='file' 
@@ -86,7 +77,7 @@ const UserProfile = () => {
                     onChange={(e) => handleChange(e)}
                 />
             </div>
-            {content}
+            <Outlet/>
             </div>
         </>
     )

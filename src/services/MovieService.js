@@ -1,4 +1,3 @@
-import { useMemo } from "react";
 import { useHttp } from "../hooks/http.hook";
 
 const MovieService = () => {
@@ -9,7 +8,6 @@ const MovieService = () => {
 
         const date = new Date();
         const month = date.getMonth();
-
         switch (month) {
             case 0:
                 return 'JANUARY';
@@ -47,7 +45,7 @@ const MovieService = () => {
 
         const res = await request(`https://kinopoiskapiunofficial.tech/api/v2.2/films/premieres?year=2022&month=${currentMonth}`)
         return _transformFilms(res);
-    };
+    }
 
     const getFilmInfo = async (id) => {
         return (await request(`https://kinopoiskapiunofficial.tech/api/v2.2/films/${id}`)
