@@ -33,9 +33,12 @@ const RegForm = () => {
         <Formik
             initialValues={{ email: '', password: '', repeatPasword: '' }}
             validationSchema={Yup.object({
-                email: Yup.string().required('Обязательное поле'),
-                password: Yup.string().required('Обязательное поле'),
+                email: Yup.string().required('Обязательное поле')
+                                .email('Неправильный формат email'),
+                password: Yup.string().required('Обязательное поле')
+                                    .min(6, 'минимальное количество 6 символов'),
                 repeatPasword: Yup.string().required('Обязательное поле')
+                                        .oneOf([Yup.ref('password')], 'Пароли не совпадают')
             })}
             onSubmit={(value) => {
                 register(auth, value.email, value.password)

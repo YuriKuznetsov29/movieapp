@@ -18,12 +18,12 @@ const LoginForm = () => {
         <Formik
             initialValues={{ email: '', password: '' }}
             validationSchema={Yup.object({
-                email: Yup.string().required('Обязательное поле'),
+                email: Yup.string().required('Обязательное поле')
+                                .email('Неправильный формат email'),
                 password: Yup.string().required('Обязательное поле')
             })}
             onSubmit={(value) => {
                 dispatch(fetchLogin({email: value.email, password: value.password}))
-                
             }}
         >
             <Form className="form-wrapper">
