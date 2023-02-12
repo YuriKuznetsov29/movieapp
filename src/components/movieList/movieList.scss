@@ -1,6 +1,38 @@
+.premieres {
+    margin: 0 auto;
+    color: #fff;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    h1 {
+        margin: 0 auto;
+    }
+}
+
+.months {
+    margin: 0 auto;
+    width: 400px;
+    color: #fff;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    div {
+        &:hover {
+            cursor: pointer;
+        }
+    }
+}
+
+.activeMonth {
+    color: rgb(99, 98, 98);
+    border-bottom: 1px solid rgb(99, 98, 98);
+}
+
+
 .my-node-enter {
     opacity: 0;
-  }
+}
+
 .my-node-enter-active {
 opacity: 1;
 transition: opacity 1000ms;
@@ -33,7 +65,6 @@ transition: opacity 1000ms;
         height: 450px;
         border-radius: 10px;
     }
-    
 }
 
 .btn {

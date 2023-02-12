@@ -1,38 +1,37 @@
-import { useState, useEffect, useRef, memo, useMemo, useCallback } from 'react';
+import { useEffect, useRef, memo, useMemo, useCallback } from 'react';
 import {useSelector, useDispatch } from 'react-redux';
-import { getLoginState } from '../store/selectors';
+import { setAvatar } from '../store/reducers/userProfileSlice';
+import { getLoginState, getUserProfileState } from '../store/selectors';
 import { clearFilters } from '../store/reducers/userProfileSlice';
 import { Outlet, NavLink } from 'react-router-dom';
 import { getStorage, ref, uploadBytes, getDownloadURL} from "firebase/storage";
+import useFirebase from '../../hooks/firebase.hook';
 
 import './userProfile.scss'
 
 const UserProfile = () => {
-    const [avatar, setAvatar] = useState(null);
     const inputAvatar = useRef(null);
+
+    const {getAvatar} = useFirebase();
 
     const dispatch = useDispatch();
 
     const {email, loginStatus} = useSelector(getLoginState);
+    const {avatar} = useSelector(getUserProfileState);
 
     const storage = getStorage();
     const avatarRef = ref(storage, email + '/avatar')
-
-
-    useEffect(() => {
-        getAvatar()
-    }, [avatarRef])
 
     const inputClick = () => {
         inputAvatar.current.click()
     }
 
-    const getAvatar = () => {
-        getDownloadURL(avatarRef)
-        .then((url) => {
-            setAvatar(url)
-        })
-    }
+    // const getAvatar = () => {
+    //     getDownloadURL(avatarRef)
+    //     .then((url) => {
+    //         dispatch(setAvatar(url))
+    //     })
+    // }
 
     const uploadAvatar = (image) => {
         uploadBytes(avatarRef, image).then((snapshot) => {

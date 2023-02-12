@@ -14,7 +14,7 @@ const MovieList = () => {
 
     const nodeRef = useRef(null);
 
-    const {getFilms, loading} = MovieService();
+    const {getFilms, loading, getActualMonth} = MovieService();
 
     const dispatch = useDispatch();
 
@@ -38,6 +38,7 @@ const MovieList = () => {
     const renderFilms = (arr) => {
         const items = arr.map(item => {
             return (
+                <>
                 <div 
                     className="filmitem"
                     tabIndex={0}
@@ -47,7 +48,11 @@ const MovieList = () => {
                     onKeyDown={(e) => onKeyDown(e, item.id)}>
                     
                         <img src={item.posterUrl} alt="logo"/>
+                    {/* {item.name} */}
                 </div>
+                
+                </>
+                
             )
         })
         return (
@@ -57,10 +62,47 @@ const MovieList = () => {
         )
     }
 
+    const activeClassMonth = (e) => {
+        document.querySelector('.activeMonth').classList.remove('activeMonth');
+        e.target.classList.add('activeMonth');
+    }
+
+    
+    const currentMonth = getActualMonth(new Date().getMonth());
+    const previousMonth = new Date().getMonth() - 1 < 0 ? getActualMonth(11) : getActualMonth(new Date().getMonth() - 1);
+    const nextMonth = new Date().getMonth() + 1 > 11 ? getActualMonth(0) : getActualMonth(new Date().getMonth() + 1);
+
     const content = loading ? <Spinner/> : renderFilms(films);
 
     return (
-        <>  
+        
+        <>  <div className="premieres">
+                <h1>Премьеры</h1>
+                <div className="months">
+                    <div 
+                    onClick={(e) => {
+                        getFilms(previousMonth)
+                            .then(res => setFilms(res));
+                            activeClassMonth(e)}}>
+                    {previousMonth}
+                    </div>
+                    <div
+                    className="activeMonth"
+                    onClick={(e) => {
+                        getFilms()
+                            .then(res => setFilms(res));
+                            activeClassMonth(e)}}>
+                        {currentMonth}
+                    </div>
+                    <div onClick={(e) => {
+                        getFilms(nextMonth)
+                            .then(res => setFilms(res));
+                            activeClassMonth(e)}}>
+                        {nextMonth}
+                    </div>
+                </div>
+
+            </div>
             <CSSTransition nodeRef={nodeRef} in={inProp} timeout={1000} classNames="my-node">
                 <div ref={nodeRef}>
                     {content}

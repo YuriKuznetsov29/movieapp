@@ -4,10 +4,8 @@ const MovieService = () => {
 
     const {request, loading} = useHttp();
 
-    const getActualMonth = () => {
+    const getActualMonth = (month) => {
 
-        const date = new Date();
-        const month = date.getMonth();
         switch (month) {
             case 0:
                 return 'JANUARY';
@@ -39,11 +37,12 @@ const MovieService = () => {
         }
     };
 
-    const currentMonth = getActualMonth();
+    const month = new Date().getMonth();
+    const currentMonth = getActualMonth(month);
 
-    const getFilms = async () => {
+    const getFilms = async (month = currentMonth) => {
 
-        const res = await request(`https://kinopoiskapiunofficial.tech/api/v2.2/films/premieres?year=2022&month=${currentMonth}`)
+        const res = await request(`https://kinopoiskapiunofficial.tech/api/v2.2/films/premieres?year=2022&month=${month}`)
         return _transformFilms(res);
     }
 
@@ -199,7 +198,7 @@ const MovieService = () => {
         return result;
     }
 
-    return {getFilms, getFilmInfo, getActualMonth, getFilmByName, getCounryList, getFimsByParametrs, getSimilarFilms, getTrailer, getStaff, loading}
+    return {getFilms, getFilmInfo, getActualMonth, getFilmByName, getCounryList, getFimsByParametrs, getSimilarFilms, getTrailer, getStaff, loading, getActualMonth}
 }
 
 export default MovieService;

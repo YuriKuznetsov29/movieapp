@@ -1,18 +1,22 @@
 import { useEffect, useCallback } from "react";
 import { Link } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import { getLoginState } from "../store/selectors";
+import { getLoginState, getUserProfileState } from "../store/selectors";
 import { fetchLogOut, changeStatusOnOnline, changeStatusOnOffline } from "../store/reducers/loginSlice";
 import { getAuth, onAuthStateChanged } from "firebase/auth";
 import { setViewdFilmsData, setViewedFilms, setFavoriteFilms, setFavoriteFilmsData, setGradeFilms } from "../store/reducers/userProfileSlice";
+import useFirebase from "../../hooks/firebase.hook";
 
 import './sidebar.scss';
 
 const Sidebar = (props) => {
     const dispatch = useDispatch();
+
+    const {getAvatar} = useFirebase();
     const auth = getAuth();
 
-    const {loginStatus, userId} = useSelector(getLoginState)
+    const {loginStatus, userId, email} = useSelector(getLoginState)
+    const {avatar} = useSelector(getUserProfileState);
 
     const check = (auth) => {
         onAuthStateChanged(auth, (user) => {
@@ -40,8 +44,8 @@ const Sidebar = (props) => {
                         </li>
                         { loginStatus ?
                             <li>
-                                <Link to={`/profile`}>
-                                <i class="ph-person"></i>
+                                <Link to={`/profile/1`}>
+                                    {avatar ? <img className="avatarIconNav" src={avatar} title={email}></img> : <i class="ph-person" title={email}></i>}
                                 </Link> 
                             </li> : null
                         }

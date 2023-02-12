@@ -40,7 +40,7 @@ const LoginForm = () => {
                     </Link>
                 </div>
                 {loginStatus && 
-                    (<Navigate to="/profile" replace={true} />)
+                    (<Navigate to="/profile/1" replace={true} />)
                 }
             </Form>
         </Formik>

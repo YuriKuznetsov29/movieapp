@@ -19,6 +19,7 @@ const initialState = {
     msgModalState: {display: 'none'},
     notification: null,
     startTransition: false,
+    avatar: null
 }
 
 const userProfileSlice = createSlice({
@@ -83,6 +84,9 @@ const userProfileSlice = createSlice({
         },
         setStartTransition: (state, action) => {
             state.startTransition = action.payload;
+        },
+        setAvatar: (state, action) => {
+            state.avatar = action.payload;
         },
     },
 });
@@ -167,4 +171,24 @@ export const viewedSelector = createSelector(
     }
 )
 
-export const {setFavoriteFilms, setFavoriteFilmsData, setViewedFilms, setViewdFilmsData, setGradeFilms, setGrade, setMaxYear, setMinYear, setGenre, setCountry, setMaxRate, setMinRate, clearFilters, setFiltersVisibility, setContent, setMsgModalState, setNotification, setStartTransition} = actions;
+export const {
+    setFavoriteFilms, 
+    setFavoriteFilmsData, 
+    setViewedFilms, 
+    setViewdFilmsData, 
+    setGradeFilms, 
+    setGrade, 
+    setMaxYear, 
+    setMinYear, 
+    setGenre, 
+    setCountry, 
+    setMaxRate, 
+    setMinRate, 
+    clearFilters, 
+    setFiltersVisibility, 
+    setContent, 
+    setMsgModalState, 
+    setNotification, 
+    setStartTransition,
+    setAvatar
+} = actions;
